@@ -1,4 +1,4 @@
-../../Downloads/hover-sprite/hover-sprite/HELP.md
+# Ignore target directory except in specific locations
 target/
 !backend/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-../.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore MacOS specific files
+.DS_Store
+
+# Ignore logs and temporary files
+*.log
+/tmp
