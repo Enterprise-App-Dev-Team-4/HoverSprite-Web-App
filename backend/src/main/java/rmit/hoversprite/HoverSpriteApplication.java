@@ -1,4 +1,4 @@
-package rmit.team4.hover_sprite;
+package rmit.hoversprite;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
