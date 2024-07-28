@@ -1,14 +1,4 @@
-.App {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f5f5f5;
-  }
-  
-  .signup-container {
+.signup-container {
     display: flex;
     flex-direction: row;
     background: white;
@@ -17,6 +7,7 @@
     overflow: hidden;
     max-width: 900px;
     width: 100%;
+    margin: auto;
   }
   
   .image-section {
