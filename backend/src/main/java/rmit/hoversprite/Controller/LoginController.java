@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginController {
-    // @RequestMapping ("/login")
-    // @ResponseBody
+    @RequestMapping ("/")
+    @ResponseBody
 
-    // public String returnHello()
-    // {
-    //     return "<h2>Hello WOrld</h2>";
-    // }
-
-    @GetMapping("/login")
-    public String getSignupPage() {
-        return "redirect:/Signup.html";
+    public String returnHello()
+    {
+        return "<h2>Hello WOrld</h2>";
     }
+
+    // @GetMapping("/login")
+    // public String getSignupPage() {
+    //     return "redirect:/Signup.html";
+    // }
 }
