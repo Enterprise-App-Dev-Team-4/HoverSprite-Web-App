@@ -42,3 +42,5 @@ build/
 # Ignore logs and temporary files
 *.log
 /tmp
+
+.frontend/node_modules/
