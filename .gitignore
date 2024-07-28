@@ -43,4 +43,4 @@ build/
 *.log
 /tmp
 
-.frontend/node_modules/
+node_modules/
