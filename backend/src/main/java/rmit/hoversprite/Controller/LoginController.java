@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginController {
-    @RequestMapping ("/")
+    @RequestMapping ("/login")
     @ResponseBody
 
     public String returnHello()
