@@ -21,14 +21,14 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorizeRequests -> 
-                authorizeRequests
-                    .requestMatchers("/public/**", "/resources/**", "/css/**", "/js/**").permitAll()
-                    .anyRequest().authenticated()
+                authorizeRequests.anyRequest().permitAll()
+                    // .requestMatchers("/", "/landingpage", "/public/**", "/resources/**", "/css/**", "/js/**").permitAll()
+                    
             )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .permitAll()
-            )
+            // .formLogin(form -> form
+            //     .loginPage("/login")
+            //     .permitAll()
+            // )
             .logout(logout -> logout
                 .permitAll()
             );

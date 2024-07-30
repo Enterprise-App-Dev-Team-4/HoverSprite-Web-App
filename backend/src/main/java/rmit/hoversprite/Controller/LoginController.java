@@ -4,12 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping ("/")
 public class LoginController {
-    @RequestMapping ("/login")
-    @ResponseBody
-
+    
+    // @ResponseBody
+    @GetMapping("landingpage")
     public String returnHello()
     {
         return "<h2>Hello WOrld</h2>";

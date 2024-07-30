@@ -8,4 +8,8 @@ public interface User {
     public void deleteOrder();
 
     public void updateOrder();
+
+    public void setPassword(String password);
+
+    public String getPassword();
 }
