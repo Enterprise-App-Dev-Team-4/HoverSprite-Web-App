@@ -14,9 +14,4 @@ public class HoverSpriteApplication {
 		SpringApplication.run(HoverSpriteApplication.class, args);
 		logger.info("Application started successfully.");
 	}
-
-	@Bean
-    public BCryptPasswordEncoder passwordEncode() {
-        return new BCryptPasswordEncoder();
-    }
 }

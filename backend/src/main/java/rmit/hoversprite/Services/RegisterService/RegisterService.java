@@ -1,33 +1,31 @@
 package rmit.hoversprite.Services.RegisterService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import rmit.hoversprite.Model.User.Farmer;
-import rmit.hoversprite.Repositories.DBUserRepository.DBUserRepository;
-
+import rmit.hoversprite.Repositories.DBRegisterRepository.DBRegisterRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Component
+import java.util.Comparator;
+import java.util.List;
+
+import rmit.hoversprite.Utils.Utils;
+
+@Service
 public class RegisterService {
     @Autowired
-    private DBUserRepository userRepository;
+    private DBRegisterRepository userRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private Utils utilsClass;
+
     public Farmer registerUser(Farmer user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // used to hash the password
+        List<Farmer> farmers = userRepository.findAll();
+        user.setId(utilsClass.generateFarmerId(farmers)); // generate id for farmer
         return userRepository.save(user);
-    }
-
-    public void setUsername(String username)
-    {
-
-    }
-
-    public void setPassword(String password)
-    {
-        
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping ("/")
 public class LoginController {
     
-    // @ResponseBody
     @GetMapping("landingpage")
     public String returnHello()
     {
