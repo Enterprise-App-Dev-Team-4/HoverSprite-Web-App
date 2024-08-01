@@ -23,21 +23,32 @@ public class UserController {
     private UserService userService;
 
     
-    
-    @PostMapping("login/farmer")
-    public UserDTO returFarmerData(@RequestBody Farmer farmer)
+    @PostMapping("login")
+    public UserDTO returFarmerData(@RequestBody User user, @RequestParam String type) //http://localhost:8080/login?type=farmer
     {
-        return new DTOConverter().convertFarmerDataToObject(userService.loginFarmer(farmer)); // just call dto once every time a request recieved
+        if(type.equals("farmer"))
+        {
+            Farmer farmer = new Farmer();
+            farmer.setUser(user);
+            return new DTOConverter().convertUserDataToObject(userService.login(farmer)); // just call dto once every time a request recieved
+        }
+        return null;
     }
 
 
-    @PostMapping("farmer/register")
-    public Farmer saveFarmerToDatabase(@RequestBody Farmer user) {
-        return registerService.registerUser(user);
-    }
-
-    @PostMapping("receptionist/register")
-    public Receptionist saveReceptionistToDatabase(@RequestBody Receptionist user) {
-        return registerService.registerReceptionist(user);
+    @PostMapping("register")
+    public User saveFarmerToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
+        if(type.equals("farmer"))
+        {
+            Farmer farmer = new Farmer();
+            farmer.setUser(user);
+            return registerService.register(farmer);
+        } else if(type.equals("receptionist"))
+        {
+            Receptionist receptionist = new Receptionist();
+            receptionist.setUser(user);
+            return registerService.register(receptionist);
+        }
+        return null;
     }
 }

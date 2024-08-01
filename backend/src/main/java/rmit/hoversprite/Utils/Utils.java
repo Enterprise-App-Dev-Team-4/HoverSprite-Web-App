@@ -41,4 +41,5 @@ public class Utils {
         int numericPart = Integer.parseInt(lastId.substring(1)) + 1;
         return String.format("R%03d", numericPart);
     }
+    
 }

@@ -13,4 +13,5 @@ public class Receptionist extends User {
     public Receptionist(String id, String username, String password, String email, String fullName, String phoneNumber, String homeAddress) {
         super(id, username, password, email, fullName, phoneNumber, homeAddress);
     }
+
 }

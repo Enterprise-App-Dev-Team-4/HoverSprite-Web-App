@@ -4,7 +4,8 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Id;
 
 @MappedSuperclass
-public abstract class User {
+
+public class User {
     @Id
     private String id;
     
@@ -84,5 +85,14 @@ public abstract class User {
 
     public void setHomeAddress(String homeAddress) {
         this.homeAddress = homeAddress;
+    }
+
+    public void setUser(User user)
+    {
+        this.email = user.email;
+        this.password = user.password;
+        this.fullName = user.fullName;
+        this.homeAddress = user.homeAddress;
+        this.username = user.username;
     }
 }

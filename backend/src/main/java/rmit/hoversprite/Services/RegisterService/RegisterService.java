@@ -29,22 +29,34 @@ public class RegisterService {
     @Autowired
     private Utils utilsClass;
 
-    public Farmer registerUser(Farmer farmer) {
-        farmer.setPassword(passwordEncoder.encode(farmer.getPassword())); // Hash the password
-        
+    private Farmer checkFarmerRegisterStatus(User user)
+    {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
         List<Farmer> farmers = userRepository.findAll();
-        farmer.setId(utilsClass.generateFarmerId(farmers)); // Generate ID for farmer
-
-        return userRepository.save(farmer);
+        user.setId(utilsClass.generateFarmerId(farmers)); // Generate ID for farmer
+        return userRepository.save((Farmer) user);
     }
 
-    
-    public Receptionist registerReceptionist(Receptionist recept) {
-        recept.setPassword(passwordEncoder.encode(recept.getPassword())); // Hash the password
-        
-        List<Receptionist> recepts = receptionistRepository.findAll();
-        recept.setId(utilsClass.generateReceptionistId(recepts)); // Generate ID for farmer
+    private Receptionist checkReceptionistRegisterStatus(User user)
+    {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
+        List<Receptionist> receptionists = receptionistRepository.findAll();
+        user.setId(utilsClass.generateReceptionistId(receptionists)); // Generate ID for farmer
+        return receptionistRepository.save((Receptionist) user);
+    }
 
-        return receptionistRepository.save(recept);
+    public User register(User user) {
+        if(user instanceof Farmer)
+        {
+            Farmer status = checkFarmerRegisterStatus(user);
+            return status;
+        }
+
+        if(user instanceof Receptionist)
+        {
+            Receptionist status =  checkReceptionistRegisterStatus(user);
+            return status;
+        }
+        return null;
     }
 }

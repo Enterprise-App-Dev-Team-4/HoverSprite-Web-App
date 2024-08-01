@@ -13,7 +13,7 @@ public class DTOConverter {
      * @param farmer
      * @return the DTO object to the browser
      */
-    public UserDTO convertFarmerDataToObject(User farmer) {
+    public UserDTO convertUserDataToObject(User farmer) {
         if(farmer != null)
         {
             return new UserDTO(
