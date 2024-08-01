@@ -21,3 +21,5 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
 1. Register-> new Server
 2. Enter the server detail with the configuration above.
 
+## Table permission denied
+- Need to create to table in database first before using JPA
