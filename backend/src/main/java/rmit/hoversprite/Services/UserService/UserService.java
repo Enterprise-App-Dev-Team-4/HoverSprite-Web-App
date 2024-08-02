@@ -34,4 +34,13 @@ public class UserService {
         return null;
     }
 
+    public User getUserData(User user)
+    {
+        if(user instanceof Farmer)
+        {
+            Farmer farmer =  farmerRepository.findFarmerById(user.getId());
+            return farmer;
+        }
+        return null;
+    }
 }

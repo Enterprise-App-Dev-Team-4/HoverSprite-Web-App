@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
 
 @Component
@@ -40,6 +41,22 @@ public class Utils {
 
         int numericPart = Integer.parseInt(lastId.substring(1)) + 1;
         return String.format("R%03d", numericPart);
+    }
+
+     /**
+     * @apiNote this function checks if a given ID is a farmer or receptionist ID
+     * @param id the ID to check
+     * @return "Farmer" if the ID belongs to a farmer, "Receptionist" if it belongs to a receptionist, or "Unknown" if not recognized
+     */
+    public User getUserTypeById(String id) {
+        if (id.startsWith("F")) {
+            Farmer farmer = new Farmer();
+            return farmer;
+        } else if (id.startsWith("R")) {
+            Receptionist receptionist = new Receptionist();
+            return receptionist;
+        }
+        return null;
     }
     
 }

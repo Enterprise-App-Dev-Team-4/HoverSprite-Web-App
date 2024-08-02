@@ -12,6 +12,7 @@ import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Services.RegisterService.RegisterService;
 import rmit.hoversprite.Services.UserService.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
+import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Utils utilClass;
 
     
     @PostMapping("login")
@@ -52,9 +56,23 @@ public class UserController {
         return null;
     }
 
+    // @GetMapping("")
+    // public RedirectView registerPage()
+    // {
+    //     return new RedirectView("/register.html");
+    // }
+
     @GetMapping("")
-    public RedirectView registerPage()
+    public UserDTO userProfilePage(@RequestParam String id)
     {
-        return new RedirectView("/register.html");
+        User user = utilClass.getUserTypeById(id);
+        if(user == null) return null;
+        if(user instanceof Farmer)
+        {
+            Farmer farmer = new Farmer();
+            farmer.setId(id);
+            return new DTOConverter().convertUserDataToObject(userService.getUserData(farmer)); 
+        }
+        return null;
     }
 }
