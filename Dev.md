@@ -23,3 +23,45 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
 
 ## Table permission denied
 - Need to create to table in database first before using JPA
+
+## to send post request to the server
+1. In html the form should have action the the url that server handle with method post:
+```
+<form id="userForm" method="post" action="http://localhost:8080/register?type=farmer">
+```
+
+2. In javascript, the data must be colleceted and packaged in JSON to be sent
+```
+ // Create a JSON object with the user input
+            var user = {
+                username: form.username.value,
+                password: form.password.value,
+                email: form.email.value,
+                phoneNumber: form.phoneNumber.value,
+                fullName : form.fullName.value,
+                homeAddress: form.homeAddress.value
+            };
+```
+3. Using fetch to send the JSON to server:
+```
+// Send the form data using fetch
+fetch(form.action, { // make connection to server; action: This specifies the URL to which the request is sent.
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+})
+.then(response => response.json()) // PROMISE
+.then(data => { // call respojse data from the server
+    // Handle success
+    console.log('Success:', data);
+    alert('Registration successful!');
+})
+.catch((error) => {
+    // Handle error
+    console.error('Error:', error);
+    alert('An error occurred during registration.');
+});
+```
+- This will fetch JSON to send to server via POST request

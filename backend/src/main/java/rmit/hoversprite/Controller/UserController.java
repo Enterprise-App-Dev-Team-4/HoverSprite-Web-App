@@ -2,6 +2,7 @@ package rmit.hoversprite.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
@@ -35,7 +36,6 @@ public class UserController {
         return null;
     }
 
-
     @PostMapping("register")
     public User saveFarmerToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
         if(type.equals("farmer"))
@@ -50,5 +50,11 @@ public class UserController {
             return registerService.register(receptionist);
         }
         return null;
+    }
+
+    @GetMapping("")
+    public RedirectView registerPage()
+    {
+        return new RedirectView("/register.html");
     }
 }
