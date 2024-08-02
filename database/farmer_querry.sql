@@ -1,1 +1,0 @@
-Select * From farmer_detail.farmer;
