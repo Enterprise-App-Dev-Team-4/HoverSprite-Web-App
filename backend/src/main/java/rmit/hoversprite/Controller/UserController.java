@@ -56,11 +56,11 @@ public class UserController {
         return null;
     }
 
-    // @GetMapping("")
-    // public RedirectView registerPage()
-    // {
-    //     return new RedirectView("/register.html");
-    // }
+    @GetMapping("register")
+    public RedirectView registerPage()
+    {
+        return new RedirectView("/register.html");
+    }
 
     @GetMapping("")
     public UserDTO userProfilePage(@RequestParam String id)
