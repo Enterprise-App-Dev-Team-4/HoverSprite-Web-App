@@ -29,7 +29,7 @@ public class UserController {
 
     
     @PostMapping("login")
-    public UserDTO returFarmerData(@RequestBody User user, @RequestParam String type) //http://localhost:8080/login?type=farmer
+    public UserDTO returUserData(@RequestBody User user, @RequestParam String type) //http://localhost:8080/login?type=farmer
     {
         if(type.equals("farmer"))
         {
@@ -41,25 +41,31 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public User saveFarmerToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
+    public UserDTO saveUserToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
         if(type.equals("farmer"))
         {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
-            return registerService.register(farmer);
+            return new DTOConverter().convertUserDataToObject(registerService.register(farmer)); 
         } else if(type.equals("receptionist"))
         {
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
-            return registerService.register(receptionist);
+            return new DTOConverter().convertUserDataToObject(registerService.register(receptionist));
         }
         return null;
+    }
+
+    @GetMapping("signup")
+    public RedirectView signUpPage()
+    {
+        return new RedirectView("/src/Signup/Signup.html");
     }
 
     @GetMapping("register")
     public RedirectView registerPage()
     {
-        return new RedirectView("/register.html");
+        return new RedirectView("/src/Register/Register.html");
     }
 
     @GetMapping("")
@@ -73,6 +79,12 @@ public class UserController {
             farmer.setId(id);
             return new DTOConverter().convertUserDataToObject(userService.getUserData(farmer)); 
         }
+        return null;
+    }
+
+    @PutMapping("") // when user are in the profile view, user click edit, a dialog pop up for user to edit
+    public UserDTO usereditProfile(@RequestParam String id, @RequestParam String type)
+    {
         return null;
     }
 }
