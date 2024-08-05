@@ -16,6 +16,7 @@ import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "http://127.0.0.1:5501") // Allow requests from this origin
 public class UserController {
 
     @Autowired
@@ -54,18 +55,6 @@ public class UserController {
             return new DTOConverter().convertUserDataToObject(registerService.register(receptionist));
         }
         return null;
-    }
-
-    @GetMapping("signup")
-    public RedirectView signUpPage()
-    {
-        return new RedirectView("/src/Signup/Signup.html");
-    }
-
-    @GetMapping("register")
-    public RedirectView registerPage()
-    {
-        return new RedirectView("/src/Register/Register.html");
     }
 
     @GetMapping("")
