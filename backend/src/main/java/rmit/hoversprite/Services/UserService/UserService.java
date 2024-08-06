@@ -1,13 +1,18 @@
 package rmit.hoversprite.Services.UserService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
+import rmit.hoversprite.Repositories.DBFarmRepository.DBFarmRepository;
 import rmit.hoversprite.Repositories.DBUserRepository.DBFarmerRepository;
+import rmit.hoversprite.Services.FarmService.FarmService;
 
 @Component
 public class UserService {
@@ -17,6 +22,9 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private FarmService farmService;
 
     public User login(User user) {
         // Find farmer by username

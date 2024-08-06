@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
@@ -37,7 +38,7 @@ public class Utils {
         String lastId = users.stream()
                 .max(Comparator.comparing(User::getId))
                 .map(User::getId)
-                .orElse("F000");
+                .orElse("R000");
 
         int numericPart = Integer.parseInt(lastId.substring(1)) + 1;
         return String.format("R%03d", numericPart);
@@ -57,6 +58,21 @@ public class Utils {
             return receptionist;
         }
         return null;
+    }
+
+    
+    public String generateFarmId(List<Farm> farms) {
+        String lastId = farms.stream()
+                .map(Farm::getFarmID)
+                .filter(id -> id.startsWith("FA")) // Ensure valid IDs
+                .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+                .orElse("FA000"); // Default to "FA000" if no valid ID is found
+    
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("FA%03d", numericPart);
     }
     
 }

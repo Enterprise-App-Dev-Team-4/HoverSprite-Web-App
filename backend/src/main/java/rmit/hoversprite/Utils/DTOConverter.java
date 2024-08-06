@@ -18,7 +18,6 @@ public class DTOConverter {
         {
             return new UserDTO(
                 farmer.getId(),
-                farmer.getUsername(),
                 farmer.getEmail(),
                 farmer.getFullName(),
                 farmer.getPhoneNumber(),
