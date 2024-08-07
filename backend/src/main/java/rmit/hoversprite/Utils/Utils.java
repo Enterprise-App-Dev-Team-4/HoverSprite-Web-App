@@ -63,10 +63,10 @@ public class Utils {
     
     public String generateFarmId(List<Farm> farms) {
         String lastId = farms.stream()
-                .map(Farm::getFarmID)
-                .filter(id -> id.startsWith("FA")) // Ensure valid IDs
-                .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
-                .orElse("FA000"); // Default to "FA000" if no valid ID is found
+            .map(Farm::getFarmID)
+            .filter(id -> id.startsWith("FA")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("FA000"); // Default to "FA000" if no valid ID is found
     
         // Extract the numeric part of the ID and increment it
         int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
@@ -74,5 +74,6 @@ public class Utils {
         // Return the new ID formatted with a prefix "FA" and a three-digit number
         return String.format("FA%03d", numericPart);
     }
+    
     
 }

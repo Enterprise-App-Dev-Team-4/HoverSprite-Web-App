@@ -8,20 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Services.FarmService.FarmService;
 import rmit.hoversprite.Services.UserService.UserService;
+import rmit.hoversprite.Utils.DTOConverter;
 
 @RestController
 @RequestMapping("/farm/")
-@CrossOrigin(origins = "http://127.0.0.1:5501") // Allow requests from this origin
+// @CrossOrigin(origins = "http://127.0.0.1:5501") // Allow requests from this origin
 public class FarmController {
     @Autowired
     FarmService farmService;
 
     @PostMapping("add-farm")
-    public Farm addFarm(@RequestBody Farm farm, @RequestParam String farmer_id)
+    public FarmDTO addFarm(@RequestBody Farm farm, @RequestParam String farmer_id)
     {
-        return farmService.userSaveFarm(farmer_id, farm);
+        return new DTOConverter().convertFarmDataToObject(farmService.userSaveFarm(farmer_id, farm));
     }
 }
