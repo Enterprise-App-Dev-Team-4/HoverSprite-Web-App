@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account</title>
+<link rel="stylesheet" href="../../css/Register.css">
+</head>
+<body>
+<div class="container">
+    <div class="background-image"></div>
+    <div class="form-container">
+        <h1>Create an account</h1>
+        <form id="userForm" method="post" action="http://localhost:8080/register?type=farmer"> 
+            <input type="text" id="username" name="username" required placeholder="Username">
+            <input type="password" id="password" name="password" required placeholder="Password">
+            <input type="email" id="email" name="email" required placeholder="Email">
+            <input type="text" id="phoneNumber" name="phoneNumber" required placeholder="Phone Number">
+            <input type="text" id="fullName" name="fullName" required placeholder="Full Name">
+            <input type="text" id="homeAddress" name="homeAddress" required placeholder="Home Address">
+            <div class="agreement">
+                <input type="checkbox" id="terms">
+                <label for="terms">By creating an account, I agree to our Terms of Use and Privacy Policy</label>
+            </div>
+            <button type="submit">Create account</button>
+            <div class="alternative">
+                <span>OR</span>
+                <button type="button" class="google-btn">Continue with Google</button>
+            </div>
+        </form>
+        <a href="#" class="login-link">Log in instead</a>
+    </div>
+</div>
+<script src="Register.js"></script>
+</body>
+</html>
