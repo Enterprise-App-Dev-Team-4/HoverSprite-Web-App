@@ -1,44 +1,28 @@
-package rmit.hoversprite.Model.Farm;
+package rmit.hoversprite.DTO.FarmDTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.Utils.Enum.CropType;
 
-@Entity(name = "farms")
-@Table(schema = "farmer_detail")
-public class Farm {
-    @Id
+public class FarmDTO {
+
     private String farmID;
 
     private double farmArea;
     
-    @Enumerated(EnumType.STRING)
     private CropType cropType;
 
     private String farmLocation;
 
-    // Many-to-One relationship with Farmer
-    @ManyToOne
-    @JoinColumn(name = "farmer_id")
-    private Farmer farmer;
-
 
     // No-argument constructor
-    public Farm() {}
+    public FarmDTO() {}
 
-    public Farm(String farmID, double farmArea, CropType cropType, String farmLocation, Farmer farmer)
+    public FarmDTO(String farmID, double farmArea, CropType cropType, String farmLocation)
     {
         this.farmID =farmID;
         this.farmArea = farmArea;
         this.cropType = cropType;
         this.farmLocation = farmLocation;
-        this.farmer = farmer;
     }
     // Methods
     public String getFarmID() {
@@ -73,11 +57,5 @@ public class Farm {
         this.farmLocation = farmLocation;
     }
 
-    public Farmer getFarmer() {
-        return farmer;
-    }
-
-    public void setFarmer(Farmer farmer) {
-        this.farmer = farmer;
-    }
+    // farmer dto getter and setter if needed
 }

@@ -1,7 +1,9 @@
 package rmit.hoversprite.Utils;
 
+import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.User;
 
@@ -18,11 +20,24 @@ public class DTOConverter {
         {
             return new UserDTO(
                 farmer.getId(),
-                farmer.getUsername(),
                 farmer.getEmail(),
                 farmer.getFullName(),
                 farmer.getPhoneNumber(),
                 farmer.getHomeAddress()
+            );
+        }
+        return null;
+    }
+
+    public FarmDTO convertFarmDataToObject(Farm farm)
+    {
+        if(farm != null)
+        {
+            return new FarmDTO(
+                farm.getFarmID(),
+                farm.getFarmArea(),
+                farm.getCropType(),
+                farm.getFarmLocation()
             );
         }
         return null;

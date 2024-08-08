@@ -9,7 +9,6 @@ public class User {
     @Id
     private String id;
     
-    private String username;
     private String password;
     private String email;
     private String fullName;
@@ -20,9 +19,8 @@ public class User {
     public User() {}
 
     // Parameterized constructor
-    public User(String id, String username, String password, String email, String fullName, String phoneNumber, String homeAddress) {
+    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress) {
         this.id = id;
-        this.username = username;
         this.password = password;
         this.email = email;
         this.fullName = fullName;
@@ -37,14 +35,6 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -93,6 +83,5 @@ public class User {
         this.password = user.password;
         this.fullName = user.fullName;
         this.homeAddress = user.homeAddress;
-        this.username = user.username;
     }
 }

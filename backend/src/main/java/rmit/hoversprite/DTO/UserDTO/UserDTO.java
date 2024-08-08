@@ -10,9 +10,8 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String id, String username, String email, String fullName, String phoneNumber, String homeAddress) {
+    public UserDTO(String id, String email, String fullName, String phoneNumber, String homeAddress) {
         this.id = id;
-        this.username = username;
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
@@ -28,13 +27,6 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getEmail() {
         return email;

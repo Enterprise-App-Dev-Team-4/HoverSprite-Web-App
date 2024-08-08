@@ -65,3 +65,6 @@ fetch(form.action, { // make connection to server; action: This specifies the UR
 });
 ```
 - This will fetch JSON to send to server via POST request
+
+## If encounter the error ``add ID manually before persit ``
+- Proccess the generate id function before calling the saveToDatabase function
