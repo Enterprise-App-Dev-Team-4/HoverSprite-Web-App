@@ -28,6 +28,10 @@ app.get('/register', (req,res)=> {
     res.sendFile(registerPath);
 })
 
+app.get('/login', (req,res)=> {
+    res.sendFile(loginPath);
+})
+
 app.listen(3000, () => {
     console.log("listen on port");
 

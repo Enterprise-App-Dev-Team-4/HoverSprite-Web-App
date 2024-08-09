@@ -58,4 +58,25 @@ function sendLoginDataToServer() {
     });
 }
 
+function redirectToRegister() {
+    // Ensure the DOM is fully loaded before adding the event listener
+    document.addEventListener('DOMContentLoaded', function() {
+        const registerButton = document.getElementById('register-page');
+
+        // Check if the element exists
+        if (registerButton) {
+            registerButton.addEventListener('click', function(event) {
+                // Define the URL to redirect to
+                let url = "http://localhost:3000/register";
+
+                // Redirect to the URL
+                window.location.href = url;
+            });
+        } else {
+            console.error('Element with id "register-page" not found.');
+        }
+    });
+}
+
+redirectToRegister();
 sendLoginDataToServer();
