@@ -1,12 +1,15 @@
-function parseUserRequestParam()
+const loginParam = 'http://localhost:8080/login?type=';
+const instance = "userRole";
+
+function parseUserRequestParam(parsedParam, object)
 {
-    var userRoleSelect = document.getElementById("userRole");
+    var userRoleSelect = document.getElementById(object);
     
      // Get the selected user role
      var selectedRole = userRoleSelect.value;
     
      // Construct the new action URL with the selected role as a parameter
-     var actionURL = 'http://localhost:8080/login?type=' + encodeURIComponent(selectedRole);
+     var actionURL = parsedParam + encodeURIComponent(selectedRole);
      return actionURL;
 }
 
@@ -43,9 +46,8 @@ function sendLoginDataToServer()
 {
     document.getElementById('loginForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
-        // var form = this;       
          // Construct the new action URL with the selected role as a parameter
-         var actionURL = parseUserRequestParam();
+         var actionURL = parseUserRequestParam(loginParam, instance);
 
         var user = client; // assign client from login to user
 
