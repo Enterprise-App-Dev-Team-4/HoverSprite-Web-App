@@ -1,7 +1,7 @@
 function redirectToRegister()
 {
     console.log('hello');
-    let url = "http://127.0.0.1:5501/frontend/src/pages/Register/Register.html";
+    let url = "http://localhost:3000/register";
     window.location.href = url;
 }
 
