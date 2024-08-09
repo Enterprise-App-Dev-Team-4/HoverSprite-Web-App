@@ -31,7 +31,7 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
 ```
 
 2. In javascript, the data must be colleceted and packaged in JSON to be sent
-```
+```js
  // Create a JSON object with the user input
             var user = {
                 username: form.username.value,
@@ -43,7 +43,7 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
             };
 ```
 3. Using fetch to send the JSON to server:
-```
+```js
 // Send the form data using fetch
 fetch(form.action, { // make connection to server; action: This specifies the URL to which the request is sent.
     method: 'POST',
