@@ -80,3 +80,20 @@ fetch(form.action, { // make connection to server; action: This specifies the UR
 <script src="./Signup/Signup.js"></script> // function is called directly
 ```
 
+# Host Front end to different server port
+## Purpose
+- It is a nice practice that the url of the front end indicates the same url end point that can be handled by spring server
+## Steps
+1. Install express
+``
+npm -i express
+``
+2. Install nodemon
+``
+npm -i nodemon
+``
+3. Go to ``frontend`` folder
+``
+cd frontend/
+``
+4. Run ``nodemon app``
