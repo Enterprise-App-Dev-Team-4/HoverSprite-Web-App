@@ -68,3 +68,15 @@ fetch(form.action, { // make connection to server; action: This specifies the UR
 
 ## If encounter the error ``add ID manually before persit ``
 - Proccess the generate id function before calling the saveToDatabase function
+
+## To handle the js static hosted by express
+- In the ``js`` file, for the function is called in html tag, the file path to the script file is ``./parent/child``
+- For the function is called inside the js file, the file path is: ``./child``
+- Example
+```js
+<script src="./Register.js"></script> // the function is called globally
+```
+```js
+<script src="./Signup/Signup.js"></script> // function is called directly
+```
+

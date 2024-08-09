@@ -4,6 +4,7 @@ const body_parser = require('body-parser');
 
 const SignupPath = __dirname + '/src/pages/Signup/Signup.html'
 const registerPath = __dirname + '/src/pages/Register/Register.html'
+app.use(body_parser.urlencoded({extended: true}));
 
 // Serve static images from the public directory
 app.use('/public', express.static('./public'));
