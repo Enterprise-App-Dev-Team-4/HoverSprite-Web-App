@@ -1,6 +1,7 @@
 package rmit.hoversprite.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -16,7 +17,7 @@ import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
-// @CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+//@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
 @CrossOrigin(origins = "http://127.0.0.1:5501")
 public class UserController {
 
@@ -30,16 +31,23 @@ public class UserController {
     private Utils utilClass;
 
     
-    @PostMapping("login")
-    public UserDTO returUserData(@RequestBody User user, @RequestParam String type) //http://localhost:8080/login?type=farmer
-    {
-        if(type.equals("farmer"))
-        {
+     @PostMapping("/login")
+    public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type) {
+        if ("farmer".equals(type)) {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
-            return new DTOConverter().convertUserDataToObject(userService.login(farmer)); // just call dto once every time a request recieved
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
+            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
+
+            if (userDTO != null) {
+                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+            } else {
+                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+            }
         }
-        return null;
+
+        // Return a BadRequest if the type parameter is incorrect or not provided
+        return ResponseEntity.badRequest().body("Invalid type parameter. Expected 'farmer'.");
     }
 
     @PostMapping("register")
