@@ -31,7 +31,7 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
 ```
 
 2. In javascript, the data must be colleceted and packaged in JSON to be sent
-```
+```js
  // Create a JSON object with the user input
             var user = {
                 username: form.username.value,
@@ -43,7 +43,7 @@ psql -h your_server_ip -p 5432 -U developer_user -d hover_sprite
             };
 ```
 3. Using fetch to send the JSON to server:
-```
+```js
 // Send the form data using fetch
 fetch(form.action, { // make connection to server; action: This specifies the URL to which the request is sent.
     method: 'POST',
@@ -68,3 +68,32 @@ fetch(form.action, { // make connection to server; action: This specifies the UR
 
 ## If encounter the error ``add ID manually before persit ``
 - Proccess the generate id function before calling the saveToDatabase function
+
+## To handle the js static hosted by express
+- In the ``js`` file, for the function is called in html tag, the file path to the script file is ``./parent/child``
+- For the function is called inside the js file, the file path is: ``./child``
+- Example
+```js
+<script src="./Register.js"></script> // the function is called globally
+```
+```js
+<script src="./Signup/Signup.js"></script> // function is called directly
+```
+
+# Host Front end to different server port
+## Purpose
+- It is a nice practice that the url of the front end indicates the same url end point that can be handled by spring server
+## Steps
+1. Install express
+``
+npm -i express
+``
+2. Install nodemon
+``
+npm -i nodemon
+``
+3. Go to ``frontend`` folder
+``
+cd frontend/
+``
+4. Run ``nodemon app``

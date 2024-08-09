@@ -1,0 +1,24 @@
+.navbar-custom {
+    background-color: #fff;
+    color: black;
+    border-bottom: 1px solid #ccc;
+}
+.navbar-brand, .nav-link {
+    color: black;
+    font-weight: bold;
+}
+.nav-link.active {
+    color: green; /* Active link color */
+    text-decoration: underline;
+    text-decoration-color: green; /* Green underline */
+    text-decoration-thickness: 2px; /* Thickness of the underline */
+}
+.profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.profile-badge img {
+    border-radius: 50%;
+    width: 40px;
+}
