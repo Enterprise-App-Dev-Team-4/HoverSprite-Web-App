@@ -17,8 +17,8 @@ import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
-//@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+//@CrossOrigin(origins = "http://127.0.0.1:5501")
 public class UserController {
 
     @Autowired

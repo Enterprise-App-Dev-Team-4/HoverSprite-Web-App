@@ -11,6 +11,7 @@ function activeClick()
 
 function returnNavBar()
 {
+    console.log('hello navbar');
     return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
