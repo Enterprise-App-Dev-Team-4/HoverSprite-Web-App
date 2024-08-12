@@ -6,6 +6,7 @@ const SignupPath = __dirname + '/src/pages/Signup.html'
 const registerPath = __dirname + '/src/pages/Register.html'
 const loginPath = __dirname + '/src/pages/Login.html'
 const aboutPath = __dirname + '/src/pages/HomePage.html'
+const bookingPath = __dirname + '/src/pages/Booking.html'
 
 app.use(body_parser.urlencoded({extended: true}));
 
@@ -37,6 +38,10 @@ app.get('/login', (req,res)=> {
 
 app.get('/about-us', (req,res) => {
     res.sendFile(aboutPath);
+})
+
+app.get('/booking', (req,res) => {
+    res.sendFile(bookingPath);
 })
 
 app.listen(3000, () => {
