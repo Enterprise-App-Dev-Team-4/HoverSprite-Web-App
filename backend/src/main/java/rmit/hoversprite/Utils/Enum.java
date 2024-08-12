@@ -18,4 +18,32 @@ public class Enum {
         PENDING,
         ACCEPTED
     }
+
+    public enum ServiceName
+    {
+        Rantizo,
+        DroneDeploy,
+        AgriSpray,
+        DJIAgriculture,
+        XAG,
+        AmericanRobotics,
+        PrecisionHawk,
+        DroneAG,
+        Hylio,
+        AirMap
+    }
+
+    public enum ServiceType
+    {
+        CONSULT,
+        SPRAYING
+    }
+
+    public enum SprayerExpertise
+    {
+        ExpertSprayer,
+        AppretienceSprayer,
+        AdeptSprayer
+    }
+    
 }
