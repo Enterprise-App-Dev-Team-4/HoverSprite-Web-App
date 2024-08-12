@@ -11,4 +11,11 @@ public class Enum {
         LEGUMES,
         TUBERS
     }
+
+    public enum OrderStatus
+    {
+        REJECTED,
+        PENDING,
+        ACCEPTED
+    }
 }
