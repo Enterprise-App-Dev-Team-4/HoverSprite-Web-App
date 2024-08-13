@@ -38,7 +38,7 @@ public class SprayServices {
 
     private String description;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sprayerServices", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
     public SprayServices() {}

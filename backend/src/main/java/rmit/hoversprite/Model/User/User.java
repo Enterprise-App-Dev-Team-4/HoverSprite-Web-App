@@ -12,6 +12,8 @@ public class User {
     private String password;
     private String email;
     private String fullName;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
     private String homeAddress;
 
@@ -19,13 +21,15 @@ public class User {
     public User() {}
 
     // Parameterized constructor
-    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress) {
+    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName) {
         this.id = id;
         this.password = password;
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.homeAddress = homeAddress;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     // Getters and Setters
@@ -83,5 +87,25 @@ public class User {
         this.password = user.password;
         this.fullName = user.fullName;
         this.homeAddress = user.homeAddress;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getFirstName()
+    {
+        return this.firstName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    public String getLastName()
+    {
+        return this.lastName;
     }
 }
