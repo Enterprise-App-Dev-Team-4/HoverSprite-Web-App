@@ -1,5 +1,6 @@
 package rmit.hoversprite.Model.SprayerServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -15,7 +16,7 @@ import jakarta.persistence.Table;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.CropType;
 import rmit.hoversprite.Utils.Enum.ServiceName;
-import rmit.hoversprite.Utils.Enum.ServiceType;;;
+import rmit.hoversprite.Utils.Enum.ServiceType;
 
 @Entity(name = "spray_services")
 @Table(schema = "farmer_detail")
@@ -24,8 +25,6 @@ public class SprayServices {
     private String id;
 
     private double price;
-
-    private String date;
 
     @Enumerated(EnumType.STRING)
     private ServiceName serviceName;
@@ -41,14 +40,20 @@ public class SprayServices {
     @OneToMany(mappedBy = "sprayerServices", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
+    private int timeSlot1;
+    private int timeSlot2;
+    private int timeSlot3;
+    private int timeSlot4;
+    private int timeSlot5;
+    private int timeSlot6;
+
     public SprayServices() {}
 
-    public SprayServices(String id, double price, String date, ServiceName serviceName, ServiceType serviceType, String description,
+    public SprayServices(String id, double price, ServiceName serviceName, ServiceType serviceType, String description,
                         List<Order> orders, CropType cropType)
     {
         this.id = id;
         this.price = price;
-        this.date = date;
         this.serviceName = serviceName;
         this.serviceType = serviceType;
         this.description = description;
@@ -75,7 +80,7 @@ public class SprayServices {
         this.serviceType = serviceType;
     }
 
-    public ServiceName getServiceTName() {
+    public ServiceName getServiceName() {
         return serviceName;
     }
 
@@ -109,5 +114,62 @@ public class SprayServices {
     public CropType getCropType()
     {
         return this.cropType;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    // Time slot getters and setters
+    public int getTimeSlot1() {
+        return timeSlot1;
+    }
+
+    public void setTimeSlot1(int timeSlot1) {
+        this.timeSlot1 = timeSlot1;
+    }
+
+    public int getTimeSlot2() {
+        return timeSlot2;
+    }
+
+    public void setTimeSlot2(int timeSlot2) {
+        this.timeSlot2 = timeSlot2;
+    }
+
+    public int getTimeSlot3() {
+        return timeSlot3;
+    }
+
+    public void setTimeSlot3(int timeSlot3) {
+        this.timeSlot3 = timeSlot3;
+    }
+
+    public int getTimeSlot4() {
+        return timeSlot4;
+    }
+
+    public void setTimeSlot4(int timeSlot4) {
+        this.timeSlot4 = timeSlot4;
+    }
+
+    public int getTimeSlot5() {
+        return timeSlot5;
+    }
+
+    public void setTimeSlot5(int timeSlot5) {
+        this.timeSlot5 = timeSlot5;
+    }
+
+    public int getTimeSlot6() {
+        return timeSlot6;
+    }
+
+    public void setTimeSlot6(int timeSlot6) {
+        this.timeSlot6 = timeSlot6;
     }
 }

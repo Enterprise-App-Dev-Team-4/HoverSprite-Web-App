@@ -23,6 +23,8 @@ public class Order {
     private String orderID;
 
     private String date;
+    
+    private String serviceTimeSlot;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -54,7 +56,7 @@ public class Order {
 
     // Parameterized constructor
     public Order(String orderID, String date, OrderStatus orderStatus, double totalCost, Farmer farmer,
-                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers) {
+                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot) {
         this.orderID = orderID;
         this.date = date;
         this.orderStatus = orderStatus;
@@ -63,6 +65,7 @@ public class Order {
         this.receptionist = receptionist;
         this.sprayerServices = sprayerServices;
         this.sprayers = sprayers;
+        this.serviceTimeSlot = serviceTimeSlot;
     }
 
     // Getters and setters
@@ -74,6 +77,16 @@ public class Order {
         this.orderID = orderID;
     }
 
+    public String getServiceTimeSlot()
+    {
+        return this.serviceTimeSlot;
+    }
+
+    public void setServiceTimeSlot(String serviceTimeSlot)
+    {
+        this.serviceTimeSlot = serviceTimeSlot;
+    }
+    
     public String getDate() {
         return date;
     }
