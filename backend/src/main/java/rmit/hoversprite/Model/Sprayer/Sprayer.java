@@ -1,15 +1,19 @@
 package rmit.hoversprite.Model.Sprayer;
 
 import java.util.List;
+
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.SprayerExpertise;
 
-@MappedSuperclass
+@Entity
+@Table(name = "sprayers", schema = "farmer_detail")
 public class Sprayer {
     @Id
     private String sprayerId;
