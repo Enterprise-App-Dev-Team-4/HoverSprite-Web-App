@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/Profile.css">
+    <title>User Profile</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/public/HoverSpriteLogo.png" alt="HoverSprite Logo">
+        </div>
+        <nav>
+            <a href="HomePage.html">Home</a>
+            <a href="Booking.html">Booking</a>
+            <a href="">Logout</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-card">
+                <img src="/public/user-avatar.png" alt="Profile Picture" class="profile-pic">
+                <h2 class="profile-name">John Smith</h2>
+                <p class="profile-username">@john</p>
+                <p class="email">Email: demomail@mail.com</p>
+                <p class="member-since">Member Since: <span>29 September 2019</span></p>
+                <button class="edit-btn">Edit Profile</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <p><strong>Full Name:</strong>John</p>
+                <p><strong>Username:</strong>cultivated farmer</p>
+                <p><strong>Email:</strong> demomail@mail.com</p>
+                <p><strong>Facebook:</strong> Facebook Username</p>
+                <p><strong>Twitter:</strong> Twitter Username</p>
+            </div>
+
+            <!-- This form is hidden by default -->
+            <form class="profile-form" style="display:none;">
+                <h2>Edit Profile</h2>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" value="Jamed Allan">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="james">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="demomail@mail.com">
+                </div>
+                <div class="form-group">
+                    <label for="facebook">Facebook Username</label>
+                    <input type="text" id="facebook" name="facebook" value="Facebook Username">
+                </div>
+                <div class="form-group">
+                    <label for="twitter">Twitter Username</label>
+                    <input type="text" id="twitter" name="twitter" value="Twitter Username">
+                </div>
+                <button type="submit" class="update-btn">Update Info</button>
+                <button type="button" class="cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 HoverSprite. All rights reserved.</p>
+    </footer>
+    
+    <script src="../js/Profile.js"></script>
+</body>
+</html>
