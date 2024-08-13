@@ -115,9 +115,11 @@ nav a {
 .profile-form {
     margin-top: 20px;
     text-align: left;
-    width: 100%; 
-    max-width: 500px; 
-    margin: 0 auto; 
+    width: 100%;
+    max-width: 500px; /* Controls the overall width */
+    margin: 0 auto; /* Centers the form */
+    padding: 0 20px; /* Add padding inside the form container */
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
 
 .profile-form .form-group {
@@ -163,12 +165,4 @@ nav a {
     background-color: #c82333;
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #ffffff;
-    color: #777777;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: auto;
-    width: 100%;
-}
+
