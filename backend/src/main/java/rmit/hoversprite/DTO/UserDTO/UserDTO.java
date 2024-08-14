@@ -7,15 +7,19 @@ public class UserDTO {
     private String fullName;
     private String phoneNumber;
     private String homeAddress;
+    private String lastName;
+    private String firstName;
 
     public UserDTO() {}
 
-    public UserDTO(String id, String email, String fullName, String phoneNumber, String homeAddress) {
+    public UserDTO(String id, String email, String fullName, String firstName, String lastName, String phoneNumber, String homeAddress) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.homeAddress = homeAddress;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     // Getters and Setters
@@ -25,6 +29,26 @@ public class UserDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getFirstName()
+    {
+        return this.firstName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    public String getLastName()
+    {
+        return this.lastName;
     }
 
 

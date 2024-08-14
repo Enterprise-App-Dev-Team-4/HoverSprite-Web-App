@@ -86,6 +86,9 @@ public class User {
         this.email = user.email;
         this.password = user.password;
         this.fullName = user.fullName;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.phoneNumber = user.phoneNumber;
         this.homeAddress = user.homeAddress;
     }
 

@@ -7,8 +7,8 @@ import rmit.hoversprite.Model.Farm.Farm;
 public class FarmerDTO extends UserDTO {
     public FarmerDTO() {}
     List<Farm> farms;
-    public FarmerDTO(String id, String email, String fullName, String phoneNumber, String homeAddress, List<Farm> farms) {
-        super(id, email, fullName, phoneNumber, homeAddress);
+    public FarmerDTO(String id, String email, String fullName, String lastName, String firstName, String phoneNumber, String homeAddress, List<Farm> farms) {
+        super(id, email, fullName,firstName, lastName, phoneNumber, homeAddress);
         this.farms = farms;
     }
 

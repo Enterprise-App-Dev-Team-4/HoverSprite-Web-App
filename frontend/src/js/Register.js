@@ -4,14 +4,16 @@ function submitForm()
     document.getElementById('userForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
         var form = this;
+        var full_name = form.firstName.value + " " + form.lastName.value;
     
         // Create a JSON object with the user input
         var user = {
-            username: form.username.value,
+            firstName: form.firstName.value,
+            lastName : form.lastName.value,
+            fullName: full_name,
             password: form.password.value,
             email: form.email.value,
             phoneNumber: form.phoneNumber.value,
-            fullName : form.fullName.value,
             homeAddress: form.homeAddress.value
         };
     

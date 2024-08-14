@@ -12,6 +12,7 @@ import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Repositories.DBFarmRepository.DBFarmRepository;
 import rmit.hoversprite.Repositories.DBUserRepository.DBFarmerRepository;
+import rmit.hoversprite.Repositories.DBUserRepository.DBReceptionistRepository;
 import rmit.hoversprite.Services.FarmService.FarmService;
 
 @Component
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     private DBFarmerRepository farmerRepository;
+
+    @Autowired
+    private DBReceptionistRepository receptionistRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -36,7 +40,10 @@ public class UserService {
             }
         } else if(user instanceof Receptionist)
         {
-            
+            Receptionist receptionist = receptionistRepository.findByEmail(user.getEmail());
+            if (receptionist != null && passwordEncoder.matches(user.getPassword(), receptionist.getPassword())) {
+                return receptionist;
+            }
         }
         // If authentication fails, return empty
         return null;

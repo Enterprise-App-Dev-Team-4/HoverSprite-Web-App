@@ -6,6 +6,7 @@ function parseUserRequestParam(parsedParam, object) {
     
     // Get the selected user role
     var selectedRole = userRoleSelect.value;
+    console.log(selectedRole);
     
     // Construct the new action URL with the selected role as a parameter
     var actionURL = parsedParam + encodeURIComponent(selectedRole);
