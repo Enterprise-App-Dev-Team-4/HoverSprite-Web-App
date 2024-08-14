@@ -44,6 +44,18 @@ public class UserController {
             } else {
                 return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
             }
+        } else if("receptionist".equals(type))
+        {
+            Receptionist receptionist = new Receptionist();
+            receptionist.setUser(user);
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
+            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
+
+            if (userDTO != null) {
+                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+            } else {
+                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+            }
         }
 
         // Return a BadRequest if the type parameter is incorrect or not provided

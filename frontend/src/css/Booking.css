@@ -2,8 +2,12 @@
     height: 50px;
 }
 
+h2 {
+    margin-bottom: 20px;
+}
+
 .hero-image {
-    background-image: url('../../public/drone-spray-4.jpeg'); /* Replace with the actual path to your image */
+    background-image: url('../../public/drone-spray-4.jpeg'); 
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;
@@ -21,7 +25,6 @@
     left: 25px;
     transform: translateY(-50%);
     z-index: 2;
-    
 }
 
 .display-4 {
@@ -35,7 +38,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* Adjust transparency as needed */
+    background-color: rgba(0, 0, 0, 0.3); 
     z-index: 1;
 }
 
@@ -43,4 +46,57 @@
     margin-top: 100px;
 }
 
+.or-divider {
+    margin: 20px 0;
+    position: relative;
+}
 
+.or-divider span {
+    background: #fff;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.or-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #ccc;
+    z-index: 0;
+}
+
+.call-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.booking-form .form-group {
+    margin-bottom: 20px; 
+    border-radius: 20px;
+}
+
+.booking-form .form-group input,
+.booking-form .form-group select {
+    border-radius: 20px; 
+    padding: 10px 15px; 
+    border: 1px solid #ccc; 
+    font-size: 16px; 
+}
+
+.form-group.text-center button[type="submit"] {
+    border-radius: 20px; 
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-group.text-center {
+    display: flex;
+    justify-content: center;
+}

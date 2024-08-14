@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
@@ -75,5 +77,31 @@ public class Utils {
         return String.format("FA%03d", numericPart);
     }
     
+    public String generateSprayServiceId(List<SprayServices> services) {
+        String lastId = services.stream()
+            .map(SprayServices::getId)
+            .filter(id -> id.startsWith("S")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("S000"); // Default to "FA000" if no valid ID is found
     
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("S%03d", numericPart);
+    }
+
+    public String generateOrderId(List<Order> orders) {
+        String lastId = orders.stream()
+            .map(Order::getOrderID)
+            .filter(id -> id.startsWith("O")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("O000"); // Default to "FA000" if no valid ID is found
+    
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("O%03d", numericPart);
+    }
 }

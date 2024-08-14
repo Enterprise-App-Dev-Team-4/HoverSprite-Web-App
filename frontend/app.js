@@ -5,7 +5,8 @@ const body_parser = require('body-parser');
 const SignupPath = __dirname + '/src/pages/Signup.html'
 const registerPath = __dirname + '/src/pages/Register.html'
 const loginPath = __dirname + '/src/pages/Login.html'
-const aboutPath = __dirname + '/src/pages/HomePage.html'
+const aboutPath = __dirname + '/src/pages/About.html'
+const servicePath = __dirname + '/src/pages/Services.html'
 const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
 
@@ -39,6 +40,10 @@ app.get('/login', (req,res)=> {
 
 app.get('/about-us', (req,res) => {
     res.sendFile(aboutPath);
+})
+
+app.get('/service', (req,res) => {
+    res.sendFile(servicePath);
 })
 
 app.get('/booking', (req,res) => {
