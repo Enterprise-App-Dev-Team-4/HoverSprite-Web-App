@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", function() {
+function loadNavBar()
+{
+  document.addEventListener("DOMContentLoaded", function() {
     // Fetch the Navbar component
     var content = document.getElementById("navbar-container");
     content.innerHTML = returnNavBar();
@@ -6,3 +8,17 @@ document.addEventListener("DOMContentLoaded", function() {
     activeClick();
   });
   
+}
+
+function loadFooter()
+{
+  console.log('Hello  footer');
+  document.addEventListener("DOMContentLoaded", function() {
+    // Fetch the Navbar component
+    var content = document.getElementById("footer-container");
+    content.innerHTML = returnFooter();
+  });
+}
+
+loadFooter();
+loadNavBar();

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/Profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>User Profile</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-card">
+                <img src="../../public/user-avatar.png" alt="Profile Picture" class="profile-pic">
+                <h2 class="profile-name">John Smith</h2>
+                <p class="profile-username">@john</p>
+                <p class="email">Email: demomail@mail.com</p>
+                <button class="edit-btn">Edit Profile</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <p><strong>Full Name:</strong>John</p>
+                <p><strong>Username:</strong>cultivated farmer</p>
+                <p><strong>Email:</strong> demomail@mail.com</p>
+                <p><strong>Facebook:</strong> Facebook Username</p>
+                <p><strong>Twitter:</strong> Twitter Username</p>
+            </div>
+
+            <!-- This form is hidden by default -->
+            <form class="profile-form" style="display:none;">
+                <h2>Edit Profile</h2>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" value="Jamed Allan">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="james">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="demomail@mail.com">
+                </div>
+                <div class="form-group">
+                    <label for="facebook">Facebook Username</label>
+                    <input type="text" id="facebook" name="facebook" value="Facebook Username">
+                </div>
+                <div class="form-group">
+                    <label for="twitter">Twitter Username</label>
+                    <input type="text" id="twitter" name="twitter" value="Twitter Username">
+                </div>
+                <button type="submit" class="update-btn">Update Info</button>
+                <button type="button" class="cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    
+    <div id="footer-container"></div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../js/Profile.js"></script>
+    <script src="../../components/Navbar.js"></script>
+    <script src="../../components/Footer.js"></script>
+</body>
+</html>
