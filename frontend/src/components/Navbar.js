@@ -23,7 +23,7 @@ function returnNavBar()
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link" href="#">Home</a>
-        <a class="nav-link" href="http://localhost:3000/about-us">About</a>
+        <a class="nav-link" href="/about-us">About</a>
         <a class="nav-link" href="#">Services</a>
         <a class="nav-link" href="http://localhost:3000/booking">Booking</a>
         <a class="nav-link" href="#">Orders</a>
