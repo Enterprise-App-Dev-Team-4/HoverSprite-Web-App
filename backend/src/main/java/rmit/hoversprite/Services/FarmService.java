@@ -1,4 +1,4 @@
-package rmit.hoversprite.Services.FarmService;
+package rmit.hoversprite.Services;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
-import rmit.hoversprite.Repositories.DBFarmRepository.DBFarmRepository;
-import rmit.hoversprite.Repositories.DBUserRepository.DBFarmerRepository;
+import rmit.hoversprite.Repositories.DBFarmRepository;
+import rmit.hoversprite.Repositories.DBFarmerRepository;
 import rmit.hoversprite.Utils.Utils;
 
 @Component

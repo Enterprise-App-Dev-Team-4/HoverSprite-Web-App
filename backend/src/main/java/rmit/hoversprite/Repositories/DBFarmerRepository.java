@@ -1,4 +1,4 @@
-package rmit.hoversprite.Repositories.DBUserRepository;
+package rmit.hoversprite.Repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import rmit.hoversprite.Model.User.Farmer;

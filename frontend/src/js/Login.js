@@ -19,13 +19,21 @@ function fetchRequestServer(user, action) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
+        credentials: 'include'  // Include credentials (like session cookies) in requests
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Login failed');
+        }
+    })
     .then(data => {
         // Handle success
         console.log('Success:', data);
         alert('Login successful!');
+        window.location.href = '/about-us';  // Redirect to home page or dashboard
     })
     .catch((error) => {
         // Handle error
@@ -33,6 +41,7 @@ function fetchRequestServer(user, action) {
         alert('Wrong user name or Password');
     });
 }
+
 
 function sendLoginDataToServer() {
     document.getElementById('loginForm').addEventListener('submit', function(event) {

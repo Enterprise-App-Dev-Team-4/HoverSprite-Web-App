@@ -1,4 +1,4 @@
-package rmit.hoversprite.Repositories.DBOrderRepository;
+package rmit.hoversprite.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

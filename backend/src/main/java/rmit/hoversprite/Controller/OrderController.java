@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.Model.Order.Order;
-import rmit.hoversprite.Services.OrderService.OrderService;
+import rmit.hoversprite.Services.OrderService;
 
 @RestController
 @RequestMapping("/order/")

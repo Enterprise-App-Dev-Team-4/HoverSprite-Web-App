@@ -1,4 +1,4 @@
-const serviceAPI = 'http://localhost:8080/service/'
+const serviceAPI = 'http://localhost:8080/service/all'
 
 function getAllService()
 {

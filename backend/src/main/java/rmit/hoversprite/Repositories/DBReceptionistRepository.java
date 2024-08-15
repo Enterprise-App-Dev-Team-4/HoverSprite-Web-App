@@ -1,4 +1,4 @@
-package rmit.hoversprite.Repositories.DBUserRepository;
+package rmit.hoversprite.Repositories;
 
 import rmit.hoversprite.Model.User.Receptionist;
 

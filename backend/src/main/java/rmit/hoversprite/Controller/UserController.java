@@ -10,19 +10,15 @@ import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
-import rmit.hoversprite.Services.RegisterService.RegisterService;
-import rmit.hoversprite.Services.UserService.UserService;
+import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
 import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") // Allow requests from this origin
 //@CrossOrigin(origins = "http://127.0.0.1:5501")
 public class UserController {
-
-    @Autowired
-    private RegisterService registerService;
 
     @Autowired
     private UserService userService;
@@ -30,32 +26,42 @@ public class UserController {
     @Autowired
     private Utils utilClass;
 
+    private ResponseEntity<?> handleFarmerLoginRequest( User user)
+    {
+        Farmer farmer = new Farmer();
+        farmer.setUser(user);
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
+        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
+
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        } else {
+            return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+        }
+    }
+
+    private ResponseEntity<?> handleReceptionistLoginRequest( User user)
+    {
+        Receptionist receptionist = new Receptionist();
+        receptionist.setUser(user);
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
+        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
+
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        } else {
+            return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+        }
+    }
     
-     @PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type) {
         if ("farmer".equals(type)) {
-            Farmer farmer = new Farmer();
-            farmer.setUser(user);
-            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
-            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
-
-            if (userDTO != null) {
-                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
-            } else {
-                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
-            }
-        } else if("receptionist".equals(type))
+            return handleFarmerLoginRequest(user);
+        }
+        if("receptionist".equals(type))
         {
-            Receptionist receptionist = new Receptionist();
-            receptionist.setUser(user);
-            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
-            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
-
-            if (userDTO != null) {
-                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
-            } else {
-                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
-            }
+            return handleReceptionistLoginRequest(user);
         }
 
         // Return a BadRequest if the type parameter is incorrect or not provided
@@ -68,12 +74,12 @@ public class UserController {
         {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
-            return new DTOConverter().convertUserDataToObject(registerService.register(farmer)); 
+            return new DTOConverter().convertUserDataToObject(userService.register(farmer)); 
         } else if(type.equals("receptionist"))
         {
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
-            return new DTOConverter().convertUserDataToObject(registerService.register(receptionist));
+            return new DTOConverter().convertUserDataToObject(userService.register(receptionist));
         }
         return null;
     }
