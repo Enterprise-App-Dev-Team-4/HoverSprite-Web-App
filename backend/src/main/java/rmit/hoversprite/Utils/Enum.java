@@ -7,9 +7,6 @@ public class Enum {
         CEREALS,
         FRUITS,
         VEGETABLES,
-        OILSEEDS,
-        LEGUMES,
-        TUBERS
     }
 
     public enum OrderStatus
