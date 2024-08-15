@@ -21,16 +21,10 @@ public class Enum {
 
     public enum ServiceName
     {
-        Rantizo,
-        DroneDeploy,
-        AgriSpray,
-        DJIAgriculture,
-        XAG,
-        AmericanRobotics,
-        PrecisionHawk,
-        DroneAG,
-        Hylio,
-        AirMap
+        UrbanSpraying,
+        IndustrialSpraying,
+        EnvironmentalSpraying,
+        SafetySpraying
     }
 
     public enum ServiceType
