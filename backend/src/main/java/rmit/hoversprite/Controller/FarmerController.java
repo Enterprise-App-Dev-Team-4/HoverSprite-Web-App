@@ -1,6 +1,7 @@
 package rmit.hoversprite.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,9 +39,43 @@ public class FarmerController {
     }
 
     @GetMapping("service/all")
-    public List<SprayServices> getAllServices()
+    public List<SprayServices> getAllServices(
+        @RequestParam(required = false) String searchTerm,
+        @RequestParam(required = false) String cropType,
+        @RequestParam(required = false) String serviceType,
+        @RequestParam(required = false, defaultValue = "serviceName") String sortBy,
+        @RequestParam(required = false, defaultValue = "asc") String sortOrder
+    )
     {
-        return sprayServices.listAllSprayServices();
+        // Fetch all services initially
+        List<SprayServices> services = sprayServices.listAllSprayServices();
+
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            System.out.println(searchTerm);
+            services = sprayServices.filterBySearch(searchTerm);
+        }
+        
+        if (cropType != null && !cropType.isEmpty()) {
+            services = sprayServices.filterByCropType(cropType);
+        }
+
+        if (serviceType != null && !serviceType.isEmpty()) {
+            services = sprayServices.filterByServiceType(serviceType);
+        }
+
+        // Sort services (assuming sorting by service name or other criteria)
+        services = services.stream()
+            .sorted((s1, s2) -> {
+                int comparison = 0;
+                if ("asc".equalsIgnoreCase(sortOrder)) {
+                    comparison = s1.getServiceName().compareTo(s2.getServiceName());
+                } else if ("desc".equalsIgnoreCase(sortOrder)) {
+                    comparison = s2.getServiceName().compareTo(s1.getServiceName());
+                }
+                return comparison;
+            })
+            .collect(Collectors.toList());
+            return services;
     }
 
     

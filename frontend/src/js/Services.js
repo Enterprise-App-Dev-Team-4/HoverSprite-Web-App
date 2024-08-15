@@ -1,4 +1,5 @@
 const serviceAPI = 'http://localhost:8080/service/all';
+let allServices = []; // Store the fetched services globally for filtering
 
 function displayServices(services) {
     const container = document.querySelector('.services-scroll-container .container');
@@ -29,43 +30,41 @@ function displayServices(services) {
     });
 }
 
-function filterServices(services) {
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    const cropTypeSelect = document.getElementById('cropTypeSelect').value;
-    const serviceTypeSelect = document.getElementById('serviceTypeSelect').value;
+function fetchAndDisplayServices() {
+    const searchInput = document.getElementById('searchInput').value.toUpperCase(); // Convert to uppercase for enum matching
+    const cropTypeSelect = document.getElementById('cropTypeSelect').value.toUpperCase(); // Convert to uppercase for enum matching
+    const serviceTypeSelect = document.getElementById('serviceTypeSelect').value.toUpperCase(); // Convert to uppercase for enum matching
 
-    const filteredServices = services.filter(service => {
-        const matchesSearch = service.serviceName.toLowerCase().includes(searchInput);
-        const matchesCropType = cropTypeSelect ? service.cropType === cropTypeSelect : true;
-        const matchesServiceType = serviceTypeSelect ? service.serviceType === serviceTypeSelect : true;
+    console.log(searchInput);
+    const queryString = `searchTerm=${encodeURIComponent(searchInput)}&cropType=${encodeURIComponent(cropTypeSelect)}&serviceType=${encodeURIComponent(serviceTypeSelect)}`;
 
-        return matchesSearch && matchesCropType && matchesServiceType;
-    });
-
-    displayServices(filteredServices);
+    fetch(`${serviceAPI}?${queryString}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            allServices = data; // Store the fetched services for later filtering
+            displayServices(allServices); // Initially display all services
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
 
 function getAllService() {
     document.addEventListener('DOMContentLoaded', function() {
-        fetch(serviceAPI)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Display all services initially
-                displayServices(data);
+        // Fetch and display services initially
+        fetchAndDisplayServices();
 
-                // Add event listeners for filtering
-                document.getElementById('searchInput').addEventListener('input', () => filterServices(data));
-                document.getElementById('cropTypeSelect').addEventListener('change', () => filterServices(data));
-                document.getElementById('serviceTypeSelect').addEventListener('change', () => filterServices(data));
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+        // Add event listener for the search button
+        document.getElementById('searchButton').addEventListener('click', fetchAndDisplayServices);
+
+        // Add event listeners for filtering and sorting
+        document.getElementById('cropTypeSelect').addEventListener('change', fetchAndDisplayServices);
+        document.getElementById('serviceTypeSelect').addEventListener('change', fetchAndDisplayServices);
     });
 }
 
