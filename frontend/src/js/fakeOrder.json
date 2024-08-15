@@ -239,6 +239,14 @@
       "cropType": "Cereal",
       "area": 8,
       "cost": 240000
+    },
+    {
+      "id": 3,
+      "status": "in_progress",
+      "date": "2024-08-13",
+      "cropType": "Cereal",
+      "area": 8,
+      "cost": 240000
     }
   ]
 }

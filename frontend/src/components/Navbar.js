@@ -1,18 +1,16 @@
 // JavaScript to add 'active' class on click
-function activeClick()
-{
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
+function activeClick() {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
     });
+  });
 }
 
-function returnNavBar()
-{
-    console.log('hello navbar');
-    return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
+function returnNavBar() {
+  console.log('hello navbar');
+  return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="../../../public/HoverSpriteLogo.png" style="height:40px;" id="logo-img"> HoverSprite
@@ -26,7 +24,7 @@ function returnNavBar()
         <a class="nav-link" href="/about-us">About</a>
         <a class="nav-link" href="#">Services</a>
         <a class="nav-link" href="http://localhost:3000/booking">Booking</a>
-        <a class="nav-link" href="#">Orders</a>
+        <a class="nav-link" href="/order-list">Orders</a>
       </div>
       <div class="profile-badge ms-auto">
         <img src="../../../public/user-avatar.png">
