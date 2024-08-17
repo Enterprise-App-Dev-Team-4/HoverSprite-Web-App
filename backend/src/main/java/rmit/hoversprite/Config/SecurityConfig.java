@@ -28,8 +28,13 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .permitAll()
             ).sessionManagement(sessionManagement -> sessionManagement
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Create sessions when needed
-        ); // Custom filter to enforce HttpOnly and Secure flags;
+                .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+                .maximumSessions(1)
+            )
+            .rememberMe(rememberMe -> rememberMe.disable())  // Disable remember-me to ensure session is cookie-based
+            .sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            ); // Custom filter to enforce HttpOnly and Secure flags;
 
         return http.build();
     }

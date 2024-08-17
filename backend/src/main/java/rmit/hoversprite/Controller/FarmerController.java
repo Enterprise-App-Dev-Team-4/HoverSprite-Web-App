@@ -64,17 +64,17 @@ public class FarmerController {
         }
 
         // Sort services (assuming sorting by service name or other criteria)
-        services = services.stream()
-            .sorted((s1, s2) -> {
-                int comparison = 0;
-                if ("asc".equalsIgnoreCase(sortOrder)) {
-                    comparison = s1.getServiceName().compareTo(s2.getServiceName());
-                } else if ("desc".equalsIgnoreCase(sortOrder)) {
-                    comparison = s2.getServiceName().compareTo(s1.getServiceName());
-                }
-                return comparison;
-            })
-            .collect(Collectors.toList());
+        // services = services.stream()
+        //     .sorted((s1, s2) -> {
+        //         int comparison = 0;
+        //         if ("asc".equalsIgnoreCase(sortOrder)) {
+        //             comparison = s1.getServiceName().compareTo(s2.getServiceName());
+        //         } else if ("desc".equalsIgnoreCase(sortOrder)) {
+        //             comparison = s2.getServiceName().compareTo(s1.getServiceName());
+        //         }
+        //         return comparison;
+        //     })
+        //     .collect(Collectors.toList());
             return services;
     }
 

@@ -1,6 +1,9 @@
 package rmit.hoversprite.Model.User;
 
 import jakarta.persistence.MappedSuperclass;
+import rmit.hoversprite.Utils.Enum.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
 @MappedSuperclass
@@ -16,12 +19,15 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String homeAddress;
+    
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // No-argument constructor
     public User() {}
 
     // Parameterized constructor
-    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName) {
+    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName, Role role) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -30,6 +36,7 @@ public class User {
         this.homeAddress = homeAddress;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -39,6 +46,16 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setRole(Role role)
+    {
+        this.role = role;
+    }
+
+    public Role getRole()
+    {
+        return this.role;
     }
 
     public String getPassword() {

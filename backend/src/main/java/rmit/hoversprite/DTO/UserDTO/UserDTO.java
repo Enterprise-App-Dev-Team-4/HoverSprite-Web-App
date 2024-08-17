@@ -1,18 +1,24 @@
 package rmit.hoversprite.DTO.UserDTO;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import rmit.hoversprite.Utils.Enum.Role;
+
 public class UserDTO {
     private String id;
-    private String username;
     private String email;
     private String fullName;
     private String phoneNumber;
     private String homeAddress;
     private String lastName;
     private String firstName;
+    
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public UserDTO() {}
 
-    public UserDTO(String id, String email, String fullName, String firstName, String lastName, String phoneNumber, String homeAddress) {
+    public UserDTO(String id, String email, String fullName, String firstName, String lastName, String phoneNumber, String homeAddress, Role role) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -20,6 +26,7 @@ public class UserDTO {
         this.homeAddress = homeAddress;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -29,6 +36,16 @@ public class UserDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setRole(Role role)
+    {
+        this.role = role;
+    }
+
+    public Role getRole()
+    {
+        return this.role;
     }
 
     public void setFirstName(String firstName)

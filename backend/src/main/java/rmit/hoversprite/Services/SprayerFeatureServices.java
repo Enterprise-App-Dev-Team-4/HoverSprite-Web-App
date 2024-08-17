@@ -39,6 +39,7 @@ public class SprayerFeatureServices {
         List<SprayServices> services =listAllSprayServices();
         try {
             ServiceName searchEnum = ServiceName.valueOf(searchTerm.toUpperCase());
+            System.out.println(searchEnum);
             services = services.stream()
                 .filter(service -> service.getServiceName() == searchEnum)
                 .collect(Collectors.toList());

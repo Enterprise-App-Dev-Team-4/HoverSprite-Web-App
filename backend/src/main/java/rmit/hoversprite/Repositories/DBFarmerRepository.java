@@ -8,5 +8,7 @@ public interface DBFarmerRepository extends JpaRepository<Farmer, String> {
     public Farmer findByEmail(String email);
     
     public Farmer findFarmerById(String id);
+
+    public Farmer findByPhoneNumber(String phoneNumber);
 }   
 

@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Utils.Enum.Role;
 
 @Entity
 @Table(name = "farmer", schema = "farmer_detail")
@@ -25,8 +26,8 @@ public class Farmer extends User {
     }
 
     public Farmer(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName,
-                    List<Farm> farms, List<Order> serviceOrders) {
-        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName);
+                    List<Farm> farms, List<Order> serviceOrders, Role role) {
+        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role);
         this.farms = farms;
         this.serviceOrders = serviceOrders;
     }

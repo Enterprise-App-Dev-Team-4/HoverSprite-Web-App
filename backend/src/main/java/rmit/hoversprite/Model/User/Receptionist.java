@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Utils.Enum.Role;
 
 @Entity
 @Table(name = "receptionist", schema = "farmer_detail")
@@ -20,8 +21,8 @@ public class Receptionist extends User {
         super();
     }
 
-    public Receptionist(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName, List<Order> receivedOrders) {
-        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName);
+    public Receptionist(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName, List<Order> receivedOrders, Role role) {
+        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role);
         this.receivedOrders = receivedOrders;
     }
 
