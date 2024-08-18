@@ -23,9 +23,11 @@ public class UserService {
         return null;
     }
 
-    public User login(User user) {
+    public User login(User user, String token) {
         User foundUser = null;
-        
+        User userToken = signUpService.updateTokenToUser(token, user);
+        if(userToken == null) return null;
+
         if (user instanceof Farmer) {
             foundUser = signUpService.loginFarmer((Farmer) user);
         } else if (user instanceof Receptionist) {

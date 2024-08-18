@@ -35,29 +35,35 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private ResponseEntity<?> handleFarmerLoginRequest( User user)
-    {
+    private ResponseEntity<?> handleFarmerLoginRequest(User user) {
         Farmer farmer = new Farmer();
         farmer.setUser(user);
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
-        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
 
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(farmer.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer, token));
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
         }
     }
 
-    private ResponseEntity<?> handleReceptionistLoginRequest( User user)
-    {
+    private ResponseEntity<?> handleReceptionistLoginRequest(User user) {
         Receptionist receptionist = new Receptionist();
         receptionist.setUser(user);
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
-        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
 
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(receptionist.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist, token));
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
         }
@@ -95,20 +101,5 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("This user has been registered before");
     }
-
-    @PostMapping("generateToken")
-    public String authenticateAndGetToken(@RequestBody User authRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            String token = jwtUtil.generateToken(authRequest.getEmail());
-            System.out.print("Token: ");
-            System.out.println(token);
-            return token;
-        } else {
-            throw new UsernameNotFoundException("Invalid user request!");
-        }
-    }
-
+    
 }

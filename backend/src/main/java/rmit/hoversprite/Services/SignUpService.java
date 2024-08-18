@@ -35,4 +35,9 @@ public class SignUpService {
     {
         return authenticationResponse.authenticateReceptionist(receptionist);
     }
+
+    public User updateTokenToUser(String token, User user)
+    {
+        return authenticationResponse.saveTokenToDataBase(token, user);
+    }
 }
