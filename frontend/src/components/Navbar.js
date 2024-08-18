@@ -1,12 +1,11 @@
 // JavaScript to add 'active' class on click
-function activeClick()
-{
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
+function activeClick() {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
     });
+  });
 }
 
 function returnNavBar(user_name)
@@ -26,7 +25,7 @@ function returnNavBar(user_name)
         <a class="nav-link" href="/about-us">About</a>
         <a class="nav-link" href="/service">Services</a>
         <a class="nav-link" href="/booking">Booking</a>
-        <a class="nav-link" href="#">Orders</a>
+        <a class="nav-link" href="/order-list">Orders</a>
       </div>
       <div class="profile-badge ms-auto">
         <img src="../../../public/user-avatar.png">
