@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
+import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Utils.Utils;
 
 @Component
@@ -20,6 +21,9 @@ public class FarmerService {
 
     @Autowired
     Utils utilsClass;
+
+    @Autowired
+    AuthenticationResponse authenticationResponse;
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
@@ -40,4 +44,10 @@ public class FarmerService {
             throw new IllegalArgumentException("Farmer with ID " + userId + " not found");
         }
     }
+
+    public Farmer getFarmerData()
+    {
+        return authenticationResponse.getFarmerByToken();
+    }
+
 }

@@ -34,7 +34,7 @@ function submitForm()
         .catch((error) => {
             // Handle error
             console.error('Error:', error);
-            alert('An error occurred during registration.');
+            alert(error);
         });
         console.log(data);
     });

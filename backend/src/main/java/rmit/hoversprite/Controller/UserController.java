@@ -2,6 +2,10 @@ package rmit.hoversprite.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -13,6 +17,8 @@ import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
 import rmit.hoversprite.Utils.Utils;
+import rmit.hoversprite.Utils.Enum.Role;
+import rmit.hoversprite.Utils.JwtUtil;
 
 @RestController
 @RequestMapping("/")
@@ -24,33 +30,42 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private Utils utilClass;
+    private AuthenticationManager authenticationManager;
 
-    private ResponseEntity<?> handleFarmerLoginRequest( User user)
-    {
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private ResponseEntity<?> handleFarmerLoginRequest(User user) {
         Farmer farmer = new Farmer();
         farmer.setUser(user);
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
-        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
 
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(farmer.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer, token));
+            return ResponseEntity.ok(userDTO);
         } else {
-            return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
         }
     }
 
-    private ResponseEntity<?> handleReceptionistLoginRequest( User user)
-    {
+    private ResponseEntity<?> handleReceptionistLoginRequest(User user) {
         Receptionist receptionist = new Receptionist();
         receptionist.setUser(user);
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
-        // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
 
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);  // Return 200 OK with body
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(receptionist.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist, token));
+            return ResponseEntity.ok(userDTO);
         } else {
-            return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
         }
     }
     
@@ -65,42 +80,26 @@ public class UserController {
         }
 
         // Return a BadRequest if the type parameter is incorrect or not provided
-        return ResponseEntity.badRequest().body("Invalid type parameter. Expected 'farmer'.");
+        return ResponseEntity.badRequest().body("Invalid type parameter");
     }
 
     @PostMapping("register")
-    public UserDTO saveUserToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
+    public ResponseEntity<?>saveUserToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
         if(type.equals("farmer"))
         {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
-            return new DTOConverter().convertUserDataToObject(userService.register(farmer)); 
+            farmer.setRole(Role.Farmer);
+            UserDTO farmerDTO =  new DTOConverter().convertUserDataToObject(userService.register(farmer));
+            return ResponseEntity.ok(farmerDTO); 
         } else if(type.equals("receptionist"))
         {
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
-            return new DTOConverter().convertUserDataToObject(userService.register(receptionist));
+            UserDTO receptionistDTO =  new DTOConverter().convertUserDataToObject(userService.register(receptionist));
+            return ResponseEntity.ok(receptionistDTO); 
         }
-        return null;
+        return ResponseEntity.badRequest().body("This user has been registered before");
     }
-
-    @GetMapping("")
-    public UserDTO userProfilePage(@RequestParam String id)
-    {
-        User user = utilClass.getUserTypeById(id);
-        if(user == null) return null;
-        if(user instanceof Farmer)
-        {
-            Farmer farmer = new Farmer();
-            farmer.setId(id);
-            return new DTOConverter().convertUserDataToObject(userService.getUserData(farmer)); 
-        }
-        return null;
-    }
-
-    @PutMapping("") // when user are in the profile view, user click edit, a dialog pop up for user to edit
-    public UserDTO usereditProfile(@RequestParam String id, @RequestParam String type)
-    {
-        return null;
-    }
+    
 }

@@ -36,4 +36,10 @@ public class Enum {
         AppretienceSprayer,
         AdeptSprayer
     }
+
+    public enum Role
+    {
+        Farmer,
+        Receptionist
+    }
 }

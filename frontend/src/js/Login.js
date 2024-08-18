@@ -20,7 +20,6 @@ function fetchRequestServer(user, action) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(user),
-        credentials: 'include'  // Include credentials (like session cookies) in requests
     })
     .then(response => {
         if (response.ok) {
@@ -31,9 +30,10 @@ function fetchRequestServer(user, action) {
     })
     .then(data => {
         // Handle success
-        console.log('Success:', data);
+        console.log('Success:', data.token);
+        localStorage.setItem('jwtToken', data.token); // Save the token in localStorage
         alert('Login successful!');
-        window.location.href = '/about-us';  // Redirect to home page or dashboard
+        window.location.href = '/profile';  // Redirect to home page or dashboard
     })
     .catch((error) => {
         // Handle error
@@ -49,12 +49,12 @@ function sendLoginDataToServer() {
 
         // Here we ensure 'form' is defined as the form that triggered the submit event
         var form = event.target; 
-
+        var phoneNumberForm = form.email.value;
         var client = {
             username: null, // Assuming you set this somewhere else or it's not needed
             password: form.password.value,
             email: form.email.value,
-            phoneNumber: null, // Assuming you set this somewhere else or it's not needed
+            phoneNumber: phoneNumberForm, // Assuming you set this somewhere else or it's not needed
             fullName: null,  // Assuming you set this somewhere else or it's not needed
             homeAddress: null // Assuming you set this somewhere else or it's not needed
         };
