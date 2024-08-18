@@ -27,6 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private AppUserDetailsService userDetailService;
 
+    private String browserToken;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Retrieve the Authorization header
@@ -37,6 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Check if the header starts with "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7); // Extract token
+            setBrowserToken(token);
             email = jwtUtil.extractEmail(token); // Extract email from token
         }
 
@@ -58,5 +61,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Continue the filter chain
         filterChain.doFilter(request, response);
+    }
+
+    public String getBrowserToken()
+    {
+        return this.browserToken;
+    }
+
+    public void setBrowserToken(String browserToken)
+    {
+        this.browserToken = browserToken;
     }
 }

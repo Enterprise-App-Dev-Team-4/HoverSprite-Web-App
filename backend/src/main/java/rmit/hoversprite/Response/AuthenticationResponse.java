@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import rmit.hoversprite.Config.JwtAuthFilter;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
@@ -21,6 +22,9 @@ public class AuthenticationResponse {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtAuthFilter authFilter;
 
     public Farmer authenticateFarmer(User user) {
         Farmer farmer = farmerRepository.findByEmail(user.getEmail());
@@ -69,5 +73,12 @@ public class AuthenticationResponse {
             return (User) receptionist;
         }
         return null;
+    }
+
+
+    public Farmer getFarmerByToken()
+    {
+        String token = authFilter.getBrowserToken();
+        return farmerRepository.findByToken(token);
     }
 }

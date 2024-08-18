@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
+import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Services.FarmService;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.SprayerFeatureServices;
@@ -79,10 +83,12 @@ public class FarmerController {
             return services;
     }
 
-    @GetMapping("farmerProfile")
+    @GetMapping("userName")
     @PreAuthorize("hasAuthority('Farmer')")
-    public String userProfile() {
-        return "Welcome to User Profile";
+    public ResponseEntity<?> userName() 
+    {
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.getFarmerData());
+        return ResponseEntity.ok(userDTO);
     }
     
 }

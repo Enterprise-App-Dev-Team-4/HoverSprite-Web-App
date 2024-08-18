@@ -9,7 +9,7 @@ function activeClick()
     });
 }
 
-function returnNavBar()
+function returnNavBar(user_name)
 {
     console.log('hello navbar');
     return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
@@ -30,7 +30,7 @@ function returnNavBar()
       </div>
       <div class="profile-badge ms-auto">
         <img src="../../../public/user-avatar.png">
-        <span>John Smith</span>
+        <span>${user_name}</span>
       </div>
     </div>
   </div>
@@ -67,4 +67,4 @@ function returnNavBar()
 
 
 activeClick();
-returnNavBar();
+returnNavBar(user_name);

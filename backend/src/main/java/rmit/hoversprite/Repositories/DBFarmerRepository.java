@@ -10,5 +10,7 @@ public interface DBFarmerRepository extends JpaRepository<Farmer, String> {
     public Farmer findFarmerById(String id);
 
     public Farmer findByPhoneNumber(String phoneNumber);
+
+    public Farmer findByToken(String token);
 }   
 

@@ -20,7 +20,6 @@ function fetchRequestServer(user, action) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(user),
-        credentials: 'include'  // Include credentials (like session cookies) in requests
     })
     .then(response => {
         if (response.ok) {
@@ -31,7 +30,8 @@ function fetchRequestServer(user, action) {
     })
     .then(data => {
         // Handle success
-        console.log('Success:', data);
+        console.log('Success:', data.token);
+        localStorage.setItem('jwtToken', data.token); // Save the token in localStorage
         alert('Login successful!');
         window.location.href = '/about-us';  // Redirect to home page or dashboard
     })
