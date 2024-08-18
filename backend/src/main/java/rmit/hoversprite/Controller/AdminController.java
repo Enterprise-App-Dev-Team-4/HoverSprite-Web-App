@@ -20,6 +20,6 @@ public class AdminController {
     @PostMapping("services/add")
     public SprayServices addSprayServices(@RequestBody SprayServices sprayServices)
     {
-        return sprayerService.createSerSprayServices(sprayServices);
+        return sprayerService.createSprayServices(sprayServices);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Repositories.DBServiceRepository;
+import rmit.hoversprite.Response.CheckTimeSlotService;
 import rmit.hoversprite.Utils.Enum.CropType;
 import rmit.hoversprite.Utils.Enum.ServiceName;
 import rmit.hoversprite.Utils.Enum.ServiceType;
@@ -19,14 +20,21 @@ public class SprayerFeatureServices {
     DBServiceRepository serviceRepository;
 
     @Autowired
+    CheckTimeSlotService checkTimeSlotService;
+
+    @Autowired
     Utils utilsClass;
 
-    public SprayServices createSerSprayServices(SprayServices sprayServices)
+    public SprayServices createSprayServices(SprayServices sprayServices)
     {
         // Generate service id and assign it
         String generatedServiceId = utilsClass.generateSprayServiceId(serviceRepository.findAll());
         sprayServices.setId(generatedServiceId);
-        return serviceRepository.save(sprayServices);
+
+        // auto fulfill the timeslot at the beginning
+        SprayServices savedSprayServices = checkTimeSlotService.fullFillTimeSlot(sprayServices);
+
+        return serviceRepository.save(savedSprayServices);
     }
     
     public List<SprayServices> listAllSprayServices()
