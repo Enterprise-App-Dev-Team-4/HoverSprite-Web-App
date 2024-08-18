@@ -24,8 +24,8 @@ function returnNavBar(user_name)
       <div class="navbar-nav">
         <a class="nav-link" href="#">Home</a>
         <a class="nav-link" href="/about-us">About</a>
-        <a class="nav-link" href="#">Services</a>
-        <a class="nav-link" href="http://localhost:3000/booking">Booking</a>
+        <a class="nav-link" href="/service">Services</a>
+        <a class="nav-link" href="/booking">Booking</a>
         <a class="nav-link" href="#">Orders</a>
       </div>
       <div class="profile-badge ms-auto">

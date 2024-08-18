@@ -33,7 +33,7 @@ function fetchRequestServer(user, action) {
         console.log('Success:', data.token);
         localStorage.setItem('jwtToken', data.token); // Save the token in localStorage
         alert('Login successful!');
-        window.location.href = '/about-us';  // Redirect to home page or dashboard
+        window.location.href = '/profile';  // Redirect to home page or dashboard
     })
     .catch((error) => {
         // Handle error

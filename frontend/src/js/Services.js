@@ -1,4 +1,5 @@
 const serviceAPI = 'http://localhost:8080/service/all';
+const navBarURL = 'http://localhost:8080/userName';
 let allServices = []; // Store the fetched services globally for filtering
 
 function displayServices(services) {
@@ -68,12 +69,18 @@ function getAllService() {
     });
 }
 
-function loadNavBar() {
-    document.addEventListener("DOMContentLoaded", function() {
-        var content = document.getElementById("navbar-container");
-        content.innerHTML = returnNavBar();
-        activeClick();
-    });
+function loadNavBar()
+{
+  document.addEventListener("DOMContentLoaded", function() {
+    // Fetch the Navbar component
+    var content = document.getElementById("navbar-container");
+    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data.email))
+    .catch(error => console.error(error));
+    // content.innerHTML = returnNavBar(userData.email);
+    // content.innerHTML = returnNavBarStyle();
+    activeClick();
+  });
+  
 }
 
 function loadFooter() {
