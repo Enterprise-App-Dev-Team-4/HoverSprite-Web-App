@@ -21,8 +21,9 @@ public class Receptionist extends User {
         super();
     }
 
-    public Receptionist(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName, List<Order> receivedOrders, Role role) {
-        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role);
+    public Receptionist(String id, String password, String email, String fullName, String phoneNumber, String homeAddress,
+     String firstName, String lastName, List<Order> receivedOrders, Role role, String token) {
+        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role,token);
         this.receivedOrders = receivedOrders;
     }
 

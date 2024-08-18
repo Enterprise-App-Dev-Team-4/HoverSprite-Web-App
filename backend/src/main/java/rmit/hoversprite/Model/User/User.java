@@ -19,6 +19,10 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String homeAddress;
+
+    // Add a field for storing the JWT token
+    private String token;
+
     
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -27,7 +31,8 @@ public class User {
     public User() {}
 
     // Parameterized constructor
-    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName, Role role) {
+    public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, 
+        String firstName, String lastName, Role role, String token) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -37,6 +42,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.token = token;
     }
 
     // Getters and Setters
@@ -56,6 +62,14 @@ public class User {
     public Role getRole()
     {
         return this.role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getPassword() {
@@ -107,6 +121,7 @@ public class User {
         this.lastName = user.lastName;
         this.phoneNumber = user.phoneNumber;
         this.homeAddress = user.homeAddress;
+        this.token = user.token;
     }
 
     public void setFirstName(String firstName)

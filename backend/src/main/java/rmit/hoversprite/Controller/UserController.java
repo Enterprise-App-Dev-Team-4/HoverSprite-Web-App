@@ -2,6 +2,10 @@ package rmit.hoversprite.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -14,6 +18,7 @@ import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
 import rmit.hoversprite.Utils.Utils;
 import rmit.hoversprite.Utils.Enum.Role;
+import rmit.hoversprite.Utils.JwtUtil;
 
 @RestController
 @RequestMapping("/")
@@ -25,7 +30,10 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private Utils utilClass;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private ResponseEntity<?> handleFarmerLoginRequest( User user)
     {
@@ -86,6 +94,21 @@ public class UserController {
             return ResponseEntity.ok(receptionistDTO); 
         }
         return ResponseEntity.badRequest().body("This user has been registered before");
+    }
+
+    @PostMapping("generateToken")
+    public String authenticateAndGetToken(@RequestBody User authRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+        );
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(authRequest.getEmail());
+            System.out.print("Token: ");
+            System.out.println(token);
+            return token;
+        } else {
+            throw new UsernameNotFoundException("Invalid user request!");
+        }
     }
 
 }

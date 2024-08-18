@@ -25,7 +25,7 @@ public class UserService {
 
     public User login(User user) {
         User foundUser = null;
-
+        
         if (user instanceof Farmer) {
             foundUser = signUpService.loginFarmer((Farmer) user);
         } else if (user instanceof Receptionist) {
