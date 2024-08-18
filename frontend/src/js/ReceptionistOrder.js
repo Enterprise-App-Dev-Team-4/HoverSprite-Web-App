@@ -31,6 +31,7 @@ function createOrderCard(order) {
                     </div>
                     <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                         <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
+                        <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
                         <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                 </div>
                 </div>
@@ -60,6 +61,7 @@ function createOrderCard(order) {
                             </div>
                             <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                                 <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
+                                <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
                                 <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                             </div>
                         </div>
@@ -193,6 +195,49 @@ backToTopBtn.addEventListener('click', () => {
     document.documentElement.scrollTop = 0;
 });
 
+function openStatusModal(orderId) {
+    document.getElementById('statusModalOrderId').value = orderId;
+    document.getElementById('statusModal').style.display = 'block';
+}
+
+function changeOrderStatus() {
+    const orderId = document.getElementById('statusModalOrderId').value;
+    const newStatus = document.getElementById('statusSelect').value;
+
+    // Update the status in the order data (this would typically be an API call)
+    const order = orders.find(o => o.id == orderId);
+    if (order) {
+        order.status = newStatus;
+        // Re-render the order cards to reflect the new status
+        renderOrders();
+
+        // Send the appropriate emails based on the new status
+        sendStatusChangeEmail(orderId, newStatus);
+    }
+
+    document.getElementById('statusModal').style.display = 'none';
+}
+
+function sendStatusChangeEmail(orderId, status) {
+    switch (status) {
+        case 'pending':
+            console.log(`Email: Order #${orderId} is now pending.`);
+            break;
+        case 'cancelled':
+            console.log(`Email: Order #${orderId} has been cancelled.`);
+            break;
+        case 'confirmed':
+            console.log(`Email: Order #${orderId} has been confirmed.`);
+            break;
+        case 'assigned':
+            console.log(`Email: Order #${orderId} has been assigned to sprayer(s).`);
+            break;
+        default:
+            console.log(`Email: Status of order #${orderId} has been changed to ${status}.`);
+            break;
+    }
+}
+
 
 // Function to open the assign sprayer modal
 function openAssignSprayerModal(orderId) {
@@ -225,8 +270,6 @@ function assignSprayer() {
 
     // Close the modal
     document.getElementById('assignSprayerModal').style.display = 'none';
-
-
 }
 
 

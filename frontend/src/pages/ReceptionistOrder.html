@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 
     <!-- Css -->
-    <link rel="stylesheet" href="../css/UserOderList.css">
+    <link rel="stylesheet" href="../css/ReceptionistOrder.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 
     <section class="hero animated-bg mb-5">
         <div class="container text-center text-white py-5">
-            <h1 class="display-4 mb-4">Order Tracking</h1>
+            <h1 class="display-4 mb-4">Mange Orders</h1>
             <p class="lead">Monitor your spray orders with ease</p>
         </div>
     </section>
@@ -92,6 +92,32 @@
     <button id="backToTop" class="btn" title="Back to Top">
         <i class="bi bi-arrow-up"></i>
     </button>
+
+    <!-- Status Change Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change Order Status</h5>
+                    <button type="button" class="close" onclick="document.getElementById('statusModal').style.display='none'">&times;</button>
+                </div>
+                <div id="statusModalBody" class="modal-body">
+                    <label for="statusSelect">Select New Status:</label>
+                    <select id="statusSelect" class="form-select">
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="assigned">Assigned</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="statusModalOrderId" value="">
+                    <button type="button" class="btn btn-primary" onclick="changeOrderStatus()">Change Status</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('statusModal').style.display='none'">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Assign Sprayer Modal -->
     <div id="assignSprayerModal" class="modal">

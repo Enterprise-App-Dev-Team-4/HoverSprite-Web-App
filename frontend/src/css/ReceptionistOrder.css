@@ -90,6 +90,27 @@ body {
     color: white;
 }
 
+/* Ensure consistent button sizing */
+.card-footer .btn {
+    flex: 1;
+    margin-right: 5px;
+    white-space: nowrap;
+    padding: 5px 10px;
+    font-size: 14px;
+    width: 32%;
+    text-align: center;
+}
+
+.card-footer .btn:last-child {
+    margin-right: 0; /* Remove margin for the last button */
+}
+
+/* Adjust width and alignment for both list and grid views */
+.grid-view .card-footer .btn, 
+.list-view .card-footer .btn {
+    width: 32%; 
+}
+
 /* Modal Styles */
 .modal {
     display: none; 
