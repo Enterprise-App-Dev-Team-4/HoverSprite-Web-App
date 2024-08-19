@@ -12,6 +12,7 @@ This project is developed by Team 4 for the [EEET2580] Enterprise Application De
 - **Member 2**: [Bui Sy Quang] (s3958668)
 - **Member 3**: [Dinh Gia Bao] (s3877923)
 - **Member 4**: [Dinh Ngoc Minh] (s3925113)
+- **Member 5**: [Tran Ngoc Minh] (s3911737)
 
 ## Project Features
 

@@ -7,9 +7,6 @@ public class Enum {
         CEREALS,
         FRUITS,
         VEGETABLES,
-        OILSEEDS,
-        LEGUMES,
-        TUBERS
     }
 
     public enum OrderStatus
@@ -21,16 +18,10 @@ public class Enum {
 
     public enum ServiceName
     {
-        Rantizo,
-        DroneDeploy,
-        AgriSpray,
-        DJIAgriculture,
-        XAG,
-        AmericanRobotics,
-        PrecisionHawk,
-        DroneAG,
-        Hylio,
-        AirMap
+        UrbanSpraying,
+        IndustrialSpraying,
+        EnvironmentalSpraying,
+        SafetySpraying
     }
 
     public enum ServiceType
@@ -44,5 +35,11 @@ public class Enum {
         ExpertSprayer,
         AppretienceSprayer,
         AdeptSprayer
+    }
+
+    public enum Role
+    {
+        Farmer,
+        Receptionist
     }
 }

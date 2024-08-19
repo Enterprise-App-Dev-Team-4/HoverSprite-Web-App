@@ -13,19 +13,34 @@ function parseUserRequestParam(parsedParam, object) {
     return actionURL;
 }
 
+function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiration date
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/;Secure;SameSite=Lax";
+}
+
 function fetchRequestServer(user, action) {
     fetch(action, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Login failed');
+        }
+    })
     .then(data => {
         // Handle success
-        console.log('Success:', data);
+        console.log('Success:', data.token);
+        setCookie('jwtToken', data.token, 7); // Save the token in a cookie for 7 days
         alert('Login successful!');
+        window.location.href = '/profile';  // Redirect to home page or dashboard
     })
     .catch((error) => {
         // Handle error
@@ -40,12 +55,12 @@ function sendLoginDataToServer() {
 
         // Here we ensure 'form' is defined as the form that triggered the submit event
         var form = event.target; 
-
+        var phoneNumberForm = form.email.value;
         var client = {
             username: null, // Assuming you set this somewhere else or it's not needed
             password: form.password.value,
             email: form.email.value,
-            phoneNumber: null, // Assuming you set this somewhere else or it's not needed
+            phoneNumber: phoneNumberForm, // Assuming you set this somewhere else or it's not needed
             fullName: null,  // Assuming you set this somewhere else or it's not needed
             homeAddress: null // Assuming you set this somewhere else or it's not needed
         };

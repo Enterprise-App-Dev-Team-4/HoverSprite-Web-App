@@ -11,6 +11,9 @@ const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
 const userOrderList = __dirname + '/src/pages/UserOrderList.html'
 const receptionistOrder = __dirname + '/src/pages/ReceptionistOrder.html'
+const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
+const landingPagePath = __dirname + '/src/pages/LandingPage.html'
+
 
 app.use(body_parser.urlencoded({ extended: true }));
 
@@ -29,6 +32,10 @@ app.use('/js', express.static('src/js'));
 
 // handle routing
 app.get('/', (req, res) => {
+    res.sendFile(landingPagePath);
+})
+
+app.get('/signup', (req, res) => {
     res.sendFile(SignupPath);
 })
 
@@ -59,6 +66,11 @@ app.get('/profile', (req, res) => {
 app.get('/order-list', (req, res) => {
     res.sendFile(userOrderList);
 })
+
+app.get('/order-detail/:id', (req, res) => {
+    res.sendFile(userOrderDetailPath);
+});
+
 
 app.get('/receptionist-order', (req, res) => {
     res.sendFile(receptionistOrder);

@@ -1,252 +1,240 @@
 {
   "orders": [
     {
-      "id": 123213121,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
+      "id": 1001,
       "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
       "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
+      "farmer": {
+        "name": "John Doe"
+      },
+      "sprayer": {
+        "name": "Jane Smith"
+      },
+      "farm": {
+        "area": 50,
+        "cropType": "Rice",
+        "location": "Field A23"
+      },
+      "sprayService": {
+        "name": "Pest Control",
+        "type": "Insecticide",
+        "timeSlot": "09:00 AM - 11:00 AM"
+      },
+      "cost": 1500000,
+      "feedback": {
+        "rating": 4.5,
+        "comment": "Great service, very professional!"
+      }
     },
     {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
+      "id": 1002,
       "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
+      "date": "2024-08-18",
+      "farmer": {
+        "name": "Alice Johnson"
+      },
+      "sprayer": {
+        "name": "Bob Williams"
+      },
+      "farm": {
+        "area": 75,
+        "cropType": "Corn",
+        "location": "Field B12"
+      },
+      "sprayService": {
+        "name": "Fertilizer Application",
+        "type": "Nutrient Spray",
+        "timeSlot": "02:00 PM - 04:00 PM"
+      },
+      "cost": 2250000,
+      "feedback": null
     },
     {
-      "id": 1,
+      "id": 1003,
+      "status": "confirmed",
+      "date": "2024-08-20",
+      "farmer": {
+        "name": "Emma Davis"
+      },
+      "sprayer": {
+        "name": "Michael Brown"
+      },
+      "farm": {
+        "area": 60,
+        "cropType": "Wheat",
+        "location": "Field C45"
+      },
+      "sprayService": {
+        "name": "Weed Control",
+        "type": "Herbicide",
+        "timeSlot": "10:00 AM - 12:00 PM"
+      },
+      "cost": 1800000,
+      "feedback": null
+    },
+    {
+      "id": 1004,
+      "status": "assigned",
+      "date": "2024-08-22",
+      "farmer": {
+        "name": "Oliver Wilson"
+      },
+      "sprayer": {
+        "name": "Sophia Lee"
+      },
+      "farm": {
+        "area": 40,
+        "cropType": "Soybeans",
+        "location": "Field D78"
+      },
+      "sprayService": {
+        "name": "Fungicide Treatment",
+        "type": "Fungicide",
+        "timeSlot": "01:00 PM - 03:00 PM"
+      },
+      "cost": 1200000,
+      "feedback": null
+    },
+    {
+      "id": 1005,
+      "status": "cancelled",
+      "date": "2024-08-25",
+      "farmer": {
+        "name": "Liam Taylor"
+      },
+      "sprayer": {
+        "name": "Ava Martin"
+      },
+      "farm": {
+        "area": 80,
+        "cropType": "Cotton",
+        "location": "Field E56"
+      },
+      "sprayService": {
+        "name": "Growth Regulator",
+        "type": "Plant Growth Regulator",
+        "timeSlot": "08:00 AM - 10:00 AM"
+      },
+      "cost": 2400000,
+      "feedback": null
+    },
+    {
+      "id": 1006,
       "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
+      "date": "2024-08-28",
+      "farmer": {
+        "name": "Noah Anderson"
+      },
+      "sprayer": {
+        "name": "Isabella White"
+      },
+      "farm": {
+        "area": 90,
+        "cropType": "Sugarcane",
+        "location": "Field F34"
+      },
+      "sprayService": {
+        "name": "Ripener Application",
+        "type": "Ripening Agent",
+        "timeSlot": "03:00 PM - 05:00 PM"
+      },
+      "cost": 2700000,
+      "feedback": null
     },
     {
-      "id": 2,
+      "id": 1007,
       "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
+      "date": "2024-08-30",
+      "farmer": {
+        "name": "James Clark"
+      },
+      "sprayer": {
+        "name": "Emily Harris"
+      },
+      "farm": {
+        "area": 30,
+        "cropType": "Coffee",
+        "location": "Field G90"
+      },
+      "sprayService": {
+        "name": "Foliar Fertilizer",
+        "type": "Micronutrient Spray",
+        "timeSlot": "07:00 AM - 09:00 AM"
+      },
+      "cost": 900000,
+      "feedback": {
+        "rating": 4.0,
+        "comment": "Good service, but arrived a bit late."
+      }
     },
     {
-      "id": 3,
+      "id": 1008,
       "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
+      "date": "2024-09-02",
+      "farmer": {
+        "name": "Charlotte Lewis"
+      },
+      "sprayer": {
+        "name": "Daniel Walker"
+      },
+      "farm": {
+        "area": 25,
+        "cropType": "Tea",
+        "location": "Field H67"
+      },
+      "sprayService": {
+        "name": "Pest Control",
+        "type": "Organic Pesticide",
+        "timeSlot": "11:00 AM - 01:00 PM"
+      },
+      "cost": 750000,
+      "feedback": null
     },
     {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
+      "id": 1009,
+      "status": "confirmed",
+      "date": "2024-09-05",
+      "farmer": {
+        "name": "Benjamin Moore"
+      },
+      "sprayer": {
+        "name": "Amelia King"
+      },
+      "farm": {
+        "area": 70,
+        "cropType": "Rubber",
+        "location": "Field I23"
+      },
+      "sprayService": {
+        "name": "Latex Stimulant",
+        "type": "Yield Enhancer",
+        "timeSlot": "06:00 AM - 08:00 AM"
+      },
+      "cost": 2100000,
+      "feedback": null
     },
     {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 1,
-      "status": "pending",
-      "date": "2024-08-15",
-      "cropType": "Fruit",
-      "area": 5,
-      "cost": 150000
-    },
-    {
-      "id": 2,
-      "status": "completed",
-      "date": "2024-08-14",
-      "cropType": "Vegetable",
-      "area": 3,
-      "cost": 90000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
-    },
-    {
-      "id": 3,
-      "status": "in_progress",
-      "date": "2024-08-13",
-      "cropType": "Cereal",
-      "area": 8,
-      "cost": 240000
+      "id": 1010,
+      "status": "assigned",
+      "date": "2024-09-08",
+      "farmer": {
+        "name": "Mia Robinson"
+      },
+      "sprayer": {
+        "name": "William Green"
+      },
+      "farm": {
+        "area": 55,
+        "cropType": "Coconut",
+        "location": "Field J45"
+      },
+      "sprayService": {
+        "name": "Nutrient Boost",
+        "type": "Foliar Fertilizer",
+        "timeSlot": "04:00 PM - 06:00 PM"
+      },
+      "cost": 1650000,
+      "feedback": null
     }
   ]
 }

@@ -1,0 +1,150 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+}
+
+.info-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 767.98px) {
+    .card-body .row>div {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.bi {
+    font-size: 1.2rem;
+    vertical-align: middle;
+}
+
+/* Increase font size for tablet and above */
+@media (min-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+    }
+
+    .btn {
+        font-size: 1rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 1rem;
+    }
+
+    .search-box input {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+    }
+}
+
+/* Further increase font size for larger screens */
+@media (min-width: 992px) {
+    body {
+        font-size: 20px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+    }
+
+    .card-text {
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 1.1rem;
+    }
+
+    .search-box input {
+        font-size: 1.1rem;
+    }
+
+    .badge {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-footer {
+        padding: 1rem 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .card-body {
+        padding: 2rem;
+    }
+
+    .card-footer {
+        padding: 1.5rem 2rem;
+    }
+}

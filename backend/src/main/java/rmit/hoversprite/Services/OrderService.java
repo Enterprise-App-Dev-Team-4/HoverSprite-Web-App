@@ -1,11 +1,10 @@
-package rmit.hoversprite.Services.OrderService;
+package rmit.hoversprite.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Order.Order;
-import rmit.hoversprite.Repositories.DBOrderRepository.DBOrderRepository;
-import rmit.hoversprite.Services.UseCaseServices.UseCaseServices;
+import rmit.hoversprite.Repositories.DBOrderRepository;
 import rmit.hoversprite.Utils.Utils;
 
 @Component
@@ -14,7 +13,7 @@ public class OrderService {
     private DBOrderRepository orderRepository;
 
     @Autowired
-    private UseCaseServices sprayServices;
+    private SprayerFeatureServices sprayServices;
 
     @Autowired
     private Utils utilsClass;

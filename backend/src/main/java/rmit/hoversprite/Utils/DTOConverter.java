@@ -25,7 +25,9 @@ public class DTOConverter {
                 farmer.getFirstName(),
                 farmer.getLastName(),
                 farmer.getPhoneNumber(),
-                farmer.getHomeAddress()
+                farmer.getHomeAddress(),
+                farmer.getRole(),
+                farmer.getToken()
             );
         }
         return null;

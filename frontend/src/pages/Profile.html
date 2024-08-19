@@ -15,45 +15,49 @@
     <div class="container">
         <div class="sidebar">
             <div class="profile-card">
-                <img src="../../public/user-avatar.png" alt="Profile Picture" class="profile-pic">
-                <h2 class="profile-name">John Smith</h2>
-                <p class="profile-username">@john</p>
-                <p class="email">Email: demomail@mail.com</p>
+                <img src="../../public/user-avatar.png" alt="Profile Picture" class="profile-pic" id="profileImage">
+                <h2 class="profile-name" id="profileName">John Smith</h2>
+                <p class="profile-username" id="profileUsername">@john</p>
+                <p class="profile-email" id="profileEmail">Email: demomail@mail.com</p>
                 <button class="edit-btn">Edit Profile</button>
             </div>
         </div>
         <div class="main-content">
             <h2>Profile Information</h2>
             <div class="profile-info">
-                <p><strong>Full Name:</strong>John</p>
-                <p><strong>Username:</strong>cultivated farmer</p>
-                <p><strong>Email:</strong> demomail@mail.com</p>
-                <p><strong>Facebook:</strong> Facebook Username</p>
-                <p><strong>Twitter:</strong> Twitter Username</p>
+                <p><strong>Full Name:</strong> <span id="fullNameDisplay">John</span></p>
+                <p><strong>Username:</strong> <span id="usernameDisplay">cultivated farmer</span></p>
+                <p><strong>Email:</strong> <span id="emailDisplay">demomail@mail.com</span></p>
+                <p><strong>Facebook:</strong> <span id="facebookDisplay">Facebook Username</span></p>
+                <p><strong>Twitter:</strong> <span id="twitterDisplay">Twitter Username</span></p>
             </div>
 
             <!-- This form is hidden by default -->
-            <form class="profile-form" style="display:none;">
+            <form class="profile-form" style="display:none;" enctype="multipart/form-data">
                 <h2>Edit Profile</h2>
                 <div class="form-group">
+                    <label for="profileImageUpload">Profile Image</label>
+                    <input type="file" id="profileImageUpload" name="profileImage" accept="image/*">
+                </div>
+                <div class="form-group">
                     <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" value="Jamed Allan">
+                    <input type="text" id="fullName" name="fullName">
                 </div>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="james">
+                    <input type="text" id="username" name="username">
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="demomail@mail.com">
+                    <input type="email" id="email" name="email">
                 </div>
                 <div class="form-group">
                     <label for="facebook">Facebook Username</label>
-                    <input type="text" id="facebook" name="facebook" value="Facebook Username">
+                    <input type="text" id="facebook" name="facebook">
                 </div>
                 <div class="form-group">
                     <label for="twitter">Twitter Username</label>
-                    <input type="text" id="twitter" name="twitter" value="Twitter Username">
+                    <input type="text" id="twitter" name="twitter">
                 </div>
                 <button type="submit" class="update-btn">Update Info</button>
                 <button type="button" class="cancel-btn">Cancel</button>
@@ -62,7 +66,6 @@
     </div>
 
     <!-- Footer -->
-    
     <div id="footer-container"></div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -70,5 +73,6 @@
     <script src="../js/Profile.js"></script>
     <script src="../../components/Navbar.js"></script>
     <script src="../../components/Footer.js"></script>
+    <script src="../../components/sendToken.js"></script>
 </body>
 </html>

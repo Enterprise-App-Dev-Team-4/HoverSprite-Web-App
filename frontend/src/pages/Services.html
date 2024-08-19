@@ -17,73 +17,35 @@
             <p>Home &gt; Services</p>
         </div>
     </div>
+
+    <!------Search bar-->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search Services">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col-md-4">
+                <select id="cropTypeSelect" class="form-control">
+                    <option value="">All Crop Types</option>
+                    <option value="FRUITS">Fruits</option>
+                    <option value="VEGETABLE">Vegetables</option>
+                    <option value="CEREALS">Cereals</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select id="serviceTypeSelect" class="form-control">
+                    <option value="">All Service Types</option>
+                    <option value="SPRAYING">Spraying</option>
+                    <option value="CONSULT">Consult</option>
+                </select>
+            </div>
+        </div>
+    </div>
     
+    <!--------COntent-->
     <div class="services-scroll-container">
         <div class="container mt-5"> 
-            <div class="col-12">
-                <div class="card service-card">
-                    <div class="row no-gutters"> 
-                        <div class="col-md-4">
-                            <img src="../../public/drone-spray-5.png" class="card-img" alt="Crop Spraying">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Crop Spraying</h5>
-                                <p class="card-text">Plant protection is essential for maximizing yield and ensuring a high-quality product. With our drone, we provide efficient and precise application of:</p>
-                                <ul>
-                                    <li>Insecticides, pesticides, fungicides, and fertilizers</li>
-                                    <li>Operate in wet/boggy or hilly areas</li>
-                                    <li>No soil compaction</li>
-                                    <li>Fumigation</li>
-                                </ul>
-                                <a href="#" class="btn btn-dark btn-block">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card service-card">
-                    <div class="row no-gutters"> 
-                        <div class="col-md-4">
-                            <img src="../../public/drone-seeding.jpg" class="card-img" alt="Aerial Seeding">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Aerial Seeding</h5>
-                                <p class="card-text">Use our drones to plant seeds across large and hard-to-reach areas. Achieve optimal germination, reduced labor costs, and improved yields effortlessly. Ideal for reforestation, cover cropping, and soil health enhancement.</p>
-                                <ul>
-                                    <li>Even seed distribution for better growth</li>
-                                    <li>Reduced labor and equipment costs</li>
-                                    <li>Seed hard to reach areas</li>
-                                </ul>
-                                <a href="#" class="btn btn-dark btn-block">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card service-card">
-                    <div class="row no-gutters"> 
-                        <div class="col-md-4">
-                            <img src="../../public/drone-mapping.png" class="card-img" alt="Surveying and Mapping">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Surveying and Mapping</h5>
-                                <p class="card-text">Boost farm efficiency with our advanced drone technology for detailed topographic maps and regular field monitoring. Optimize crop health and growth with precise data and insights.</p>
-                                <ul>
-                                    <li>Crop health and growth tracking</li>
-                                    <li>Detailed topographic maps</li>
-                                    <li>Regular field monitoring</li>
-                                </ul>
-                                <a href="#" class="btn btn-dark btn-block">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -94,6 +56,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../../components/Navbar.js"></script>
     <script src="../../components/Footer.js"></script>
+    <script src="../../components/sendToken.js"></script>
     <script src="../js/Services.js"></script>
 
 </body>

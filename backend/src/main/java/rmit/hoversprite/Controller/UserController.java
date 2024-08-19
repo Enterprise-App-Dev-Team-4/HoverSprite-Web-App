@@ -1,100 +1,124 @@
 package rmit.hoversprite.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.User;
-import rmit.hoversprite.Services.RegisterService.RegisterService;
-import rmit.hoversprite.Services.UserService.UserService;
+import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
-import rmit.hoversprite.Utils.Utils;
+import rmit.hoversprite.Utils.Enum.Role;
+import rmit.hoversprite.Utils.JwtUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
-//@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
-
-    @Autowired
-    private RegisterService registerService;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private Utils utilClass;
+    private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private ResponseEntity<?> handleFarmerLoginRequest(User user, HttpServletResponse response) {
+        Farmer farmer = new Farmer();
+        farmer.setUser(user);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(farmer.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer, token));
+            
+            // Set token in a cookie
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                    .httpOnly(true)
+                    .secure(false) // Set to true in production (HTTPS)
+                    .path("/")
+                    .maxAge(7 * 24 * 60 * 60)  // Token valid for 7 days
+                    .sameSite("Lax")  // Prevent CSRF
+                    .build();
+
+            response.addHeader("Set-Cookie", jwtCookie.toString());
+
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
+        }
+    }
+
+    private ResponseEntity<?> handleReceptionistLoginRequest(User user, HttpServletResponse response) {
+        Receptionist receptionist = new Receptionist();
+        receptionist.setUser(user);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(receptionist.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist, token));
+
+            // Set token in a cookie
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                    .httpOnly(true)
+                    .secure(false) // Set to true in production (HTTPS)
+                    .path("/")
+                    .maxAge(7 * 24 * 60 * 60)  // Token valid for 7 days
+                    .sameSite("Lax")  // Prevent CSRF
+                    .build();
+
+            response.addHeader("Set-Cookie", jwtCookie.toString());
+
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
+        }
+    }
     
-     @PostMapping("/login")
-    public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type) {
+    @PostMapping("/login")
+    public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
         if ("farmer".equals(type)) {
-            Farmer farmer = new Farmer();
-            farmer.setUser(user);
-            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(farmer));
-            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
-
-            if (userDTO != null) {
-                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
-            } else {
-                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
-            }
-        } else if("receptionist".equals(type))
-        {
-            Receptionist receptionist = new Receptionist();
-            receptionist.setUser(user);
-            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(receptionist));
-            // Assuming userService.login(farmer) handles the user login and throws an exception if unsuccessful.
-
-            if (userDTO != null) {
-                return ResponseEntity.ok(userDTO);  // Return 200 OK with body
-            } else {
-                return ResponseEntity.notFound().build();  // Return 404 Not Found if the user is not found or invalid
-            }
+            return handleFarmerLoginRequest(user, response);
+        }
+        if ("receptionist".equals(type)) {
+            return handleReceptionistLoginRequest(user, response);
         }
 
-        // Return a BadRequest if the type parameter is incorrect or not provided
-        return ResponseEntity.badRequest().body("Invalid type parameter. Expected 'farmer'.");
+        return ResponseEntity.badRequest().body("Invalid type parameter");
     }
 
     @PostMapping("register")
-    public UserDTO saveUserToDatabase(@RequestBody User user, @RequestParam String type) { // http://localhost:8080/register?type=farmer
-        if(type.equals("farmer"))
-        {
+    public ResponseEntity<?> saveUserToDatabase(@RequestBody User user, @RequestParam String type) {
+        if (type.equals("farmer")) {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
-            return new DTOConverter().convertUserDataToObject(registerService.register(farmer)); 
-        } else if(type.equals("receptionist"))
-        {
+            farmer.setRole(Role.Farmer);
+            UserDTO farmerDTO = new DTOConverter().convertUserDataToObject(userService.register(farmer));
+            return ResponseEntity.ok(farmerDTO);
+        } else if (type.equals("receptionist")) {
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
-            return new DTOConverter().convertUserDataToObject(registerService.register(receptionist));
+            UserDTO receptionistDTO = new DTOConverter().convertUserDataToObject(userService.register(receptionist));
+            return ResponseEntity.ok(receptionistDTO);
         }
-        return null;
-    }
-
-    @GetMapping("")
-    public UserDTO userProfilePage(@RequestParam String id)
-    {
-        User user = utilClass.getUserTypeById(id);
-        if(user == null) return null;
-        if(user instanceof Farmer)
-        {
-            Farmer farmer = new Farmer();
-            farmer.setId(id);
-            return new DTOConverter().convertUserDataToObject(userService.getUserData(farmer)); 
-        }
-        return null;
-    }
-
-    @PutMapping("") // when user are in the profile view, user click edit, a dialog pop up for user to edit
-    public UserDTO usereditProfile(@RequestParam String id, @RequestParam String type)
-    {
-        return null;
+        return ResponseEntity.badRequest().body("This user has been registered before");
     }
 }
