@@ -11,6 +11,7 @@ const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
 const userOrderList = __dirname + '/src/pages/UserOrderList.html'
 const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
+const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 
 
 app.use(body_parser.urlencoded({ extended: true }));
@@ -30,6 +31,10 @@ app.use('/js', express.static('src/js'));
 
 // handle routing
 app.get('/', (req, res) => {
+    res.sendFile(landingPagePath);
+})
+
+app.get('/signup', (req, res) => {
     res.sendFile(SignupPath);
 })
 
