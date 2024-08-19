@@ -15,10 +15,10 @@
     <div class="container">
         <div class="sidebar">
             <div class="profile-card">
-                <img src="../../public/user-avatar.png" alt="Profile Picture" class="profile-pic">
+                <img src="../../public/user-avatar.png" alt="Profile Picture" class="profile-pic" id="profileImage">
                 <h2 class="profile-name" id="profileName">John Smith</h2>
                 <p class="profile-username" id="profileUsername">@john</p>
-                <p class="email" id="profileEmail">Email: demomail@mail.com</p>
+                <p class="profile-email" id="profileEmail">Email: demomail@mail.com</p>
                 <button class="edit-btn">Edit Profile</button>
             </div>
         </div>
@@ -33,8 +33,12 @@
             </div>
 
             <!-- This form is hidden by default -->
-            <form class="profile-form" style="display:none;">
+            <form class="profile-form" style="display:none;" enctype="multipart/form-data">
                 <h2>Edit Profile</h2>
+                <div class="form-group">
+                    <label for="profileImageUpload">Profile Image</label>
+                    <input type="file" id="profileImageUpload" name="profileImage" accept="image/*">
+                </div>
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
                     <input type="text" id="fullName" name="fullName">
@@ -62,7 +66,6 @@
     </div>
 
     <!-- Footer -->
-    
     <div id="footer-container"></div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>

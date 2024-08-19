@@ -9,7 +9,6 @@ function sendRequestWithToken(url, method, body) {
 
     const headers = {
         'Content-Type': 'application/json'
-        // No need to include the token in the Authorization header if using a cookie
     };
 
     const options = {

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,4 +92,11 @@ public class FarmerController {
         return ResponseEntity.ok(userDTO);
     }
     
+    @PutMapping("updateProfile")
+    @PreAuthorize("hasAuthority('Farmer')")
+    public ResponseEntity<?> farmerUpdateProfile() 
+    {
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.getFarmerData()); // update profile here
+        return ResponseEntity.ok(userDTO);
+    }
 }
