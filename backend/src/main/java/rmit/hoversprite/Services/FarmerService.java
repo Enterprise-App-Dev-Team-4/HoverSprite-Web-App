@@ -50,4 +50,10 @@ public class FarmerService {
         return authenticationResponse.getFarmerByToken();
     }
 
+    public Farmer updateFarmerProfile()
+    {
+        
+        return null;
+    }
+
 }

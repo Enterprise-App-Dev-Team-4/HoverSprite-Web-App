@@ -29,6 +29,12 @@ function updateProfileInfo(data) {
 
     document.getElementById('facebookDisplay').textContent = data.facebook || 'Facebook Username';
     document.getElementById('twitterDisplay').textContent = data.twitter || 'Twitter Username';
+
+    // Handle profile image if it's in the response
+    if (data.profileImage) {
+        const base64Image = `data:image/jpeg;base64,${data.profileImage}`;
+        document.getElementById('profileImage').src = base64Image;
+    }
 }
 
 function populateFormFields(data) {
@@ -77,14 +83,20 @@ function initializeProfileButtons() {
         const formData = new FormData(profileForm);
 
         // Make the request to update the user profile
-        
-        sendRequestWithToken(UpdateProfileUrl, 'POST', formData)
+        sendRequestWithToken(UpdateProfileUrl, 'PUT', formData)
             .then(response => {
+                if (response.ok) {
+                    return response.json(); // Assuming the backend returns the updated user data
+                } else {
+                    throw new Error('Profile update failed');
+                }
+            })
+            .then(data => {
                 alert('Profile updated successfully!');
                 profileForm.style.display = 'none';
                 profileInfo.style.display = 'block';
                 editBtn.style.display = 'block';
-                updateProfileInfo(response); // Update the profile display with new data
+                updateProfileInfo(data); // Update the profile display with new data
             })
             .catch(error => {
                 console.error('Error updating profile:', error);

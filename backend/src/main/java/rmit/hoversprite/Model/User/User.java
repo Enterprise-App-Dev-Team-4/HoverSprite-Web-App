@@ -5,6 +5,7 @@ import rmit.hoversprite.Utils.Enum.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 @MappedSuperclass
 
@@ -27,12 +28,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Lob
+    private byte[] profileImage;
+
     // No-argument constructor
     public User() {}
 
     // Parameterized constructor
     public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, 
-        String firstName, String lastName, Role role, String token) {
+        String firstName, String lastName, Role role, String token, byte[] profileImage) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -43,6 +47,7 @@ public class User {
         this.lastName = lastName;
         this.role = role;
         this.token = token;
+        this.profileImage = profileImage;
     }
 
     // Getters and Setters
@@ -63,6 +68,15 @@ public class User {
     {
         return this.role;
     }
+
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
 
     public String getToken() {
         return token;
@@ -122,6 +136,7 @@ public class User {
         this.phoneNumber = user.phoneNumber;
         this.homeAddress = user.homeAddress;
         this.token = user.token;
+        this.profileImage = user.profileImage;
     }
 
     public void setFirstName(String firstName)
