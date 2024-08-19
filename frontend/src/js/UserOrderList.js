@@ -44,7 +44,8 @@ fetch('../js/fakeOrder.json')
 function createOrderCard(order) {
     if (isGridView) {
 
-        const viewDetailsButton = `<a href="UserOrderDetail.html?id=${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+        // const viewDetailsButton = `<a href="UserOrderDetail.html?id=${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+        const viewDetailsButton = `<a href="/order-detail/${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">

@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('id');
-
+    const orderId = window.location.pathname.split('/').pop();
     if (orderId) {
         fetchOrderDetails(orderId);
     } else {
         displayErrorMessage('No order ID provided');
     }
 });
+
 
 function fetchOrderDetails(orderId) {
     fetch('../js/fakeOrder.json')
