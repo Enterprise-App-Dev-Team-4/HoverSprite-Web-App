@@ -7,30 +7,28 @@ let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
 
 
-function loadNavBar()
-{
-  document.addEventListener("DOMContentLoaded", function() {
-    // Fetch the Navbar component
-    var content = document.getElementById("navbar-container");
-    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data.email))
-    .catch(error => console.error(error));
-    // content.innerHTML = returnNavBar(userData.email);
-    // content.innerHTML = returnNavBarStyle();
-    activeClick();
-  });
-  
+function loadNavBar() {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Fetch the Navbar component
+        var content = document.getElementById("navbar-container");
+        sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data.email))
+            .catch(error => console.error(error));
+        // content.innerHTML = returnNavBar(userData.email);
+        // content.innerHTML = returnNavBarStyle();
+        activeClick();
+    });
+
 }
 
 
 
-function loadFooter()
-{
-  console.log('Hello  footer');
-  document.addEventListener("DOMContentLoaded", function() {
-    // Fetch the Navbar component
-    var content = document.getElementById("footer-container");
-    content.innerHTML = returnFooter();
-  });
+function loadFooter() {
+    console.log('Hello  footer');
+    document.addEventListener("DOMContentLoaded", function () {
+        // Fetch the Navbar component
+        var content = document.getElementById("footer-container");
+        content.innerHTML = returnFooter();
+    });
 }
 
 
@@ -44,7 +42,12 @@ fetch('../js/fakeOrder.json')
     .catch(error => console.error('Error:', error));
 
 function createOrderCard(order) {
+    const viewDetailsButton = `<a href="/order-detail/${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+
     if (isGridView) {
+        // const viewDetailsButton = `<a href="UserOrderDetail.html?id=${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+
+
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
@@ -53,13 +56,13 @@ function createOrderCard(order) {
                         <p class="card-text">
                             <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
-                            <strong>Crop Type:</strong> ${order.cropType}<br>
-                            <strong>Area:</strong> ${order.area} decares<br>
+                            <strong>Crop Type:</strong> ${order.farm.cropType}<br>
+                            <strong>Area:</strong> ${order.farm.area} decares<br>
                             <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
                         </p>
                     </div>
                     <div class="card-footer bg-transparent border-0">
-                        <a href="#" class="btn btn-success btn-sm w-100">View Details</a>
+                        ${viewDetailsButton}
                     </div>
                 </div>
             </div>
@@ -78,16 +81,16 @@ function createOrderCard(order) {
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.cropType}
+                                <strong>Crop:</strong> ${order.farm.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Area:</strong> ${order.area} decares
+                                <strong>Area:</strong> ${order.farm.area} decares
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
                             </div>
                             <div class="col-md-3 col-lg-2">
-                                <a href="#" class="btn btn-success btn-sm w-100">View Details</a>
+                                ${viewDetailsButton}
                             </div>
                         </div>
                     </div>
@@ -165,7 +168,7 @@ function filterOrders() {
 
     const filteredOrders = orders.filter(order => {
         const matchesSearch = order.id.toString().includes(searchTerm) ||
-            order.cropType.toLowerCase().includes(searchTerm);
+            order.farm.cropType.toLowerCase().includes(searchTerm);
         const matchesStatus = statusFilter === '' || order.status === statusFilter;
         const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
 
