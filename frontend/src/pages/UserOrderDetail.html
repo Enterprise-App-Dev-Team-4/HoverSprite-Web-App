@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/UserOrderDetail.css">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white p-4">
+                        <h2 class="mb-0 d-flex justify-content-between align-items-center">
+                            <span>Order #<span id="orderId"></span></span>
+                            <span id="orderStatus" class="badge"></span>
+                        </h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-calendar-event me-2"></i>Order Date</h5>
+                                    <p class="fs-5" id="orderDate"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-cash-coin me-2"></i>Cost</h5>
+                                    <p class="fs-4 text-success" id="orderCost"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-person me-2"></i>Farmer</h5>
+                                    <p class="fs-5" id="farmerName"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-person-badge me-2"></i>Sprayer</h5>
+                                    <p class="fs-5" id="sprayerName"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-geo-alt me-2"></i>Farm Details</h5>
+                                    <p class="mb-1"><strong>Area:</strong> <span id="farmArea"></span> decares</p>
+                                    <p class="mb-1"><strong>Crop Type:</strong> <span id="cropType"></span></p>
+                                    <p><strong>Location:</strong> <span id="farmLocation"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-tools me-2"></i>Service Details</h5>
+                                    <p class="mb-1"><strong>Service:</strong> <span id="serviceName"></span></p>
+                                    <p class="mb-1"><strong>Type:</strong> <span id="serviceType"></span></p>
+                                    <p><strong>Time Slot:</strong> <span id="timeSlot"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="info-card">
+                                    <h5 class="text-muted mb-3"><i class="bi bi-star me-2"></i>Feedback</h5>
+                                    <p class="mb-1"><strong>Rating:</strong> <span id="feedbackRating"></span></p>
+                                    <p><strong>Comment:</strong> <span id="feedbackComment"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light p-4">
+                        <a href="UserOrderList.html" class="btn btn-secondary"><i class="bi bi-arrow-left me-2"></i>Back
+                            to Order List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/UserOrderDetail.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../components/Navbar.js"></script>
+    <script src="../components/Footer.js"></script>
+</body>
+
+</html>
