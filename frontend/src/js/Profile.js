@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function fetchUserData() {
   sendRequestWithToken(UserURL)
       .then(data => {
+        console.log(data);
           updateProfileInfo(data);
           populateFormFields(data);
       })

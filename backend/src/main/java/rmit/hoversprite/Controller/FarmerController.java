@@ -27,7 +27,7 @@ import rmit.hoversprite.Utils.DTOConverter;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") // Allow requests from this origin
 public class FarmerController {
 
     @Autowired
