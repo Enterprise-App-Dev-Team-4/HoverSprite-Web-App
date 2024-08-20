@@ -4,11 +4,13 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-function sendRequestWithToken(url, method, body) {
+function sendRequestWithToken(url, method = 'GET', body = null) {
     const token = getCookie('jwtToken'); // Retrieve the token from the cookie
 
     const headers = {
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        // 'Content-Type': 'application/json' 
+        // Note: Do not set 'Content-Type' if body is FormData
     };
 
     const options = {
@@ -18,7 +20,13 @@ function sendRequestWithToken(url, method, body) {
     };
 
     if (body) {
-        options.body = JSON.stringify(body); // If there's a body, stringify it and add it to the request
+        if (body instanceof FormData) {
+            // If the body is FormData, do not stringify it or set the Content-Type header
+            options.body = body;
+        } else {
+            headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify(body);
+        }
     }
 
     return fetch(url, options)
@@ -31,6 +39,3 @@ function sendRequestWithToken(url, method, body) {
         })
         .catch(error => console.error('There was a problem with your fetch operation:', error));
 }
-
-// Example usage
-sendRequestWithToken();

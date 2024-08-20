@@ -25,12 +25,12 @@
         <div class="main-content">
             <h2>Profile Information</h2>
             <div class="profile-info">
-                <p><strong>Full Name:</strong> <span id="fullNameDisplay">John</span></p>
-                <p><strong>Username:</strong> <span id="usernameDisplay">cultivated farmer</span></p>
+                <p><strong>First Name:</strong> <span id="firstNameDisplay">John</span></p>
+                <p><strong>Last Name:</strong> <span id="lastNameDisplay">Doe</span></p>
                 <p><strong>Email:</strong> <span id="emailDisplay">demomail@mail.com</span></p>
-                <p><strong>Facebook:</strong> <span id="facebookDisplay">Facebook Username</span></p>
-                <p><strong>Twitter:</strong> <span id="twitterDisplay">Twitter Username</span></p>
+                <p><strong>Phone Number:</strong> <span id="phoneNumberDisplay">123-456-7890</span></p>
             </div>
+            
 
             <!-- This form is hidden by default -->
             <form class="profile-form" style="display:none;" enctype="multipart/form-data">
@@ -40,24 +40,20 @@
                     <input type="file" id="profileImageUpload" name="profileImage" accept="image/*">
                 </div>
                 <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName">
                 </div>
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName">
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email">
                 </div>
                 <div class="form-group">
-                    <label for="facebook">Facebook Username</label>
-                    <input type="text" id="facebook" name="facebook">
-                </div>
-                <div class="form-group">
-                    <label for="twitter">Twitter Username</label>
-                    <input type="text" id="twitter" name="twitter">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber">
                 </div>
                 <button type="submit" class="update-btn">Update Info</button>
                 <button type="button" class="cancel-btn">Cancel</button>

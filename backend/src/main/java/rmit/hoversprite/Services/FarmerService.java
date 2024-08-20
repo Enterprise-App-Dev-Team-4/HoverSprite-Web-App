@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import rmit.hoversprite.Middleware.FarmerProfileUpdateRequest;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
@@ -24,6 +26,9 @@ public class FarmerService {
 
     @Autowired
     AuthenticationResponse authenticationResponse;
+
+    @Autowired
+    FarmerProfileUpdateRequest farmerUpdateProfileRequest;
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
@@ -50,10 +55,12 @@ public class FarmerService {
         return authenticationResponse.getFarmerByToken();
     }
 
-    public Farmer updateFarmerProfile()
+    @Transactional
+    public Farmer updateFarmerProfile(Farmer farmer)
     {
-        
-        return null;
+        Farmer oldFarmer = getFarmerData();
+        Farmer updateFarmer = farmerUpdateProfileRequest.farmerToFarmer(farmer, oldFarmer);
+        return farmerRepository.save(updateFarmer);
     }
 
 }

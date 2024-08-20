@@ -2,8 +2,11 @@ package rmit.hoversprite.Model.User;
 
 import jakarta.persistence.MappedSuperclass;
 import rmit.hoversprite.Utils.Enum.Role;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 
@@ -29,6 +32,8 @@ public class User {
     private Role role;
 
     @Lob
+    @Basic(fetch = FetchType.EAGER)
+    @Column(length = 100000)
     private byte[] profileImage;
 
     // No-argument constructor

@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.FarmerProfileUpdateRequest;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
+import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Services.FarmService;
 import rmit.hoversprite.Services.FarmerService;
@@ -37,6 +41,8 @@ public class FarmerController {
     @Autowired
     private FarmerService farmerService;
 
+    @Autowired
+    FarmerProfileUpdateRequest farmerUpdateProfileRequest;
 
     @PostMapping("farm/add-farm")
     public FarmDTO addFarm(@RequestBody Farm farm, @RequestParam String farmer_id)
@@ -94,9 +100,15 @@ public class FarmerController {
     
     @PutMapping("updateProfile")
     @PreAuthorize("hasAuthority('Farmer')")
-    public ResponseEntity<?> farmerUpdateProfile() 
+    public ResponseEntity<?> farmerUpdateProfile(@RequestPart("firstName") String firstName,
+    @RequestPart("lastName") String lastName,
+    @RequestPart("email") String email,
+    @RequestPart("phoneNumber") String phoneNumber,
+    @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) 
     {
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.getFarmerData()); // update profile here
+        Farmer farmer = new Farmer();
+        Farmer updateFarmer = farmerUpdateProfileRequest.returnRequestPartToFarmer(firstName, lastName, email, phoneNumber, profileImage, farmer);
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.updateFarmerProfile(updateFarmer));
         return ResponseEntity.ok(userDTO);
     }
 }
