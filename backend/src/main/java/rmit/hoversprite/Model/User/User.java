@@ -32,7 +32,6 @@ public class User {
     private Role role;
 
     @Lob
-    @Basic(fetch = FetchType.EAGER)
     @Column(length = 100000)
     private byte[] profileImage;
 

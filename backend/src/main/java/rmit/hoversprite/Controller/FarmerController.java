@@ -100,11 +100,14 @@ public class FarmerController {
     
     @PutMapping("updateProfile")
     @PreAuthorize("hasAuthority('Farmer')")
-    public ResponseEntity<?> farmerUpdateProfile(@RequestPart("firstName") String firstName,
-    @RequestPart("lastName") String lastName,
-    @RequestPart("email") String email,
-    @RequestPart("phoneNumber") String phoneNumber,
-    @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) 
+    
+    public ResponseEntity<?> farmerUpdateProfile(
+        @RequestPart("firstName") String firstName,
+        @RequestPart("lastName") String lastName,
+        @RequestPart("email") String email,
+        @RequestPart("phoneNumber") String phoneNumber,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+    ) 
     {
         Farmer farmer = new Farmer();
         Farmer updateFarmer = farmerUpdateProfileRequest.returnRequestPartToFarmer(firstName, lastName, email, phoneNumber, profileImage, farmer);
