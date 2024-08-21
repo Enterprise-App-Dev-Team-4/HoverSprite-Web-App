@@ -1,5 +1,7 @@
 const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
+// Global variable to store user data
+let userData = null;
 
 document.addEventListener("DOMContentLoaded", function() {
     loadNavBar();
@@ -11,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function fetchUserData() {
     sendRequestWithToken(UserURL)
         .then(data => {
+            userData = data;
             console.log(data);
             updateProfileInfo(data);
             populateFormFields(data);
@@ -105,7 +108,7 @@ function initializeProfileButtons() {
             if (profileImageUrl) {
                 submitProfileFormWithImage(profileImageUrl);
             } else {
-                sendUpdateWithoutImage();
+              submitProfileFormWithImage(userData);
             }
         });
     });
@@ -131,24 +134,6 @@ function submitProfileFormWithImage(imageUrl) {
         });
 }
 
-function sendUpdateWithoutImage() {
-    const userProfile = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phoneNumber').value
-    };
-
-    sendRequestWithToken(UpdateProfileUrl, 'PUT', userProfile)
-        .then(data => {
-            console.log(data);
-            finalizeProfileUpdate();
-        })
-        .catch(error => {
-            console.error('Error updating profile:', error);
-            alert('Failed to update profile.');
-        });
-}
 
 function finalizeProfileUpdate() {
     const profileForm = document.querySelector('.profile-form');
