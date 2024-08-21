@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import rmit.hoversprite.Middleware.FarmerProfileUpdateRequest;
+import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
@@ -28,7 +28,7 @@ public class FarmerService {
     AuthenticationResponse authenticationResponse;
 
     @Autowired
-    FarmerProfileUpdateRequest farmerUpdateProfileRequest;
+    FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);

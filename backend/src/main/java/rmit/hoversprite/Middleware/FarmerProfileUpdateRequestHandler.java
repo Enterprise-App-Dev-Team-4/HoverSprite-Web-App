@@ -5,22 +5,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 
 @Component
-public class FarmerProfileUpdateRequest {
+public class FarmerProfileUpdateRequestHandler {
     @Transactional
-    public Farmer returnRequestPartToFarmer(String firstName, String lastName, String email, String phoneNumber, String profileImage,
+    public Farmer returnRequestPartToFarmer(FarmerUpdateProfileRequest request,
             Farmer farmer)
     {
         try {
-            String fullName = firstName + " " + lastName;
+            String fullName = request.getFirstName() + " " + request.getLastName();
             System.out.print("Image Name: ");
-            farmer.setFirstName(firstName);
-            farmer.setLastName(lastName);
+            farmer.setFirstName(request.getFirstName());
+            farmer.setLastName(request.getLastName());
             farmer.setFullName(fullName);
-            farmer.setEmail(email);
-            farmer.setPhoneNumber(phoneNumber);
-            farmer.setProfileImage(profileImage);
+            farmer.setEmail(request.getEmail());
+            farmer.setPhoneNumber(request.getPhoneNumber());
+            farmer.setProfileImage(request.getProfileImage());
             return farmer;
         }catch (Exception e) {
             return null;
