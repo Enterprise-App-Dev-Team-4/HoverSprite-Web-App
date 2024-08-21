@@ -1,6 +1,6 @@
 // Navbar.js
 
-export function returnNavBar(user_name) {
+function returnNavBar(user_name) {
   console.log('hello navbar');
   return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
 <div class="container-fluid">
@@ -55,7 +55,7 @@ export function returnNavBar(user_name) {
 `;
 }
 
-export function activeClick() {
+function activeClick() {
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', function () {
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -63,3 +63,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
   });
 });
 }
+
+activeClick();
+returnNavBar();
