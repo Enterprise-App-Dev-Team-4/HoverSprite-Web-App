@@ -165,7 +165,7 @@ function loadNavBar() {
     const navbarContainer = document.getElementById("navbar-container");
     sendRequestWithToken(UserURL)
         .then(data => {
-            navbarContainer.innerHTML = returnNavBar(data.email);
+            navbarContainer.innerHTML = returnNavBar(data);
             activeClick();
         })
         .catch(error => console.error('Error loading navbar:', error));

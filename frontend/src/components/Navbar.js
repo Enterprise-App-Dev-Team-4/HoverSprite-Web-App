@@ -1,6 +1,6 @@
 // Navbar.js
 
-function returnNavBar(user_name) {
+function returnNavBar(data) {
   console.log('hello navbar');
   return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
 <div class="container-fluid">
@@ -19,8 +19,8 @@ function returnNavBar(user_name) {
       <a class="nav-link" href="/order-list">Orders</a>
     </div>
     <div class="profile-badge ms-auto">
-      <img src="../../../public/user-avatar.png">
-      <span>${user_name}</span>
+      <img src=${data.profileImage}>
+      <span>${data.fullName}</span>
     </div>
   </div>
 </div>
