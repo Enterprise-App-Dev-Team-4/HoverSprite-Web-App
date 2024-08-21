@@ -5,29 +5,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.Model.User.Farmer;
-import rmit.hoversprite.Utils.ImageUtils;
 
 @Component
 public class FarmerProfileUpdateRequest {
     @Transactional
-    public Farmer returnRequestPartToFarmer(String firstName, String lastName, String email, String phoneNumber, MultipartFile profileImage,
+    public Farmer returnRequestPartToFarmer(String firstName, String lastName, String email, String phoneNumber, String profileImage,
             Farmer farmer)
     {
         try {
             String fullName = firstName + " " + lastName;
             System.out.print("Image Name: ");
-            System.out.println(profileImage.getOriginalFilename());
             farmer.setFirstName(firstName);
             farmer.setLastName(lastName);
             farmer.setFullName(fullName);
             farmer.setEmail(email);
             farmer.setPhoneNumber(phoneNumber);
-
-            // If a profile image is provided, update it
-            if (profileImage != null && !profileImage.isEmpty()) {
-                byte[] compressedImage = ImageUtils.compressImage(profileImage.getBytes());
-                farmer.setProfileImage(compressedImage);
-            }
+            farmer.setProfileImage(profileImage);
             return farmer;
         }catch (Exception e) {
             return null;

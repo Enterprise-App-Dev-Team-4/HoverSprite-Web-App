@@ -31,16 +31,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Lob
-    @Column(length = 100000)
-    private byte[] profileImage;
+    private String profileImage; // Store the base64-encoded image string
+
 
     // No-argument constructor
     public User() {}
 
     // Parameterized constructor
     public User(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, 
-        String firstName, String lastName, Role role, String token, byte[] profileImage) {
+        String firstName, String lastName, Role role, String token, String profileImage) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -73,11 +72,11 @@ public class User {
         return this.role;
     }
 
-    public byte[] getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(byte[] profileImage) {
+    public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
 

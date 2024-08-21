@@ -39,3 +39,5 @@ function sendRequestWithToken(url, method = 'GET', body = null) {
         })
         .catch(error => console.error('There was a problem with your fetch operation:', error));
 }
+
+sendRequestWithToken()
