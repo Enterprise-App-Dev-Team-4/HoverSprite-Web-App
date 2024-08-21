@@ -14,12 +14,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
+import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Services.FarmService;
 import rmit.hoversprite.Services.FarmerService;
@@ -37,6 +42,8 @@ public class FarmerController {
     @Autowired
     private FarmerService farmerService;
 
+    @Autowired
+    FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
 
     @PostMapping("farm/add-farm")
     public FarmDTO addFarm(@RequestBody Farm farm, @RequestParam String farmer_id)
@@ -94,9 +101,12 @@ public class FarmerController {
     
     @PutMapping("updateProfile")
     @PreAuthorize("hasAuthority('Farmer')")
-    public ResponseEntity<?> farmerUpdateProfile() 
+
+    public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerUpdateProfileRequest request )
     {
-        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.getFarmerData()); // update profile here
+        Farmer farmer = new Farmer();
+        Farmer updateFarmer = farmerUpdateProfileRequest.returnRequestPartToFarmer(request, farmer);
+        UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.updateFarmerProfile(updateFarmer));
         return ResponseEntity.ok(userDTO);
     }
 }

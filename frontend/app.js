@@ -13,7 +13,7 @@ const userOrderList = __dirname + '/src/pages/UserOrderList.html'
 const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 
-
+const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
 
 // Serve static images from the public directory
@@ -70,6 +70,9 @@ app.get('/order-detail/:id', (req, res) => {
     res.sendFile(userOrderDetailPath);
 });
 
+app.get('/test', (req,res) => {
+    res.sendFile(testPath);
+})
 
 app.listen(3000, () => {
     console.log("listen on port");

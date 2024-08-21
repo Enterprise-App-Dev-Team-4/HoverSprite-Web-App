@@ -68,7 +68,7 @@ function sendLoginDataToServer() {
         // Construct the new action URL with the selected role as a parameter
         var actionURL = parseUserRequestParam(loginParam, instance);
         console.log(actionURL);
-
+        console.log(client);
         // Send the form data using fetch
         fetchRequestServer(client, actionURL);
     });

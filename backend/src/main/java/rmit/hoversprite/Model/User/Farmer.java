@@ -26,8 +26,8 @@ public class Farmer extends User {
     }
 
     public Farmer(String id, String password, String email, String fullName, String phoneNumber, String homeAddress, String firstName, String lastName,
-                    List<Farm> farms, List<Order> serviceOrders, Role role, String token) {
-        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role, token);
+                    List<Farm> farms, List<Order> serviceOrders, Role role, String token, String profileImage) {
+        super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role, token, profileImage);
         this.farms = farms;
         this.serviceOrders = serviceOrders;
     }
