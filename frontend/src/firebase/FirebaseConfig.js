@@ -1,9 +1,4 @@
-// FirebaseConfig.js
-
-// Import the Firebase SDK and necessary functions
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
-
+// FirebaseConfig.
 // Firebase configuration for your web app
 const firebaseConfig = {
   apiKey: "AIzaSyD3hUpNFgAwXxlpsGs2sfI6Fgp3MOgXanA",
@@ -16,7 +11,4 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app); // Initialize Firebase Storage
-
-export { app, storage }; // Export the initialized app and storage for use in other files
+firebase.initializeApp(firebaseConfig);

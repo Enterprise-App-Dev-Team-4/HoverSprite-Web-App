@@ -1,9 +1,5 @@
-// Profile.js
-
 const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
-
-
 
 document.addEventListener("DOMContentLoaded", function() {
     loadNavBar();
@@ -26,7 +22,6 @@ function updateProfileInfo(data) {
     document.getElementById('profileName').textContent = data.fullName || 'John Smith';
     document.getElementById('profileUsername').textContent = '@' + (data.username || 'john');
     document.getElementById('profileEmail').textContent = 'Email: ' + (data.email || 'demomail@mail.com');
-
     document.getElementById('firstNameDisplay').textContent = data.firstName || 'John';
     document.getElementById('lastNameDisplay').textContent = data.lastName || 'Doe';
     document.getElementById('emailDisplay').textContent = data.email || 'demomail@mail.com';
@@ -44,98 +39,126 @@ function populateFormFields(data) {
     document.getElementById('phoneNumber').value = data.phoneNumber || '';
 }
 
+function uploadImage() {
+    // Firebase configuration for your web app
+    const firebaseConfig = {
+        apiKey: "AIzaSyD3hUpNFgAwXxlpsGs2sfI6Fgp3MOgXanA",
+        authDomain: "hoversprite-3d6b3.firebaseapp.com",
+        projectId: "hoversprite-3d6b3",
+        storageBucket: "hoversprite-3d6b3.appspot.com",
+        messagingSenderId: "375398691957",
+        appId: "1:375398691957:web:ce8d343181d0e843cef43c",
+        measurementId: "G-M1Q0WXPBE6"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const storage = firebase.storage();
+
+    const file = document.querySelector("#profileImageUpload").files[0];
+    if (!file) return Promise.resolve(null); // If no file is selected, resolve to null
+
+    const ref = storage.ref();
+    const name = +new Date() + "-" + file.name;
+    const metadata = { contentType: file.type };
+    const task = ref.child(name).put(file, metadata);
+
+    return task
+        .then(snapshot => snapshot.ref.getDownloadURL())
+        .catch(console.error);
+}
+
 function initializeProfileButtons() {
-  const profileForm = document.querySelector('.profile-form');
-  const profileInfo = document.querySelector('.profile-info');
-  const editBtn = document.querySelector('.edit-btn');
-  const cancelBtn = document.querySelector('.cancel-btn');
-  const profileImageInput = document.getElementById('profileImageUpload');
-  const profileImage = document.getElementById('profileImage');
+    const profileForm = document.querySelector('.profile-form');
+    const profileInfo = document.querySelector('.profile-info');
+    const editBtn = document.querySelector('.edit-btn');
+    const cancelBtn = document.querySelector('.cancel-btn');
+    const profileImage = document.getElementById('profileImage');
 
-  editBtn.addEventListener('click', function() {
-      profileForm.style.display = 'block';
-      profileInfo.style.display = 'none';
-      editBtn.style.display = 'none';
-  });
+    editBtn.addEventListener('click', function() {
+        profileForm.style.display = 'block';
+        profileInfo.style.display = 'none';
+        editBtn.style.display = 'none';
+    });
 
-  cancelBtn.addEventListener('click', function() {
-      profileForm.style.display = 'none';
-      profileInfo.style.display = 'block';
-      editBtn.style.display = 'block';
-  });
+    cancelBtn.addEventListener('click', function() {
+        profileForm.style.display = 'none';
+        profileInfo.style.display = 'block';
+        editBtn.style.display = 'block';
+    });
 
-  profileImageInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-          // Use FileReader to preview the selected image
-          const reader = new FileReader();
-          reader.onload = function(event) {
-              profileImage.src = event.target.result; // Display the image preview
-          };
-          reader.readAsDataURL(file); // Read the image file as a data URL
+    document.getElementById('profileImageUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                profileImage.src = event.target.result; // Display the image preview
+            };
+            reader.readAsDataURL(file); // Read the image file as a data URL
+        }
+    });
 
-          const storageRef = initializeFirebase().storage.ref('profileImages/' + file.name);
-          const uploadTask = storageRef.put(file);
+    profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-          uploadTask.on('state_changed',
-              function(snapshot) {
-                  // Handle progress if needed
-              },
-              function(error) {
-                  console.error('Error uploading file:', error);
-              },
-              function() {
-                  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                      document.getElementById('profileImageBase64').value = downloadURL;
-
-                      // Auto-submit the form after the image has been uploaded
-                      submitProfileFormWithImage(downloadURL);
-                  });
-              }
-          );
-      }
-  });
-
-  profileForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const formData = new FormData(profileForm);
-
-      sendRequestWithToken(UpdateProfileUrl, 'PUT', formData)
-          .then(data => {
-              console.log(data);
-              profileForm.style.display = 'none';
-              profileInfo.style.display = 'block';
-              editBtn.style.display = 'block';
-              updateProfileInfo(data);
-          })
-          .catch(error => {
-              console.error('Error updating profile:', error);
-              alert('Failed to update profile.');
-          });
-  });
+        uploadImage().then(profileImageUrl => {
+            if (profileImageUrl) {
+                submitProfileFormWithImage(profileImageUrl);
+            } else {
+                sendUpdateWithoutImage();
+            }
+        });
+    });
 }
 
 function submitProfileFormWithImage(imageUrl) {
-    const profileForm = document.querySelector('.profile-form');
-    const formData = new FormData(profileForm);
+    const userProfile = {
+        profileImage: imageUrl,
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phoneNumber: document.getElementById('phoneNumber').value
+    };
 
-    // Append the image URL to the form data
-    console.log(imageUrl);
-    formData.append('profileImage', imageUrl);
-
-    sendRequestWithToken(UpdateProfileUrl, 'PUT', formData)
+    sendRequestWithToken(UpdateProfileUrl, 'PUT', userProfile)
         .then(data => {
             console.log(data);
-            profileForm.style.display = 'none';
-            document.querySelector('.profile-info').style.display = 'block';
-            document.querySelector('.edit-btn').style.display = 'block';
-            updateProfileInfo(data);
+            finalizeProfileUpdate();
         })
         .catch(error => {
             console.error('Error updating profile:', error);
             alert('Failed to update profile.');
         });
+}
+
+function sendUpdateWithoutImage() {
+    const userProfile = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phoneNumber: document.getElementById('phoneNumber').value
+    };
+
+    sendRequestWithToken(UpdateProfileUrl, 'PUT', userProfile)
+        .then(data => {
+            console.log(data);
+            finalizeProfileUpdate();
+        })
+        .catch(error => {
+            console.error('Error updating profile:', error);
+            alert('Failed to update profile.');
+        });
+}
+
+function finalizeProfileUpdate() {
+    const profileForm = document.querySelector('.profile-form');
+    const profileInfo = document.querySelector('.profile-info');
+    const editBtn = document.querySelector('.edit-btn');
+
+    profileForm.style.display = 'none';
+    profileInfo.style.display = 'block';
+    editBtn.style.display = 'block';
+    fetchUserData(); // Refresh the profile info
 }
 
 function loadNavBar() {
