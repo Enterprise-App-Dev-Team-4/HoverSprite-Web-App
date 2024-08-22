@@ -28,6 +28,9 @@ public class OrderService {
         Order order = new Order();
         String generateOrderId = utilsClass.generateOrderId(orderRepository.findAll());
         order.setOrderID(generateOrderId);
+
+        order.setFarmer(farmer);
+
         return orderRepository.save(order);
     }
 
