@@ -20,10 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Request.FarmerOrderRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Services.FarmService;
@@ -108,5 +111,14 @@ public class FarmerController {
         Farmer updateFarmer = farmerUpdateProfileRequest.returnRequestPartToFarmer(request, farmer);
         UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.updateFarmerProfile(updateFarmer));
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping("requestOrder")
+    public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerOrderRequest farmerOrderRequest)
+    {
+        Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
+        
+        //put the order in the farmerservice to get order
+        return null;
     }
 }

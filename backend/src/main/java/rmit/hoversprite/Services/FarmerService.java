@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
 import rmit.hoversprite.Response.AuthenticationResponse;
