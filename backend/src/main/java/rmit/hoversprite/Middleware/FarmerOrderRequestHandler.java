@@ -13,11 +13,10 @@ public class FarmerOrderRequestHandler {
     {
         Order order = new Order();
         order.setDate(request.getDate());
-        order.setFarmer(request.getFarmer());
         order.setSprayerServices(request.getSprayServices());
         order.setServiceTimeSlot(request.getServiceTimeSlot());
         order.setTotalCost(request.getTotalCost());
-        
+
         return order;
     }
 }

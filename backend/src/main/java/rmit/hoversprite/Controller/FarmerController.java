@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
@@ -118,7 +119,9 @@ public class FarmerController {
     {
         Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
         
+        Order savedOrder = farmerService.farmerCreateOrder(order);
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(savedOrder);
         //put the order in the farmerservice to get order
-        return null;
+        return ResponseEntity.ok(orderDTO);
     }
 }

@@ -20,10 +20,9 @@ public class OrderService {
     @Autowired
     private Utils utilsClass;
 
-    public Order createOrder(Farmer farmer, SprayServices services)
+    public Order createOrder(Order order)
     {
         // Generate order id and assign it
-        Order order = new Order();
         String generateOrderId = utilsClass.generateOrderId(orderRepository.findAll());
         order.setOrderID(generateOrderId);
         return orderRepository.save(order);

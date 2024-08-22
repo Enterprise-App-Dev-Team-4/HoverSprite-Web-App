@@ -1,9 +1,11 @@
 package rmit.hoversprite.Utils;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.User;
 
@@ -43,6 +45,22 @@ public class DTOConverter {
                 farm.getFarmArea(),
                 farm.getCropType(),
                 farm.getFarmLocation()
+            );
+        }
+        return null;
+    }
+
+    public OrderDTO convertOrderDataToObject(Order order)
+    {
+        if(order != null)
+        {
+            return new OrderDTO(
+                order.getOrderID(),
+                order.getDate(),
+                order.getServiceTimeSlot(),
+                order.getOrderStatus(),
+                order.getTotalCost(),
+                order.getFarmer()
             );
         }
         return null;

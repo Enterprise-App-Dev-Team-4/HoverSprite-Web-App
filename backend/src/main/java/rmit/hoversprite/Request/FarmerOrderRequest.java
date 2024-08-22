@@ -5,7 +5,6 @@ import rmit.hoversprite.Model.User.Farmer;
 
 public class FarmerOrderRequest {
     private SprayServices sprayServices;
-    private Farmer farmer;
     private double totalCost;
     private String serviceTimeSlot;
     private String date;
@@ -14,9 +13,8 @@ public class FarmerOrderRequest {
     public FarmerOrderRequest() {}
 
     // Parameterized constructor
-    public FarmerOrderRequest(SprayServices sprayServices, Farmer farmer, double totalCost, String serviceTimeSlot, String date) {
+    public FarmerOrderRequest(SprayServices sprayServices, double totalCost, String serviceTimeSlot, String date) {
         this.sprayServices = sprayServices;
-        this.farmer = farmer;
         this.totalCost = totalCost;
         this.serviceTimeSlot = serviceTimeSlot;
         this.date = date;
@@ -40,16 +38,6 @@ public class FarmerOrderRequest {
     public String getDate()
     {
         return this.date;
-    }
-
-    // Getter for farmer
-    public Farmer getFarmer() {
-        return farmer;
-    }
-
-    // Setter for farmer
-    public void setFarmer(Farmer farmer) {
-        this.farmer = farmer;
     }
 
     // Getter for totalCost

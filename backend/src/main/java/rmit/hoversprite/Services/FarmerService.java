@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
@@ -27,6 +28,9 @@ public class FarmerService {
 
     @Autowired
     AuthenticationResponse authenticationResponse;
+
+    @Autowired
+    OrderService orderService;
 
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
@@ -64,4 +68,18 @@ public class FarmerService {
         return farmerRepository.save(updateFarmer);
     }
 
+    public Order farmerCreateOrder(Order order)
+    {
+        Farmer orderFarmer = getFarmerData();
+        order.setFarmer(orderFarmer);
+        List<Order> listOfOrders = orderFarmer.getServicOrders();
+
+        //save order here
+        Order savedOrder = orderService.createOrder(order); // new order id will be generated here
+        listOfOrders.add(savedOrder); 
+        orderFarmer.setServiceOrders(listOfOrders);
+         
+        farmerRepository.save(orderFarmer);
+        return order;
+    }
 }
