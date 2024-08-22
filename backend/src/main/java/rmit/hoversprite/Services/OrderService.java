@@ -1,5 +1,7 @@
 package rmit.hoversprite.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,5 +26,17 @@ public class OrderService {
         String generateOrderId = utilsClass.generateOrderId(orderRepository.findAll());
         order.setOrderID(generateOrderId);
         return orderRepository.save(order);
+    }
+
+    public Order getOrderById(String id) {
+        return orderRepository.getReferenceById(id);
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+    
+    public void deleteOrder(String id) {
+        orderRepository.deleteById(id);
     }
 }
