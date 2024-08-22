@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
@@ -30,6 +31,9 @@ public class FarmerService {
 
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+
+    @Autowired
+    private OrderService orderService;
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
@@ -56,6 +60,15 @@ public class FarmerService {
         return authenticationResponse.getFarmerByToken();
     }
 
+    public Order createOrderForFarmer(String farmerId, SprayServices services) {
+        Farmer farmer = farmerRepository.findFarmerById(farmerId);
+        if (farmer != null) {
+            return orderService.createOrder(farmer, services);
+        } else {
+            throw new IllegalArgumentException("Farmer with ID " + farmerId + " not found");
+        }
+    }
+
     @Transactional
     public Farmer updateFarmerProfile(Farmer farmer)
     {
@@ -63,5 +76,4 @@ public class FarmerService {
         Farmer updateFarmer = farmerUpdateProfileRequest.farmerToFarmer(farmer, oldFarmer);
         return farmerRepository.save(updateFarmer);
     }
-
 }
