@@ -30,10 +30,12 @@ public class FarmerService {
     AuthenticationResponse authenticationResponse;
 
     @Autowired
-    FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+    OrderService orderService;
 
     @Autowired
-    private OrderService orderService;
+    FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+
+    
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
@@ -60,20 +62,29 @@ public class FarmerService {
         return authenticationResponse.getFarmerByToken();
     }
 
-    public Order createOrderForFarmer(String farmerId, SprayServices services) {
-        Farmer farmer = farmerRepository.findFarmerById(farmerId);
-        if (farmer != null) {
-            return orderService.createOrder(farmer, services);
-        } else {
-            throw new IllegalArgumentException("Farmer with ID " + farmerId + " not found");
-        }
-    }
-
     @Transactional
     public Farmer updateFarmerProfile(Farmer farmer)
     {
         Farmer oldFarmer = getFarmerData();
         Farmer updateFarmer = farmerUpdateProfileRequest.farmerToFarmer(farmer, oldFarmer);
         return farmerRepository.save(updateFarmer);
+    }
+
+    public Order farmerCreateOrder(Order order)
+    {
+        System.out.print("Current Farmer Token: ");
+        Farmer orderFarmer = farmerRepository.findByEmail(order.getFarmer().getEmail());
+        
+        System.out.println(orderFarmer.getToken());
+        order.setFarmer(orderFarmer);
+        List<Order> listOfOrders = orderFarmer.getServicOrders();
+
+        //save order here
+        Order savedOrder = orderService.createOrder(order); // new order id will be generated here
+        listOfOrders.add(savedOrder); 
+        orderFarmer.setServiceOrders(listOfOrders);
+         
+        farmerRepository.save(orderFarmer);
+        return savedOrder;
     }
 }

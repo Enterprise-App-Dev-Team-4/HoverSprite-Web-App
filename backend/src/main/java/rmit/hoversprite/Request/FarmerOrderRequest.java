@@ -14,12 +14,12 @@ public class FarmerOrderRequest {
     public FarmerOrderRequest() {}
 
     // Parameterized constructor
-    public FarmerOrderRequest(SprayServices sprayServices, Farmer farmer, double totalCost, String serviceTimeSlot, String date) {
+    public FarmerOrderRequest(SprayServices sprayServices, double totalCost, String serviceTimeSlot, String date, Farmer farmer) {
         this.sprayServices = sprayServices;
-        this.farmer = farmer;
         this.totalCost = totalCost;
         this.serviceTimeSlot = serviceTimeSlot;
         this.date = date;
+        this.farmer = farmer;
     }
 
     // Getter for sprayServices
@@ -32,6 +32,16 @@ public class FarmerOrderRequest {
         this.sprayServices = sprayServices;
     }
 
+    public Farmer getFarmer()
+    {
+        return this.farmer;
+    }
+
+    public void setFarmer(Farmer farmer)
+    {
+        this.farmer = farmer;
+    }
+
     public void setDate(String date)
     {
         this.date = date;
@@ -40,16 +50,6 @@ public class FarmerOrderRequest {
     public String getDate()
     {
         return this.date;
-    }
-
-    // Getter for farmer
-    public Farmer getFarmer() {
-        return farmer;
-    }
-
-    // Setter for farmer
-    public void setFarmer(Farmer farmer) {
-        this.farmer = farmer;
     }
 
     // Getter for totalCost
