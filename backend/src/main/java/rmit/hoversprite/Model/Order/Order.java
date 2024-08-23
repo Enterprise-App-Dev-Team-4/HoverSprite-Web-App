@@ -1,6 +1,10 @@
 package rmit.hoversprite.Model.Order;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +37,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "farmer_id")
+    @JsonBackReference (value = "ordered-farmer")
     private Farmer farmer;
 
     @ManyToOne
@@ -41,6 +46,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
+    @JsonBackReference (value = "service")
     private SprayServices sprayerServices;
 
     @ManyToMany

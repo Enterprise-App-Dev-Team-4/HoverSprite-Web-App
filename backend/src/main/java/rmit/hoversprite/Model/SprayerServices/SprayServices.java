@@ -11,6 +11,9 @@ import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.CropType;
 import rmit.hoversprite.Utils.Enum.ServiceName;
@@ -37,6 +40,7 @@ public class SprayServices {
     private String description;
 
     @OneToMany(mappedBy = "sprayerServices", fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "service")
     private List<Order> orders;
 
     @ElementCollection
