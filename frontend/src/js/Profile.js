@@ -1,7 +1,7 @@
 const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     loadNavBar();
     loadFooter();
     fetchUserData();
@@ -47,37 +47,37 @@ function initializeProfileButtons() {
     const profileImageInput = document.getElementById('profileImageUpload');
     const profileImage = document.getElementById('profileImage');
 
-    editBtn.addEventListener('click', function() {
+    editBtn.addEventListener('click', function () {
         profileForm.style.display = 'block';
         profileInfo.style.display = 'none';
         editBtn.style.display = 'none';
     });
 
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', function () {
         profileForm.style.display = 'none';
         profileInfo.style.display = 'block';
         editBtn.style.display = 'block';
     });
 
     // Update profile image preview when a new image is selected
-    profileImageInput.addEventListener('change', function(e) {
+    profileImageInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = function (event) {
                 profileImage.src = event.target.result; // Update the image preview
             };
             reader.readAsDataURL(file);
         }
     });
 
-    profileForm.addEventListener('submit', function(e) {
+    profileForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const formData = new FormData(profileForm);
 
         // Make the request to update the user profile
-        
+
         sendRequestWithToken(UpdateProfileUrl, 'POST', formData)
             .then(response => {
                 alert('Profile updated successfully!');
