@@ -1,0 +1,20 @@
+{
+    "sprayers": [
+      {
+        "id": 1,
+        "name": "Nguyen Van A",
+        "expertise": "Expert"
+      },
+      {
+        "id": 2,
+        "name": "Le Thi B",
+        "expertise": "Adept"
+      },
+      {
+        "id": 3,
+        "name": "Tran Van C",
+        "expertise": "Apprentice"
+      }
+    ]
+  }
+  

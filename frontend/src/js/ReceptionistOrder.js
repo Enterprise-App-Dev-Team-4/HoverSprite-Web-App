@@ -4,31 +4,6 @@ const itemsPerPage = 30;
 let currentPage = 1;
 let isGridView = true;
 
-const navBarURL = 'http://localhost:8080/userName';
-
-
-function loadNavBar() {
-    document.addEventListener("DOMContentLoaded", function () {
-        // Fetch the Navbar component
-        var content = document.getElementById("navbar-container");
-        sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data))
-            .catch(error => console.error(error));
-        // content.innerHTML = returnNavBar(userData.email);
-        // content.innerHTML = returnNavBarStyle();
-        activeClick();
-    });
-
-}
-
-function loadFooter() {
-    console.log('Hello  footer');
-    document.addEventListener("DOMContentLoaded", function () {
-        // Fetch the Navbar component
-        var content = document.getElementById("footer-container");
-        content.innerHTML = returnFooter();
-    });
-}
-
 
 // Fetch Order From Testing Data
 fetch('../js/fakeOrder.json')
@@ -40,12 +15,10 @@ fetch('../js/fakeOrder.json')
     .catch(error => console.error('Error:', error));
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+    const viewDetailsButton = `<a href="/receptionist-order-detail/${order.id}" class="btn btn-success btn-sm me-2 w-50">View Details</a>`;
+    const assignedSprayers = order.assignedSprayers ? order.assignedSprayers.join(', ') : 'None';
 
     if (isGridView) {
-        // const viewDetailsButton = `<a href="UserOrderDetail.html?id=${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
-
-
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
@@ -56,11 +29,14 @@ function createOrderCard(order) {
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Crop Type:</strong> ${order.farm.cropType}<br>
                             <strong>Area:</strong> ${order.farm.area} decares<br>
-                            <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
+                            <strong>Cost:</strong> ${order.cost.toLocaleString()} VND<br>
+                            <strong>Assigned Sprayers:</strong> ${assignedSprayers}
                         </p>
                     </div>
-                    <div class="card-footer bg-transparent border-0">
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                         ${viewDetailsButton}
+                        <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
+                        <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                     </div>
                 </div>
             </div>
@@ -87,8 +63,13 @@ function createOrderCard(order) {
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
                             </div>
-                            <div class="col-md-3 col-lg-2">
+                            <div class="col-md-2 mb-2 mb-md-0">
+                                <strong>Assigned Sprayers:</strong> ${assignedSprayers}
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                                 ${viewDetailsButton}
+                                <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
+                                <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                             </div>
                         </div>
                     </div>
@@ -97,6 +78,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 const toggleViewBtn = document.getElementById('toggleViewBtn');
 toggleViewBtn.addEventListener('click', () => {
@@ -166,7 +148,7 @@ function filterOrders() {
 
     const filteredOrders = orders.filter(order => {
         const matchesSearch = order.id.toString().includes(searchTerm) ||
-            order.farm.cropType.toLowerCase().includes(searchTerm);
+            order.cropType.toLowerCase().includes(searchTerm);
         const matchesStatus = statusFilter === '' || order.status === statusFilter;
         const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
 
@@ -221,9 +203,98 @@ backToTopBtn.addEventListener('click', () => {
     document.documentElement.scrollTop = 0;
 });
 
+function openStatusModal(orderId) {
+    document.getElementById('statusModalOrderId').value = orderId;
+    document.getElementById('statusModal').style.display = 'block';
+}
+
+function changeOrderStatus() {
+    const orderId = document.getElementById('statusModalOrderId').value;
+    const newStatus = document.getElementById('statusSelect').value;
+
+    // Update the status in the order data (this would typically be an API call)
+    const order = orders.find(o => o.id == orderId);
+    if (order) {
+        order.status = newStatus;
+        // Re-render the order cards to reflect the new status
+        renderOrders();
+
+        // Send the appropriate emails based on the new status
+        sendStatusChangeEmail(orderId, newStatus);
+    }
+
+    document.getElementById('statusModal').style.display = 'none';
+}
+
+function sendStatusChangeEmail(orderId, status) {
+    switch (status) {
+        case 'pending':
+            console.log(`Email: Order #${orderId} is now pending.`);
+            break;
+        case 'cancelled':
+            console.log(`Email: Order #${orderId} has been cancelled.`);
+            break;
+        case 'confirmed':
+            console.log(`Email: Order #${orderId} has been confirmed.`);
+            break;
+        case 'assigned':
+            console.log(`Email: Order #${orderId} has been assigned to sprayer(s).`);
+            break;
+        default:
+            console.log(`Email: Status of order #${orderId} has been changed to ${status}.`);
+            break;
+    }
+}
+
+
+// Function to open the assign sprayer modal
+function openAssignSprayerModal(orderId) {
+    // Fetch sprayers and populate the modal with sprayer options
+    fetch('../js/fakeSprayers.json')
+        .then(response => response.json())
+        .then(data => {
+            const sprayerOptions = data.sprayers.map(sprayer => `<option value="${sprayer.id}">${sprayer.name} (${sprayer.expertise})</option>`).join('');
+            document.getElementById('assignSprayerModalBody').innerHTML = `
+                <div>
+                    <label for="sprayerSelect">Select Sprayer:</label>
+                    <select id="sprayerSelect" class="form-select">
+                        ${sprayerOptions}
+                    </select>
+                </div>
+            `;
+            document.getElementById('assignSprayerModal').style.display = 'block';
+            document.getElementById('assignSprayerModalOrderId').value = orderId;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Function to handle sprayer assignment
+function assignSprayer() {
+    const orderId = document.getElementById('assignSprayerModalOrderId').value;
+    const sprayerId = document.getElementById('sprayerSelect').value;
+
+    // Fetch the selected sprayer's details (assuming sprayer data is available in the modal)
+    const sprayerName = document.querySelector(`#sprayerSelect option[value="${sprayerId}"]`).textContent;
+
+    // Find the order and update it with the assigned sprayer
+    const order = orders.find(o => o.id == orderId);
+    if (order) {
+        if (!order.assignedSprayers) {
+            order.assignedSprayers = [];
+        }
+        order.assignedSprayers.push(sprayerName);
+        order.status = 'assigned'; // Update status to assigned
+    }
+
+    // Re-render the order cards to reflect the new assignment
+    renderOrders();
+
+    // Close the modal
+    document.getElementById('assignSprayerModal').style.display = 'none';
+
+    console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
+}
+
+
 console.log('Orders:', orders);
 console.log('Current Page:', currentPage);
-
-
-loadNavBar();
-loadFooter();
