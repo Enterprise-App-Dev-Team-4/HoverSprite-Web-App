@@ -25,15 +25,39 @@ function initMap() {
 
   const locationInput = document.getElementById("location");
 
-  marker.on('dragend', function (event) {
+  function updateLocationInput(lat, lon) {
+    const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
+
+    fetch(reverseGeocodeUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.address) {
+          const address = data.address;
+          const ward = address.suburb || "";
+          const district = address.city_district || address.district || "";
+          const city = address.city || address.town || address.village || "";
+          const country = address.country || "";
+
+          locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
+        } else {
+          locationInput.value = "Address not found";
+        }
+      })
+      .catch(error => console.error("Error:", error));
+  }
+
+  marker.on('dragend', function () {
     const position = marker.getLatLng();
-    locationInput.value = `${position.lat}, ${position.lng}`;
+    updateLocationInput(position.lat, position.lng);
   });
 
   map.on('click', function (e) {
     marker.setLatLng(e.latlng);
-    locationInput.value = `${e.latlng.lat}, ${e.latlng.lng}`;
+    updateLocationInput(e.latlng.lat, e.latlng.lng);
   });
+
+  // Set initial location value
+  updateLocationInput(defaultLocation[0], defaultLocation[1]);
 }
 
 function updateMap(address) {
@@ -47,6 +71,7 @@ function updateMap(address) {
         const lon = parseFloat(data[0].lon);
         map.setView([lat, lon], 15);
         marker.setLatLng([lat, lon]);
+        updateLocationInput(lat, lon); // Update location input with address
       } else {
         console.log("Address not found");
       }
