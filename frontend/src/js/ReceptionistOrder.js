@@ -15,6 +15,7 @@ fetch('../js/fakeOrder.json')
     .catch(error => console.error('Error:', error));
 
 function createOrderCard(order) {
+    const viewDetailsButton = `<a href="/receptionist-order-detail/${order.id}" class="btn btn-success btn-sm me-2 w-50">View Details</a>`;
     const assignedSprayers = order.assignedSprayers ? order.assignedSprayers.join(', ') : 'None';
 
     if (isGridView) {
@@ -26,14 +27,14 @@ function createOrderCard(order) {
                         <p class="card-text">
                             <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
-                            <strong>Crop Type:</strong> ${order.cropType}<br>
-                            <strong>Area:</strong> ${order.area} decares<br>
+                            <strong>Crop Type:</strong> ${order.farm.cropType}<br>
+                            <strong>Area:</strong> ${order.farm.area} decares<br>
                             <strong>Cost:</strong> ${order.cost.toLocaleString()} VND<br>
                             <strong>Assigned Sprayers:</strong> ${assignedSprayers}
                         </p>
                     </div>
                     <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
-                        <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
+                        ${viewDetailsButton}
                         <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
                         <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                     </div>
@@ -54,10 +55,10 @@ function createOrderCard(order) {
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.cropType}
+                                <strong>Crop:</strong> ${order.farm.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Area:</strong> ${order.area} decares
+                                <strong>Area:</strong> ${order.farm.area} decares
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
@@ -66,7 +67,7 @@ function createOrderCard(order) {
                                 <strong>Assigned Sprayers:</strong> ${assignedSprayers}
                             </div>
                             <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
-                                <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
+                                ${viewDetailsButton}
                                 <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
                                 <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                             </div>

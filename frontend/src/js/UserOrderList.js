@@ -20,8 +20,6 @@ function loadNavBar() {
 
 }
 
-
-
 function loadFooter() {
     console.log('Hello  footer');
     document.addEventListener("DOMContentLoaded", function () {

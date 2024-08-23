@@ -11,6 +11,7 @@ const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
 const userOrderList = __dirname + '/src/pages/UserOrderList.html'
 const receptionistOrder = __dirname + '/src/pages/ReceptionistOrder.html'
+const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html';
 const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 
@@ -78,6 +79,10 @@ app.get('/test', (req,res) => {
 app.get('/receptionist-order', (req, res) => {
     res.sendFile(receptionistOrder);
 })
+
+app.get('/receptionist-order-detail/:id', (req, res) => {
+    res.sendFile(receptionistOrderDetailPath);
+});
 
 app.listen(3000, () => {
     console.log("listen on port");
