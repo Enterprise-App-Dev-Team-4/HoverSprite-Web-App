@@ -13,6 +13,7 @@ public class UserDTO {
     private String lastName;
     private String firstName;
     private String token;
+    private String profileImage;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -20,7 +21,7 @@ public class UserDTO {
     public UserDTO() {}
 
     public UserDTO(String id, String email, String fullName, String firstName, String lastName, 
-        String phoneNumber, String homeAddress, Role role, String token) {
+        String phoneNumber, String homeAddress, Role role, String token, String profileImage) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -30,6 +31,7 @@ public class UserDTO {
         this.lastName = lastName;
         this.role = role;
         this.token = token;
+        this.profileImage = profileImage;
     }
 
     // Getters and Setters
@@ -47,6 +49,14 @@ public class UserDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void setRole(Role role)

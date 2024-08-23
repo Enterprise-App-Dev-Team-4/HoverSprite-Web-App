@@ -48,6 +48,7 @@ function fetchAndDisplayServices() {
         })
         .then(data => {
             allServices = data; // Store the fetched services for later filtering
+            console.log(allServices);
             displayServices(allServices); // Initially display all services
         })
         .catch(error => {
@@ -74,7 +75,7 @@ function loadNavBar()
   document.addEventListener("DOMContentLoaded", function() {
     // Fetch the Navbar component
     var content = document.getElementById("navbar-container");
-    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data.email))
+    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data))
     .catch(error => console.error(error));
     // content.innerHTML = returnNavBar(userData.email);
     // content.innerHTML = returnNavBarStyle();

@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
 import rmit.hoversprite.Response.AuthenticationResponse;
@@ -24,6 +28,14 @@ public class FarmerService {
 
     @Autowired
     AuthenticationResponse authenticationResponse;
+
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+
+    
 
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
@@ -50,4 +62,29 @@ public class FarmerService {
         return authenticationResponse.getFarmerByToken();
     }
 
+    @Transactional
+    public Farmer updateFarmerProfile(Farmer farmer)
+    {
+        Farmer oldFarmer = getFarmerData();
+        Farmer updateFarmer = farmerUpdateProfileRequest.farmerToFarmer(farmer, oldFarmer);
+        return farmerRepository.save(updateFarmer);
+    }
+
+    public Order farmerCreateOrder(Order order)
+    {
+        System.out.print("Current Farmer Token: ");
+        Farmer orderFarmer = farmerRepository.findByEmail(order.getFarmer().getEmail());
+        
+        System.out.println(orderFarmer.getToken());
+        order.setFarmer(orderFarmer);
+        List<Order> listOfOrders = orderFarmer.getServicOrders();
+
+        //save order here
+        Order savedOrder = orderService.createOrder(order); // new order id will be generated here
+        listOfOrders.add(savedOrder); 
+        orderFarmer.setServiceOrders(listOfOrders);
+         
+        farmerRepository.save(orderFarmer);
+        return savedOrder;
+    }
 }
