@@ -42,14 +42,13 @@ function populateFormFields(data) {
     document.getElementById('phoneNumber').value = data.phoneNumber || '';
 }
 
-
-
 function initializeProfileButtons() {
     const profileForm = document.querySelector('.profile-form');
     const profileInfo = document.querySelector('.profile-info');
     const editBtn = document.querySelector('.edit-btn');
     const cancelBtn = document.querySelector('.cancel-btn');
     const profileImage = document.getElementById('profileImage');
+    const profileImageUpload = document.getElementById('profileImageUpload');
 
     editBtn.addEventListener('click', function() {
         profileForm.style.display = 'block';
@@ -63,7 +62,8 @@ function initializeProfileButtons() {
         editBtn.style.display = 'block';
     });
 
-    document.getElementById('profileImageUpload').addEventListener('change', function(e) {
+    // Update profile image preview when a new image is selected
+    profileImageUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -77,12 +77,16 @@ function initializeProfileButtons() {
     profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        uploadUserImage().then(profileImageUrl => {
+        // Assuming uploadUserImage is a function that handles image uploading
+        uploadUserImage(profileImageUpload.files[0]).then(profileImageUrl => {
             if (profileImageUrl) {
                 submitProfileFormWithImage(profileImageUrl);
             } else {
-              submitProfileFormWithImage(userData.profileImage);
+                submitProfileFormWithImage(userData.profileImage);
             }
+        }).catch(error => {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image.');
         });
     });
 }
@@ -96,7 +100,7 @@ function submitProfileFormWithImage(imageUrl) {
         phoneNumber: document.getElementById('phoneNumber').value
     };
 
-    console.log(userProfile)
+    console.log(userProfile);
     sendRequestWithToken(UpdateProfileUrl, 'PUT', userProfile)
         .then(data => {
             console.log(data);
@@ -107,7 +111,6 @@ function submitProfileFormWithImage(imageUrl) {
             alert('Failed to update profile.');
         });
 }
-
 
 function finalizeProfileUpdate() {
     const profileForm = document.querySelector('.profile-form');
