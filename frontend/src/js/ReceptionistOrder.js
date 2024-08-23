@@ -15,6 +15,8 @@ fetch('../js/fakeOrder.json')
     .catch(error => console.error('Error:', error));
 
 function createOrderCard(order) {
+    const assignedSprayers = order.assignedSprayers ? order.assignedSprayers.join(', ') : 'None';
+
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
@@ -26,14 +28,15 @@ function createOrderCard(order) {
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Crop Type:</strong> ${order.cropType}<br>
                             <strong>Area:</strong> ${order.area} decares<br>
-                            <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
+                            <strong>Cost:</strong> ${order.cost.toLocaleString()} VND<br>
+                            <strong>Assigned Sprayers:</strong> ${assignedSprayers}
                         </p>
                     </div>
                     <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                         <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
                         <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
                         <button class="btn btn-primary btn-sm w-50" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
-                </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -59,6 +62,9 @@ function createOrderCard(order) {
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
                             </div>
+                            <div class="col-md-2 mb-2 mb-md-0">
+                                <strong>Assigned Sprayers:</strong> ${assignedSprayers}
+                            </div>
                             <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
                                 <a href="#" class="btn btn-success btn-sm me-2 w-50">View Details</a>
                                 <button class="btn btn-warning btn-sm me-2 w-25" onclick="openStatusModal(${order.id})">Change Status</button>
@@ -71,6 +77,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 const toggleViewBtn = document.getElementById('toggleViewBtn');
 toggleViewBtn.addEventListener('click', () => {
@@ -265,11 +272,26 @@ function assignSprayer() {
     const orderId = document.getElementById('assignSprayerModalOrderId').value;
     const sprayerId = document.getElementById('sprayerSelect').value;
 
-    // Make an API call to update the order with the assigned sprayer
-    console.log(`Assigning sprayer ${sprayerId} to order ${orderId}`);
+    // Fetch the selected sprayer's details (assuming sprayer data is available in the modal)
+    const sprayerName = document.querySelector(`#sprayerSelect option[value="${sprayerId}"]`).textContent;
+
+    // Find the order and update it with the assigned sprayer
+    const order = orders.find(o => o.id == orderId);
+    if (order) {
+        if (!order.assignedSprayers) {
+            order.assignedSprayers = [];
+        }
+        order.assignedSprayers.push(sprayerName);
+        order.status = 'assigned'; // Update status to assigned
+    }
+
+    // Re-render the order cards to reflect the new assignment
+    renderOrders();
 
     // Close the modal
     document.getElementById('assignSprayerModal').style.display = 'none';
+
+    console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
 }
 
 
