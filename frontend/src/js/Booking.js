@@ -95,10 +95,35 @@ function convertDate(date, fromType, toType) {
   return date;
 }
 
+function getUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  
+  const user = {
+    email: params.get('userEmail')
+  };
+
+  const service = {
+    id: params.get('serviceId'),
+    name: params.get('serviceName'),
+    cropType: params.get('cropType'),
+    serviceType: params.get('serviceType'),
+    // Parse the JSON strings back into arrays
+    orders: JSON.parse(params.get('serviceOrders') || '[]'),
+    timeSlots: JSON.parse(params.get('serviceTimeSlots') || '[]')
+  };
+
+  return { user, service };
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
   loadNavBar();
   loadFooter();
   initMap();
+
+  const { user, service } = getUrlParams();
+  console.log('User:', user);
+  console.log('Service:', service);
 
   const form = document.querySelector('form');
   const areaInput = document.getElementById("area");

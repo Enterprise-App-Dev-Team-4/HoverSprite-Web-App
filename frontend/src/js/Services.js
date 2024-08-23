@@ -1,5 +1,7 @@
 const serviceAPI = 'http://localhost:8080/service/all';
 const navBarURL = 'http://localhost:8080/userName';
+
+var user = null;
 let allServices = []; // Store the fetched services globally for filtering
 
 function displayServices(services) {
@@ -20,7 +22,7 @@ function displayServices(services) {
                                 <h5 class="card-title">${service.serviceName}</h5>
                                 <p>Crop Type: ${cropType}</p>
                                 <p class="card-text">${service.description}</p>
-                                <a href="${service.link}" class="btn btn-dark btn-block">Book Now</a>
+                                <button class="btn btn-dark btn-block book-now-btn" data-service-id="${service.id}">Book Now</button>
                             </div>
                         </div>
                     </div>
@@ -29,7 +31,42 @@ function displayServices(services) {
         `;
         container.insertAdjacentHTML('beforeend', serviceCard);
     });
+
+    // Attach event listeners to the "Book Now" buttons
+    const bookNowButtons = document.querySelectorAll('.book-now-btn');
+    bookNowButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-service-id');
+            const selectedService = services.find(service => service.id === serviceId);
+            if (selectedService && user) {
+                redirectToBooking(selectedService, user);
+            } else {
+                console.error('Service or user data not found');
+            }
+        });
+    });
 }
+
+function redirectToBooking(service, user) {
+    // Serialize the timeSlots and orders lists into a JSON string or comma-separated values
+    const timeSlotsSerialized = JSON.stringify(service.timeSlots);
+    const ordersSerialized = JSON.stringify(service.orders);
+
+    // Prepare the data to be passed to the booking page
+    const bookingParams = new URLSearchParams({
+        serviceId: service.id,
+        serviceName: service.serviceName,
+        serviceType: service.serviceType,
+        cropType: service.cropType,
+        serviceOrders: ordersSerialized, // Serialized orders list
+        serviceTimeSlots: timeSlotsSerialized, // Serialized timeSlots list
+        userEmail: user.email, // Assuming the user object has an 'email' property
+    });
+
+    // Redirect to the booking page with the data in the query string
+    window.location.href = `/booking?${bookingParams.toString()}`;
+}
+
 
 function fetchAndDisplayServices() {
     const searchInput = document.getElementById('searchInput').value.toUpperCase(); // Convert to uppercase for enum matching
@@ -75,10 +112,12 @@ function loadNavBar()
   document.addEventListener("DOMContentLoaded", function() {
     // Fetch the Navbar component
     var content = document.getElementById("navbar-container");
-    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data))
+    sendRequestWithToken(navBarURL).then(data => {
+        content.innerHTML = returnNavBar(data);
+        user = data; // assign the fetched data to the user object
+        console.log(user.email);
+    })
     .catch(error => console.error(error));
-    // content.innerHTML = returnNavBar(userData.email);
-    // content.innerHTML = returnNavBarStyle();
     activeClick();
   });
   
