@@ -35,6 +35,8 @@ public class FarmerService {
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
 
+    
+
     public Farm userSaveFarm(String userId, Farm farm) {
         Farmer farmer = farmerRepository.findFarmerById(userId);
         if (farmer != null) {
@@ -70,7 +72,10 @@ public class FarmerService {
 
     public Order farmerCreateOrder(Order order)
     {
-        Farmer orderFarmer = getFarmerData();
+        System.out.print("Current Farmer Token: ");
+        Farmer orderFarmer = farmerRepository.findByEmail(order.getFarmer().getEmail());
+        
+        System.out.println(orderFarmer.getToken());
         order.setFarmer(orderFarmer);
         List<Order> listOfOrders = orderFarmer.getServicOrders();
 
@@ -80,6 +85,6 @@ public class FarmerService {
         orderFarmer.setServiceOrders(listOfOrders);
          
         farmerRepository.save(orderFarmer);
-        return order;
+        return savedOrder;
     }
 }

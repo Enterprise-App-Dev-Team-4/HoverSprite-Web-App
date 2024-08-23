@@ -115,13 +115,17 @@ public class FarmerController {
     }
 
     @PostMapping("requestOrder")
+    
     public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerOrderRequest farmerOrderRequest)
     {
-        Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
         
+        Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
         Order savedOrder = farmerService.farmerCreateOrder(order);
+
+
+        // System.out.println("Success");
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(savedOrder);
         //put the order in the farmerservice to get order
-        return ResponseEntity.ok(orderDTO);
+        return ResponseEntity.ok(savedOrder);
     }
 }
