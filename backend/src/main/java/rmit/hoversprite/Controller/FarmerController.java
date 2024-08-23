@@ -128,10 +128,4 @@ public class FarmerController {
         //put the order in the farmerservice to get order
         return ResponseEntity.ok(savedOrder);
     }
-
-    @PostMapping("/create-order")
-    public ResponseEntity<Order> createOrder(@RequestParam String farmerId, @RequestBody SprayServices services) {
-        Order createdOrder = farmerService.createOrderForFarmer(farmerId, services);
-        return ResponseEntity.ok(createdOrder);
-    }
 }

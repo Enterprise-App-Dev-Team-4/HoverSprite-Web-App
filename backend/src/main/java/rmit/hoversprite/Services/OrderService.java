@@ -27,21 +27,6 @@ public class OrderService {
         // Generate order id and assign it
         String generateOrderId = utilsClass.generateOrderId(orderRepository.findAll());
         order.setOrderID(generateOrderId);
-
-        order.setFarmer(farmer);
-
         return orderRepository.save(order);
-    }
-
-    public Order getOrderById(String id) {
-        return orderRepository.getReferenceById(id);
-    }
-
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
-    
-    public void deleteOrder(String id) {
-        orderRepository.deleteById(id);
     }
 }
