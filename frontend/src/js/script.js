@@ -6,7 +6,7 @@ function loadNavBar()
   document.addEventListener("DOMContentLoaded", function() {
     // Fetch the Navbar component
     var content = document.getElementById("navbar-container");
-    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data.email))
+    sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data))
     .catch(error => console.error(error));
     // content.innerHTML = returnNavBar(userData.email);
     // content.innerHTML = returnNavBarStyle();

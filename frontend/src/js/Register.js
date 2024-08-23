@@ -14,7 +14,8 @@ function submitForm()
             password: form.password.value,
             email: form.email.value,
             phoneNumber: form.phoneNumber.value,
-            homeAddress: form.homeAddress.value
+            homeAddress: form.homeAddress.value,
+            profileImage: 'https://firebasestorage.googleapis.com/v0/b/hoversprite-3d6b3.appspot.com/o/user-avatar.png?alt=media&token=ebc0c97d-28c7-4316-9ce2-a68215fe9c22'
         };
     
         // Send the form data using fetch

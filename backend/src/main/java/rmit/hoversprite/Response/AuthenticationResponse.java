@@ -26,6 +26,7 @@ public class AuthenticationResponse {
     @Autowired
     private JwtAuthFilter authFilter;
 
+
     public Farmer authenticateFarmer(User user) {
         Farmer farmer = farmerRepository.findByEmail(user.getEmail());
         if (farmer == null) {
