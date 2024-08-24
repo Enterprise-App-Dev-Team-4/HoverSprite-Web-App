@@ -60,7 +60,8 @@ public class DTOConverter {
                 order.getServiceTimeSlot(),
                 order.getOrderStatus(),
                 order.getTotalCost(),
-                order.getFarmer()
+                order.getFarmer(),
+                order.getLocation()
             );
         }
         return null;

@@ -9,17 +9,19 @@ public class FarmerOrderRequest {
     private double totalCost;
     private String serviceTimeSlot;
     private String date;
+    private String location;
 
     // Default constructor
     public FarmerOrderRequest() {}
 
     // Parameterized constructor
-    public FarmerOrderRequest(SprayServices sprayServices, double totalCost, String serviceTimeSlot, String date, Farmer farmer) {
+    public FarmerOrderRequest(SprayServices sprayServices, double totalCost, String serviceTimeSlot, String date, Farmer farmer, String location) {
         this.sprayServices = sprayServices;
         this.totalCost = totalCost;
         this.serviceTimeSlot = serviceTimeSlot;
         this.date = date;
         this.farmer = farmer;
+        this.location = location;
     }
 
     // Getter for sprayServices
@@ -30,6 +32,16 @@ public class FarmerOrderRequest {
     // Setter for sprayServices
     public void setSprayServices(SprayServices sprayServices) {
         this.sprayServices = sprayServices;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+
+    public String getLocation()
+    {
+        return this.location;
     }
 
     public Farmer getFarmer()

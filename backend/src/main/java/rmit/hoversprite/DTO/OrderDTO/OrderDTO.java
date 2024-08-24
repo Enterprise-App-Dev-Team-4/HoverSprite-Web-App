@@ -9,6 +9,7 @@ public class OrderDTO {
     private String orderID;
     private String date;
     private String serviceTimeSlot;
+    private String location;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -20,13 +21,14 @@ public class OrderDTO {
     public OrderDTO() {}
 
     // Parameterized constructor
-    public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, double totalCost, Farmer farmer) {
+    public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, double totalCost, Farmer farmer, String location) {
         this.orderID = orderID;
         this.date = date;
         this.serviceTimeSlot = serviceTimeSlot;
         this.orderStatus = orderStatus;
         this.totalCost = totalCost;
         this.farmer = farmer;
+        this.location = location;
     }
 
     // Getter for orderID
@@ -38,6 +40,17 @@ public class OrderDTO {
     public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+
+    public String getLocation()
+    {
+        return this.location;
+    }
+
 
     // Getter for date
     public String getDate() {
