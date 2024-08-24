@@ -37,8 +37,8 @@ public class FarmerService {
 
     
 
-    public Farm userSaveFarm(String userId, Farm farm) {
-        Farmer farmer = farmerRepository.findFarmerById(userId);
+    public Farm userSaveFarm(String userEmail, Farm farm) {
+        Farmer farmer = farmerRepository.findByEmail(userEmail);
         if (farmer != null) {
             farm.setFarmer(farmer);  // Set the relationship
             List<Farm> listOfFarms = farmer.getFarms();
@@ -53,7 +53,7 @@ public class FarmerService {
 
             return farmService.saveFarmToDataBase(farm);
         } else {
-            throw new IllegalArgumentException("Farmer with ID " + userId + " not found");
+            throw new IllegalArgumentException("Farmer with Email " + userEmail + " not found");
         }
     }
 

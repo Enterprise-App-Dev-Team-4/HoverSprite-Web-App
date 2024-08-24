@@ -27,6 +27,7 @@ import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Request.FarmerAddFarmRequest;
 import rmit.hoversprite.Request.FarmerOrderRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Response.AuthenticationResponse;
@@ -50,9 +51,10 @@ public class FarmerController {
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
 
     @PostMapping("farm/add-farm")
-    public FarmDTO addFarm(@RequestBody Farm farm, @RequestParam String farmer_id)
+    public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
     {
-        return new DTOConverter().convertFarmDataToObject(farmerService.userSaveFarm(farmer_id, farm));
+        FarmDTO farm = new DTOConverter().convertFarmDataToObject(farmerService.userSaveFarm(request.getFarmerEmail(), request.getFarm()));
+        return ResponseEntity.ok(farm);
     }
 
     @GetMapping("userName")

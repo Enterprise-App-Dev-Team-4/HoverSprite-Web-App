@@ -1,11 +1,26 @@
 let map, marker;
 const UserURL = 'http://localhost:8080/userName';
+var sentUser = null;
+var sendService = null;
+
+document.addEventListener("DOMContentLoaded", function () {
+  initializeApp();
+});
+
+function initializeApp() {
+  loadNavBar();
+  loadFooter();
+  initMap();
+  extractAndStoreUrlParams();
+  setupFormHandlers();
+  setInitialDate();
+}
 
 function loadNavBar() {
   const navbarContainer = document.getElementById("navbar-container");
   sendRequestWithToken(UserURL)
       .then(data => {
-        console.log(data);
+          console.log(data);
           navbarContainer.innerHTML = returnNavBar(data);
           activeClick();
       })
@@ -29,27 +44,6 @@ function initMap() {
 
   const locationInput = document.getElementById("location");
 
-  function updateLocationInput(lat, lon) {
-    const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
-
-    fetch(reverseGeocodeUrl)
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.address) {
-          const address = data.address;
-          const ward = address.suburb || "";
-          const district = address.city_district || address.district || "";
-          const city = address.city || address.town || address.village || "";
-          const country = address.country || "";
-
-          locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
-        } else {
-          locationInput.value = "Address not found";
-        }
-      })
-      .catch(error => console.error("Error:", error));
-  }
-
   marker.on('dragend', function () {
     const position = marker.getLatLng();
     updateLocationInput(position.lat, position.lng);
@@ -62,6 +56,28 @@ function initMap() {
 
   // Set initial location value
   updateLocationInput(defaultLocation[0], defaultLocation[1]);
+}
+
+function updateLocationInput(lat, lon) {
+  const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
+
+  fetch(reverseGeocodeUrl)
+    .then(response => response.json())
+    .then(data => {
+      const locationInput = document.getElementById("location");
+      if (data && data.address) {
+        const address = data.address;
+        const ward = address.suburb || "";
+        const district = address.city_district || address.district || "";
+        const city = address.city || address.town || address.village || "";
+        const country = address.country || "";
+
+        locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
+      } else {
+        locationInput.value = "Address not found";
+      }
+    })
+    .catch(error => console.error("Error:", error));
 }
 
 function updateMap(address) {
@@ -101,7 +117,7 @@ function convertDate(date, fromType, toType) {
 
 function getUrlParams() {
   const params = new URLSearchParams(window.location.search);
-  
+
   const user = {
     email: params.get('userEmail')
   };
@@ -111,7 +127,6 @@ function getUrlParams() {
     name: params.get('serviceName'),
     cropType: params.get('cropType'),
     serviceType: params.get('serviceType'),
-    // Parse the JSON strings back into arrays
     orders: JSON.parse(params.get('serviceOrders') || '[]'),
     timeSlots: JSON.parse(params.get('serviceTimeSlots') || '[]')
   };
@@ -119,25 +134,21 @@ function getUrlParams() {
   return { user, service };
 }
 
-
-document.addEventListener("DOMContentLoaded", function () {
-  loadNavBar();
-  loadFooter();
-  initMap();
-
+function extractAndStoreUrlParams() {
   const { user, service } = getUrlParams();
-  console.log('User:', user);
-  console.log('Service:', service);
+  sentUser = user;
+  sendService = service;
+  
+  console.log('User:', sentUser);
+  console.log('Service:', sendService);
+}
 
+function setupFormHandlers() {
   const form = document.querySelector('form');
   const areaInput = document.getElementById("area");
   const dateInput = document.getElementById("date");
   const dateTypeSelect = document.getElementById("dateType");
   const locationInput = document.getElementById("location");
-
-  // Set initial date to current date
-  const now = new Date();
-  dateInput.value = now.toISOString().slice(0, 16);
 
   areaInput.addEventListener("input", function () {
     if (this.value < 0) {
@@ -163,14 +174,52 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    // Convert lunar date to solar date before submitting
-    if (dateTypeSelect.value === 'lunar') {
+     // Convert lunar date to solar if necessary
+     if (dateTypeSelect.value === 'lunar') {
       const lunarDate = dateInput.value;
       const solarDate = convertDate(lunarDate, 'lunar', 'solar');
       dateInput.value = solarDate;
-    }
+  }
 
-    console.log("Form submitted");
+  // genrate farm object base on form, this will be sent to another api
+  const farm = {
+    farmArea: areaInput.value,
+    cropType: sendService.cropType,
+    farmLocation: locationInput.value
+  }
 
+  // Gather form data
+  const formData = {
+      user: sentUser, // User data extracted from URL
+      service: sendService, // Service data extracted from URL
+      area: areaInput.value,
+      date: dateInput.value,
+      location: locationInput.value
+  };
+
+  // Define the API endpoint
+  const apiEndpoint = 'http://localhost:8080/requestOrder';
+
+  // Send the POST request with the form data
+  sendRequestWithToken(apiEndpoint, 'POST', formData)
+      .then(response => {
+          if (response.ok) {
+              // Handle success, e.g., redirect or show a success message
+              console.log('Request submitted successfully');
+              // You could redirect or update the UI here
+          } else {
+              // Handle error
+              console.error('Failed to submit request:', response.statusText);
+          }
+      })
+      .catch(error => {
+          console.error('Error submitting request:', error);
+      });
   });
-});
+}
+
+function setInitialDate() {
+  const dateInput = document.getElementById("date");
+  const now = new Date();
+  dateInput.value = now.toISOString().slice(0, 16);
+}

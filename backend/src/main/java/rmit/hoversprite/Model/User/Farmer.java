@@ -20,6 +20,7 @@ import rmit.hoversprite.Utils.Enum.Role;
 public class Farmer extends User {
 
     @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "farm") 
     private List<Farm> farms;
 
     @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
