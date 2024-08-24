@@ -1,11 +1,15 @@
 let map, marker;
+const UserURL = 'http://localhost:8080/userName';
 
 function loadNavBar() {
-  document.addEventListener("DOMContentLoaded", function () {
-    var content = document.getElementById("navbar-container");
-    content.innerHTML = returnNavBar(nothing);
-    activeClick();
-  });
+  const navbarContainer = document.getElementById("navbar-container");
+  sendRequestWithToken(UserURL)
+      .then(data => {
+        console.log(data);
+          navbarContainer.innerHTML = returnNavBar(data);
+          activeClick();
+      })
+      .catch(error => console.error('Error loading navbar:', error));
 }
 
 function loadFooter() {
