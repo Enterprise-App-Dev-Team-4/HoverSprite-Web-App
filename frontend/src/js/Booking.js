@@ -258,12 +258,21 @@ function setupFormHandlers() {
   const locationInput = document.getElementById("location");
   const sessionSelect = document.getElementById("session");
 
+  setupAreaInputHandler(areaInput);
+  setupDateTypeChangeHandler(dateTypeSelect, dateInput);
+  setupLocationInputHandler(locationInput);
+  setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect);
+}
+
+function setupAreaInputHandler(areaInput) {
   areaInput.addEventListener("input", function () {
       if (this.value < 0) {
           this.value = 0;
       }
   });
+}
 
+function setupDateTypeChangeHandler(dateTypeSelect, dateInput) {
   dateTypeSelect.addEventListener('change', function () {
       const currentDate = dateInput.value;
       const currentType = this.value === 'lunar' ? 'solar' : 'lunar';
@@ -274,73 +283,89 @@ function setupFormHandlers() {
           dateInput.value = convertedDate;
       }
   });
+}
 
+function setupLocationInputHandler(locationInput) {
   locationInput.addEventListener('change', function () {
       updateMap(this.value);
   });
+}
 
+function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect) {
   form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      // Convert lunar date to solar if necessary
-      if (dateTypeSelect.value === 'lunar') {
-          const lunarDate = dateInput.value;
-          const solarDate = convertDate(lunarDate, 'lunar', 'solar');
-          dateInput.value = solarDate;
-      }
+      handleDateConversionIfNeeded(dateTypeSelect, dateInput);
+      updateServiceTimeSlots(sessionSelect);
+      const totalCost = calculateTotalCost(areaInput.value);
 
-      // Get the selected session index
-      const selectedSessionIndex = sessionSelect.selectedIndex;
-
-      // Decrement the selected time slot by 1 on form submission
-      if (sendService.timeSlots[selectedSessionIndex] > 0) {
-          sendService.timeSlots[selectedSessionIndex] -= 1;
-
-          console.log(`Time slot at index ${selectedSessionIndex} is now ${sendService.timeSlots[selectedSessionIndex]}`);
-          console.log(sendService);
-
-          // Optionally disable the session if the time slot reaches 0
-          if (sendService.timeSlots[selectedSessionIndex] === 0) {
-              sessionSelect.options[selectedSessionIndex].disabled = true;
-          }
-      } else {
-          console.log('Selected time slot is already at 0, cannot decrement further');
-      }
-
-      // Calculate the total cost
-      const costPerDecare = 30000; // Cost for 1 decare
-      const farmArea = parseFloat(areaInput.value); // Get the farm area from the input
-      const totalCost = farmArea * costPerDecare; // Calculate the total cost
-      console.log(totalCost);
-
-      // Generate farm object based on form, this will be sent to another API
-      const farm = {
-          farmArea: farmArea,
-          cropType: sendService.cropType,
-          farmLocation: locationInput.value
-      };
-
+      const farm = generateFarmObject(areaInput.value, locationInput.value);
       sendAddFarmRequest(farm);
-      console.log(sendService.timeSlots);
+
       sendRequestUpdateService(sendService);
 
-      // Gather form data
-      const formData = {
-          farmer: sentUser, // User data extracted from URL
-          sprayServices: sendService, // Service data extracted from URL
-          date: dateInput.value,
-          location: locationInput.value,
-          serviceTimeSlot: sessionSelect.value, // Include the selected time slot
-          totalCost: totalCost // Include the calculated total cost
-      };
-
-      console.log(formData);
-
+      const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionSelect.value, totalCost);
       sendRequestOrder(formData);
-      //redirect to service
-      window.location.href = `/service`
+       // Add a 1 second delay before redirecting
+       setTimeout(function() {
+        redirectToServicePage();
+    }, 2000); // 1000 milliseconds = 1 second
   });
 }
+
+function handleDateConversionIfNeeded(dateTypeSelect, dateInput) {
+  if (dateTypeSelect.value === 'lunar') {
+      const lunarDate = dateInput.value;
+      const solarDate = convertDate(lunarDate, 'lunar', 'solar');
+      dateInput.value = solarDate;
+  }
+}
+
+function updateServiceTimeSlots(sessionSelect) {
+  const selectedSessionIndex = sessionSelect.selectedIndex;
+
+  if (sendService.timeSlots[selectedSessionIndex] > 0) {
+      sendService.timeSlots[selectedSessionIndex] -= 1;
+
+      console.log(`Time slot at index ${selectedSessionIndex} is now ${sendService.timeSlots[selectedSessionIndex]}`);
+      console.log(sendService);
+
+      if (sendService.timeSlots[selectedSessionIndex] === 0) {
+          sessionSelect.options[selectedSessionIndex].disabled = true;
+      }
+  } else {
+      console.log('Selected time slot is already at 0, cannot decrement further');
+  }
+}
+
+function calculateTotalCost(farmArea) {
+  const costPerDecare = 30000;
+  return parseFloat(farmArea) * costPerDecare;
+}
+
+function generateFarmObject(farmArea, farmLocation) {
+  return {
+      farmArea: farmArea,
+      cropType: sendService.cropType,
+      farmLocation: farmLocation
+  };
+}
+
+function gatherFormData(farmArea, location, date, session, totalCost) {
+  return {
+      farmer: sentUser,
+      sprayServices: sendService,
+      date: date,
+      location: location,
+      serviceTimeSlot: session,
+      totalCost: totalCost
+  };
+}
+
+function redirectToServicePage() {
+  window.location.href = `/service`;
+}
+
 
 
 
