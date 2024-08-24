@@ -2,6 +2,7 @@ package rmit.hoversprite.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,5 +28,17 @@ public class CheckTimeSlotService {
         
         sprayServices.setTimeSlots(time_slot);
         return sprayServices;
+    }
+
+        /**
+     * Filters out services from the list where all elements in timeSlots are 0.
+     *
+     * @param services List of SprayServices to filter.
+     * @return A filtered list of SprayServices.
+     */
+    public List<SprayServices> filterServicesWithAllZeroTimeSlots(List<SprayServices> services) {
+        return services.stream()
+                .filter(service -> service.getTimeSlots().stream().anyMatch(slot -> slot != 0))
+                .collect(Collectors.toList());
     }
 }

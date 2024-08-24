@@ -4,6 +4,8 @@ const UserURL = 'http://localhost:8080/userName';
 const apiEndpoint = 'http://localhost:8080/requestOrder';
 const addFarmAPI = 'http://localhost:8080/farm/add-farm';
 
+const updateServicesAPI = 'http://localhost:8080/services/update'
+
 var sentUser = null;
 var sendService = null;
 
@@ -32,18 +34,25 @@ function initializeApp() {
 }
 
 function populateSessionOptions() {
-    const sessionSelect = document.getElementById("session");
+  const sessionSelect = document.getElementById("session");
 
-    // Clear existing options
-    sessionSelect.innerHTML = "";
+  // Clear existing options
+  sessionSelect.innerHTML = "";
 
-    // Populate session select element with options from the array
-    availableSessions.forEach(session => {
-        const option = document.createElement("option");
-        option.textContent = session;
-        sessionSelect.appendChild(option);
-    });
+  // Populate session select element with options from the array
+  availableSessions.forEach((session, index) => {
+      const option = document.createElement("option");
+      option.textContent = session;
+
+      // Disable the option if the corresponding timeSlot value is 0
+      if (sendService.timeSlots[index] === 0) {
+          option.disabled = true;
+      }
+
+      sessionSelect.appendChild(option);
+  });
 }
+
 
 function loadNavBar() {
     const navbarContainer = document.getElementById("navbar-container");
@@ -128,21 +137,23 @@ function updateMap(address) {
         .catch(error => console.error("Error:", error));
 }
 
+// Import the lunar-calendar package (for Node.js)
+
 function convertDate(date, fromType, toType) {
-    const momentDate = moment(date);
+  const momentDate = moment(date);
 
-    if (fromType === 'solar' && toType === 'lunar') {
-        const lunarDate = momentDate.subtract(1, 'days').lunar();
-        return `${lunarDate.year()}-${(lunarDate.month() + 1).toString().padStart(2, '0')}-${lunarDate.date().toString().padStart(2, '0')}T${momentDate.format('HH:mm')}`;
-    } else if (fromType === 'lunar' && toType === 'solar') {
-        const [datePart, timePart] = date.split('T');
-        const [year, month, day] = datePart.split('-').map(Number);
-        const solarDate = moment().year(year).month(month - 1).date(day).add(1, 'days');
-        return solarDate.format('YYYY-MM-DDTHH:mm');
-    }
+  if (fromType === 'solar' && toType === 'lunar') {
+      const lunarDate = momentDate.subtract(1, 'days'); // This is a simplified example
+      return lunarDate.format('YYYY-MM-DDTHH:mm'); // Ensure correct format
+  } else if (fromType === 'lunar' && toType === 'solar') {
+      const solarDate = momentDate.add(1, 'days'); // This is a simplified example
+      return solarDate.format('YYYY-MM-DDTHH:mm'); // Ensure correct format
+  }
 
-    return date;
+  return momentDate.format('YYYY-MM-DDTHH:mm'); // Default: return in correct format
 }
+
+
 
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
@@ -177,8 +188,6 @@ function sendAddFarmRequest(farm) {
         farm: farm,
         farmerEmail: sentUser.email
     };
-
-    console.log(addFarmData);
     sendRequestWithToken(addFarmAPI, 'POST', addFarmData)
         .then(response => {
             if (response.ok) {
@@ -199,6 +208,9 @@ function sendAddFarmRequest(farm) {
 function sendRequestOrder(formData) {
     // Send the POST request with the form data
     sendRequestWithToken(apiEndpoint, 'POST', formData)
+        .then(data => {
+          console.log('order response: ' + data);
+        })
         .then(response => {
             if (response.ok) {
                 console.log(response);
@@ -214,6 +226,29 @@ function sendRequestOrder(formData) {
             console.error('Error submitting request:', error);
         });
 }
+
+function sendRequestUpdateService(services) {
+  // Send the POST request with the form data
+  sendRequestWithToken(updateServicesAPI, 'PUT', services)
+      .then(data => {
+        console.log('service response: ' + data);
+      })
+      .then(response => {
+          if (response.ok) {
+              console.log(response);
+              // Handle success, e.g., redirect or show a success message
+              console.log('Request submitted successfully');
+              // You could redirect or update the UI here
+          } else {
+              // Handle error
+              console.error('Failed to submit request:', response.statusText);
+          }
+      })
+      .catch(error => {
+          console.error('Error submitting request:', error);
+      });
+}
+
 
 function setupFormHandlers() {
   const form = document.querySelector('form');
@@ -272,29 +307,41 @@ function setupFormHandlers() {
           console.log('Selected time slot is already at 0, cannot decrement further');
       }
 
+      // Calculate the total cost
+      const costPerDecare = 30000; // Cost for 1 decare
+      const farmArea = parseFloat(areaInput.value); // Get the farm area from the input
+      const totalCost = farmArea * costPerDecare; // Calculate the total cost
+      console.log(totalCost);
+
       // Generate farm object based on form, this will be sent to another API
       const farm = {
-          farmArea: areaInput.value,
+          farmArea: farmArea,
           cropType: sendService.cropType,
           farmLocation: locationInput.value
       };
 
       sendAddFarmRequest(farm);
+      console.log(sendService.timeSlots);
+      sendRequestUpdateService(sendService);
 
       // Gather form data
       const formData = {
-          user: sentUser, // User data extracted from URL
-          service: sendService, // Service data extracted from URL
+          farmer: sentUser, // User data extracted from URL
+          sprayServices: sendService, // Service data extracted from URL
           date: dateInput.value,
           location: locationInput.value,
-          timeSlot: sessionSelect.value // Include the selected time slot
+          serviceTimeSlot: sessionSelect.value, // Include the selected time slot
+          totalCost: totalCost // Include the calculated total cost
       };
 
       console.log(formData);
 
       sendRequestOrder(formData);
+      //redirect to service
+      window.location.href = `/service`
   });
 }
+
 
 
 

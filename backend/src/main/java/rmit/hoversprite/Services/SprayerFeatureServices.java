@@ -93,4 +93,17 @@ public class SprayerFeatureServices {
 
         return services;
     }
+
+    public SprayServices updateSprayServices(SprayServices services)
+    {
+        SprayServices foundServices = serviceRepository.findServiceById(services.getId());
+        // update the timeslot to database
+        foundServices.setTimeSlots(services.getTimeSlots());
+        return serviceRepository.save(foundServices);
+    }
+
+    public List<SprayServices> allBookableServices(List<SprayServices> services)
+    {
+        return checkTimeSlotService.filterServicesWithAllZeroTimeSlots(services);
+    }
 }

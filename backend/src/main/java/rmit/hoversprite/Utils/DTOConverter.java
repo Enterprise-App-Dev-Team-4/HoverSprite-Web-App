@@ -2,10 +2,12 @@ package rmit.hoversprite.Utils;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.User;
 
@@ -66,4 +68,20 @@ public class DTOConverter {
         }
         return null;
     }
+
+    public SprayServicesDTO convertServiceDataToObject(SprayServices services) {
+        if (services != null) {
+            return new SprayServicesDTO(
+                services.getId(),             // id
+                services.getPrice(),          // price
+                services.getServiceName(),    // serviceName
+                services.getServiceType(),    // serviceType
+                services.getCropType(),       // cropType
+                services.getDescription(),    // description
+                services.getTimeSlots()       // timeSlots
+            );
+        }
+        return null;
+    }
+    
 }
