@@ -27,8 +27,8 @@ function displayOrderDetails(order) {
 
     // Set order details
     document.getElementById('orderId').textContent = order.orderID;
-    document.getElementById('orderStatus').textContent = order.status;
-    document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.status)}`);
+    document.getElementById('orderStatus').textContent = order.orderStatus;
+    document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
     document.getElementById('orderDate').textContent = formatDate(order.date);
     document.getElementById('farmerName').textContent = order.farmer.fullName;
 
@@ -68,11 +68,11 @@ function displayOrderDetails(order) {
 
 function getStatusColor(status) {
     switch (status) {
-        case 'completed': return 'success';
-        case 'in_progress': return 'primary';
-        case 'confirmed': return 'info';
+        case 'COMPLETED': return 'success';
+        case 'PENDING': return 'primary';
+        case 'CONFIRM': return 'info';
         case 'assigned': return 'warning';
-        case 'cancelled': return 'danger';
+        case 'REJECTED': return 'danger';
         default: return 'secondary';
     }
 }

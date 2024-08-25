@@ -4,6 +4,7 @@ import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Request.FarmerOrderRequest;
+import rmit.hoversprite.Utils.Enum.OrderStatus;
 
 public class FarmerOrderRequestHandler {
 
@@ -18,6 +19,7 @@ public class FarmerOrderRequestHandler {
         order.setTotalCost(request.getTotalCost());
         order.setFarmer(request.getFarmer());
         order.setLocation(request.getLocation());
+        order.setOrderStatus(OrderStatus.PENDING);
         return order;
     }
 }

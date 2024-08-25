@@ -48,7 +48,7 @@ function createOrderCard(order) {
                     <div class="card-body">
                         <h5 class="card-title">Order #${order.orderID}</h5>
                         <p class="card-text">
-                            <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span><br>
+                            <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
                             <strong>Crop Type:</strong> ${order.sprayServices.cropType}<br>
@@ -103,11 +103,11 @@ toggleViewBtn.addEventListener('click', () => {
 
 function getStatusColor(status) {
     switch (status) {
-        case 'completed': return 'success';
-        case 'in_progress': return 'primary';
-        case 'confirmed': return 'info';
+        case 'COMPLETED': return 'success';
+        case 'PENDING': return 'primary';
+        case 'CONFIRM': return 'info';
         case 'assigned': return 'warning';
-        case 'cancelled': return 'danger';
+        case 'REJECTED': return 'danger';
         default: return 'secondary';
     }
 }
