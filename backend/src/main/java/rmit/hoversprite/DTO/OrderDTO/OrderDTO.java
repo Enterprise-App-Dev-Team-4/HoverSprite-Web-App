@@ -2,6 +2,7 @@ package rmit.hoversprite.DTO.OrderDTO;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Utils.Enum.OrderStatus;
 
@@ -10,6 +11,7 @@ public class OrderDTO {
     private String date;
     private String serviceTimeSlot;
     private String location;
+    private SprayServices sprayServices;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -21,7 +23,8 @@ public class OrderDTO {
     public OrderDTO() {}
 
     // Parameterized constructor
-    public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, double totalCost, Farmer farmer, String location) {
+    public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, 
+        double totalCost, Farmer farmer, String location, SprayServices sprayServices) {
         this.orderID = orderID;
         this.date = date;
         this.serviceTimeSlot = serviceTimeSlot;
@@ -29,6 +32,7 @@ public class OrderDTO {
         this.totalCost = totalCost;
         this.farmer = farmer;
         this.location = location;
+        this.sprayServices = sprayServices;
     }
 
     // Getter for orderID
@@ -39,6 +43,16 @@ public class OrderDTO {
     // Setter for orderID
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public void setSprayerServices(SprayServices sprayServices)
+    {
+        this.sprayServices = sprayServices;
+    }
+
+    public SprayServices getSprayServices()
+    {
+        return this.sprayServices;
     }
 
     public void setLocation(String location)

@@ -87,4 +87,10 @@ public class FarmerService {
         farmerRepository.save(orderFarmer);
         return savedOrder;
     }
+
+    public List<Order> farmerGetAllOrder()
+    {
+        Farmer requestFarmer = farmerRepository.findByEmail(getFarmerData().getEmail());
+        return requestFarmer.getServicOrders();
+    }
 }

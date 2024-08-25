@@ -1,51 +1,46 @@
 let orders = [];
 
+const orderAPI = 'http://localhost:8080/order/all';
 const itemsPerPage = 30;
 let currentPage = 1;
 let isGridView = true;
-
 const navBarURL = 'http://localhost:8080/userName';
-
 
 function loadNavBar() {
     document.addEventListener("DOMContentLoaded", function () {
-        // Fetch the Navbar component
-        var content = document.getElementById("navbar-container");
-        sendRequestWithToken(navBarURL).then(data => content.innerHTML = returnNavBar(data))
+        const content = document.getElementById("navbar-container");
+        sendRequestWithToken(navBarURL)
+            .then(data => content.innerHTML = returnNavBar(data))
             .catch(error => console.error(error));
-        // content.innerHTML = returnNavBar(userData.email);
-        // content.innerHTML = returnNavBarStyle();
         activeClick();
     });
-
 }
 
 function loadFooter() {
-    console.log('Hello  footer');
     document.addEventListener("DOMContentLoaded", function () {
-        // Fetch the Navbar component
-        var content = document.getElementById("footer-container");
+        const content = document.getElementById("footer-container");
         content.innerHTML = returnFooter();
     });
 }
 
-
-// Fetch Order From Testing Data
-fetch('../js/fakeOrder.json')
-    .then(response => response.json())
-    .then(data => {
-        orders = data.orders;
-        renderOrders();
-    })
-    .catch(error => console.error('Error:', error));
+function getAllOrder() {
+    document.addEventListener("DOMContentLoaded", function () {
+        sendRequestWithToken(orderAPI)
+        .then(data => {
+            orders = data;
+            renderOrders(); // Render orders after they are fetched
+        })
+        .catch(error => {
+            console.error('Error fetching orders:', error);
+        });
+    });
+    
+}
 
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/order-detail/${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
     if (isGridView) {
-        // const viewDetailsButton = `<a href="UserOrderDetail.html?id=${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
-
-
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
@@ -54,9 +49,8 @@ function createOrderCard(order) {
                         <p class="card-text">
                             <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
-                            <strong>Crop Type:</strong> ${order.farm.cropType}<br>
-                            <strong>Area:</strong> ${order.farm.area} decares<br>
-                            <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
+                            <strong>Crop Type:</strong> ${order.sprayServices.cropType}<br>
+                            <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>
                     </div>
                     <div class="card-footer bg-transparent border-0">
@@ -105,7 +99,6 @@ toggleViewBtn.addEventListener('click', () => {
     renderOrders();
 });
 
-
 function getStatusColor(status) {
     switch (status) {
         case 'completed': return 'success';
@@ -151,14 +144,6 @@ function renderPagination() {
     });
 }
 
-// Initial render
-renderOrders();
-
-// Add event listeners for search and filters
-document.getElementById('searchInput').addEventListener('input', filterOrders);
-document.getElementById('statusFilter').addEventListener('change', filterOrders);
-document.getElementById('dateFilter').addEventListener('change', filterOrders);
-
 function filterOrders() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const statusFilter = document.getElementById('statusFilter').value;
@@ -174,8 +159,7 @@ function filterOrders() {
     });
 
     currentPage = 1;
-    orders.splice(0, orders.length, ...filteredOrders);
-    renderOrders();
+    renderOrders(filteredOrders);
 }
 
 function matchesDateFilter(orderDate, filter) {
@@ -224,6 +208,6 @@ backToTopBtn.addEventListener('click', () => {
 console.log('Orders:', orders);
 console.log('Current Page:', currentPage);
 
-
 loadNavBar();
 loadFooter();
+getAllOrder(); // Fetch and display orders after the page loads
