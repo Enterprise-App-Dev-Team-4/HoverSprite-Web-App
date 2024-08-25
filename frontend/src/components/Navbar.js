@@ -1,6 +1,6 @@
 // Navbar.js
 
-function returnNavBar(data) {
+function returnNavBar(data, role) {
   console.log('hello navbar');
   return `<nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
 <div class="container-fluid">
@@ -14,7 +14,7 @@ function returnNavBar(data) {
     <div class="navbar-nav">
       <a class="nav-link" href="#">Home</a>
       <a class="nav-link" href="/about-us">About</a>
-      <a class="nav-link" href="/service">Services</a>
+      <a class="nav-link" href="/service?role=${encodeURIComponent(role)}">Services</a>
       <a class="nav-link" href="/order-list">Orders</a>
     </div>
     <div class="profile-badge ms-auto">

@@ -1,17 +1,36 @@
 const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
+const ReceptionistURL = 'http://localhost:8080/receptionist';
+const ReceptionistEditProfile = 'http://localhost:8080/receptionistProfile';
 // Global variable to store user data
 let userData = null;
+let role = null;
+
+function getUserRoleFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('role');
+}
 
 document.addEventListener("DOMContentLoaded", function() {
-    loadNavBar();
+    const userRole = getUserRoleFromUrl();
+    role = userRole;
+    loadNavBar(userRole);
     loadFooter();
-    fetchUserData();
-    initializeProfileButtons();
+    fetchUserData(userRole);
+    initializeProfileButtons(userRole);
 });
 
-function fetchUserData() {
-    sendRequestWithToken(UserURL)
+function fetchUserData(userRole) {
+    var userAPI = null;
+    if(userRole === 'receptionist')
+    {
+        userAPI = ReceptionistURL;
+    } else if(userRole === 'farmer')
+    {
+        userAPI = UserURL;
+    }
+
+    sendRequestWithToken(userAPI)
         .then(data => {
             userData = data;
             console.log(data);
@@ -42,7 +61,7 @@ function populateFormFields(data) {
     document.getElementById('phoneNumber').value = data.phoneNumber || '';
 }
 
-function initializeProfileButtons() {
+function initializeProfileButtons(userRole) {
     const profileForm = document.querySelector('.profile-form');
     const profileInfo = document.querySelector('.profile-info');
     const editBtn = document.querySelector('.edit-btn');
@@ -76,13 +95,20 @@ function initializeProfileButtons() {
 
     profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
+        var userAPI = null;
+        if(userRole === 'receptionist')
+        {
+            userAPI = ReceptionistEditProfile;
+        } else if(userRole === 'farmer')
+        {
+            userAPI = UpdateProfileUrl;
+        }
         // Assuming uploadUserImage is a function that handles image uploading
         uploadUserImage(profileImageUpload.files[0]).then(profileImageUrl => {
             if (profileImageUrl) {
-                submitProfileFormWithImage(profileImageUrl);
+                submitProfileFormWithImage(profileImageUrl, userAPI);
             } else {
-                submitProfileFormWithImage(userData.profileImage);
+                submitProfileFormWithImage(userData.profileImage, userAPI);
             }
         }).catch(error => {
             console.error('Error uploading image:', error);
@@ -91,7 +117,7 @@ function initializeProfileButtons() {
     });
 }
 
-function submitProfileFormWithImage(imageUrl) {
+function submitProfileFormWithImage(imageUrl, userAPI) {
     const userProfile = {
         profileImage: imageUrl,
         firstName: document.getElementById('firstName').value,
@@ -101,7 +127,8 @@ function submitProfileFormWithImage(imageUrl) {
     };
 
     console.log(userProfile);
-    sendRequestWithToken(UpdateProfileUrl, 'PUT', userProfile)
+
+    sendRequestWithToken(userAPI, 'PUT', userProfile)
         .then(data => {
             console.log(data);
             finalizeProfileUpdate();
@@ -123,11 +150,20 @@ function finalizeProfileUpdate() {
     fetchUserData(); // Refresh the profile info
 }
 
-function loadNavBar() {
+function loadNavBar(userRole) {
     const navbarContainer = document.getElementById("navbar-container");
-    sendRequestWithToken(UserURL)
+    var userAPI = null;
+    if(userRole === 'receptionist')
+    {
+        userAPI = ReceptionistURL;
+    } else if(userRole === 'farmer')
+    {
+        userAPI = UserURL;
+    }
+    console.log(userAPI);
+    sendRequestWithToken(userAPI)
         .then(data => {
-            navbarContainer.innerHTML = returnNavBar(data);
+            navbarContainer.innerHTML = returnNavBar(data, role);
             activeClick();
         })
         .catch(error => console.error('Error loading navbar:', error));

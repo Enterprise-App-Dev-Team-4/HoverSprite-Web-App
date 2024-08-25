@@ -123,6 +123,7 @@ public class UserController {
         } else if (type.equals("receptionist")) {
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
+            receptionist.setRole(Role.Receptionist);
             UserDTO receptionistDTO = new DTOConverter().convertUserDataToObject(userService.register(receptionist));
             return ResponseEntity.ok(receptionistDTO);
         }
