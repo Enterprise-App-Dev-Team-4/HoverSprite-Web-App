@@ -15,7 +15,7 @@ function returnNavBar(data, role) {
       <a class="nav-link" href="#">Home</a>
       <a class="nav-link" href="/about-us">About</a>
       <a class="nav-link" href="/service?role=${encodeURIComponent(role)}">Services</a>
-      <a class="nav-link" href="/order-list">Orders</a>
+      <a class="nav-link" href="/order-list?role=${encodeURIComponent(role)}">Orders</a>
     </div>
     <div class="profile-badge ms-auto">
       <img src=${data.profileImage}>

@@ -73,6 +73,7 @@ function redirectToBooking(service, user) {
         serviceOrders: ordersSerialized, // Serialized orders list
         serviceTimeSlots: timeSlotsSerialized, // Serialized timeSlots list
         userEmail: user.email, // Assuming the user object has an 'email' property
+        role: role // Attach the user role to the booking URL
     });
 
     window.location.href = `/booking?${bookingParams.toString()}`;

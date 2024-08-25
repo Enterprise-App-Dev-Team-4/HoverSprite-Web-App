@@ -1,45 +1,50 @@
 let orders = [];
-
 const orderAPI = 'http://localhost:8080/order/all';
 const itemsPerPage = 30;
 let currentPage = 1;
 let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
+let role = null;
+
+document.addEventListener("DOMContentLoaded", function () {
+    role = getUserRoleFromUrl();  // Get the role from the URL
+    loadNavBar();
+    loadFooter();
+    getAllOrder();  // Fetch and display orders after the page loads
+});
+
+function getUserRoleFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('role');
+}
 
 function loadNavBar() {
-    document.addEventListener("DOMContentLoaded", function () {
-        const content = document.getElementById("navbar-container");
-        sendRequestWithToken(navBarURL)
-            .then(data => content.innerHTML = returnNavBar(data))
-            .catch(error => console.error(error));
-        activeClick();
-    });
+    const content = document.getElementById("navbar-container");
+    sendRequestWithToken(navBarURL)
+        .then(data => content.innerHTML = returnNavBar(data, role))  // Pass role to returnNavBar
+        .catch(error => console.error(error));
+    activeClick();
 }
 
 function loadFooter() {
-    document.addEventListener("DOMContentLoaded", function () {
-        const content = document.getElementById("footer-container");
-        content.innerHTML = returnFooter();
-    });
+    const content = document.getElementById("footer-container");
+    content.innerHTML = returnFooter();
 }
 
 function getAllOrder() {
-    document.addEventListener("DOMContentLoaded", function () {
-        sendRequestWithToken(orderAPI)
-        .then(data => {
-            orders = data;
-            console.log(orders);
-            renderOrders(); // Render orders after they are fetched
-        })
-        .catch(error => {
-            console.error('Error fetching orders:', error);
-        });
+    sendRequestWithToken(orderAPI)
+    .then(data => {
+        orders = data;
+        console.log(orders);
+        renderOrders(); // Render orders after they are fetched
+    })
+    .catch(error => {
+        console.error('Error fetching orders:', error);
     });
-    
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.orderID}" class="btn btn-success btn-sm w-100">View Details</a>`;
+    const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
 
     if (isGridView) {
         return `
@@ -68,20 +73,20 @@ function createOrderCard(order) {
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
-                                <h5 class="card-title mb-0">Order #${order.id}</h5>
-                                <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span>
+                                <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                                <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
                             </div>
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.farm.cropType}
+                                <strong>Crop:</strong> ${order.sprayServices.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Area:</strong> ${order.farm.area} decares
+                                <strong>Location:</strong> ${order.location}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Cost:</strong> ${order.cost.toLocaleString()} VND
+                                <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                             </div>
                             <div class="col-md-3 col-lg-2">
                                 ${viewDetailsButton}
@@ -113,7 +118,6 @@ function getStatusColor(status) {
 }
 
 function renderOrders() {
-    console.log('Rendering orders...');
     const orderList = document.getElementById('orderList');
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -152,16 +156,17 @@ function filterOrders() {
     const dateFilter = document.getElementById('dateFilter').value;
 
     const filteredOrders = orders.filter(order => {
-        const matchesSearch = order.id.toString().includes(searchTerm) ||
-            order.farm.cropType.toLowerCase().includes(searchTerm);
-        const matchesStatus = statusFilter === '' || order.status === statusFilter;
+        const matchesSearch = order.orderID.toString().includes(searchTerm) ||
+            order.sprayServices.cropType.toLowerCase().includes(searchTerm);
+        const matchesStatus = statusFilter === '' || order.orderStatus === statusFilter;
         const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
 
         return matchesSearch && matchesStatus && matchesDate;
     });
 
     currentPage = 1;
-    renderOrders(filteredOrders);
+    orders = filteredOrders;
+    renderOrders();
 }
 
 function matchesDateFilter(orderDate, filter) {
@@ -209,7 +214,3 @@ backToTopBtn.addEventListener('click', () => {
 
 console.log('Orders:', orders);
 console.log('Current Page:', currentPage);
-
-loadNavBar();
-loadFooter();
-getAllOrder(); // Fetch and display orders after the page loads
