@@ -1,54 +1,155 @@
-/* style.css */
-html, body {
+body,
+html {
     height: 100%;
     margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-.login-form {
-    width: 75%;
-    max-width: 400px;
+.bg-image {
+    background-image: url('../../public/about_hero_section.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    position: relative;
 }
 
-h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.bg-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
 }
 
-.btn-outline-primary {
-    border-width: 2px;
-    color: #007BFF;
+.logo {
+    position: absolute;
+    top: 20%;
+    left: 43%;
+    z-index: 2;
+    width: 100px;
+    height: auto;
+}
+
+.image-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 1;
+}
+
+.image-text h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.image-text p {
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+.form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.form-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 100%;
+}
+
+.form-box h2 {
+    color: #333;
+    font-weight: 600;
+}
+
+.social-buttons .btn {
     margin-bottom: 10px;
+    transition: all 0.3s ease;
 }
 
-.btn-primary {
-    background-color: #007BFF;
-    border: none;
-    padding: 10px 0;
-}
-
-.form-control {
-    border-radius: 20px;
-    padding: 10px 20px;
+.social-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .divider {
-    margin: 20px 0;
     text-align: center;
-    border-bottom: 1px solid #ccc;
-    line-height: 0.1em;
+    margin: 20px 0;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
 }
 
 .divider::before {
-    content: 'OR';
-    background: #fff;
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.divider span {
+    background-color: white;
     padding: 0 10px;
+    position: relative;
+    z-index: 1;
+    color: #777;
 }
 
-a {
-    color: #007BFF;
-    text-decoration: none;
-}
+@media (max-width: 991px) {
+    .bg-image {
+        display: none;
+    }
 
-a:hover {
-    text-decoration: underline;
+    .form-container {
+        background-image: url('../../public/about_hero_section.jpg');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .form-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-box {
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+        position: static;
+        display: block;
+        margin: 20px auto;
+        width: 80px;
+    }
 }
