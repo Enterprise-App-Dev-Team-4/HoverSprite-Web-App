@@ -1,46 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/Login.css">
+    <title>Login - Hover Sprite</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/Login.css">
 </head>
+
 <body>
-<div class="container-fluid h-100">
-    <div class="row h-100">
-        <!-- Background Image Section -->
-        <div class="col-md-7 p-0" style="background: url('your-image-path.jpg') no-repeat center center; background-size: cover;">
-        </div>
-        <!-- Login Form Section -->
-        <div class="col-md-5 d-flex align-items-center justify-content-center">
-            <div class="login-form">
-                <h2 class="mb-3">Log In</h2>
-                <button class="btn btn-outline-dark w-100 mb-2">
-                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" class="mr-2" /> Continue with Google
-                    </button>
-                <button class="btn btn-outline-dark w-100 mb-4">
-                    <img src="https://img.icons8.com/color/16/000000/facebook-new.png" class="mr-2" />Continue with Facebook
-                </button>
-                <div class="divider"></div>
-                <form id="loginForm" method="post" action="http://localhost:8080/login">
-                    <input type="text" class="form-control mb-3" name="email" placeholder="Phone or email address">
-                    <input type="password" class="form-control mb-3" name="password" placeholder="Your password">
-                    <select class="form-select" id="userRole" aria-label="Default select example">
-                        <option selected>Login as</option>
-                        <option value="farmer">Farmer</option>
-                        <option value="receptionist">Receptionist</option>
-                      </select>
-                      <br><br><br>
-                    <button type="submit" class="btn btn-dark w-100">Log in</button>
-                </form>
-                <a href="#" class="d-block text-center mt-3">Forget your password?</a>
-                <a href="#" class="d-block text-center mt-2" id="register-page">Don't have an account? Sign up</a>
+    <div class="container-fluid h-100">
+        <div class="row h-100 no-gutters">
+            <div class="col-lg-6 bg-image d-none d-lg-block">
+                <img src="../../public/HoverSpriteLogo.png" alt="Hover Sprite Logo" class="logo">
+                <div class="image-text">
+                    <h1>Hover Sprite</h1>
+                    <p>We specialize in organic fertilizer and pesticide spraying, serving orchards, cereal fields, and
+                        vegetable farms</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="form-container">
+                    <div class="form-box">
+                        <img src="../../public/HoverSpriteLogo.png" alt="Hover Sprite Logo" class="logo d-lg-none">
+                        <h2 class="text-center mb-4">Log In</h2>
+                        <div class="social-buttons mb-4">
+                            <button class="btn btn-outline-dark btn-block">
+                                <i class="fab fa-google mr-2"></i> Continue with Google
+                            </button>
+                            <button class="btn btn-outline-primary btn-block">
+                                <i class="fab fa-facebook-f mr-2"></i> Continue with Facebook
+                            </button>
+                        </div>
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+                        <form id="loginForm" method="post" action="http://localhost:8080/login">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email"
+                                    placeholder="Phone or email address">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Your password">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="userRole" aria-label="Login as">
+                                    <option selected>Login as</option>
+                                    <option value="farmer">Farmer</option>
+                                    <option value="receptionist">Receptionist</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="#">Forget your password?</a>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="#" id="register-page">Sign up</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="../js/Login.js"></script>
+    <script src="../js/Login.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

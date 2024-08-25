@@ -1,36 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account</title>
-<link rel="stylesheet" href="../../css/Register.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Hover Sprite</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/Register.css">
 </head>
+
 <body>
-<div class="container">
-    <div class="background-image"></div>
     <div class="form-container">
-        <h1>Create an account</h1>
-        <form id="userForm" method="post" action="http://localhost:8080/register?type=farmer"> 
-            <input type="text" id="firstName" name="firstName" required placeholder="First Name">
-            <input type="text" id="lastName" name="lastName" required placeholder="Last Name">
-            <input type="password" id="password" name="password" required placeholder="Password">
-            <input type="email" id="email" name="email" required placeholder="Email">
-            <input type="text" id="phoneNumber" name="phoneNumber" required placeholder="Phone Number">
-            <input type="text" id="homeAddress" name="homeAddress" required placeholder="Home Address">
-            <div class="agreement">
-                <input type="checkbox" id="terms">
-                <label for="terms">By creating an account, I agree to our Terms of Use and Privacy Policy</label>
+        <div class="form-box">
+            <img src="../../public/HoverSpriteLogo.png" alt="Hover Sprite Logo" class="logo">
+            <h2 class="mb-4">Create an account</h2>
+            <div class="social-buttons mb-4">
+                <button class="btn btn-outline-dark btn-block">
+                    <i class="fab fa-google mr-2"></i> Sign up with Google
+                </button>
+                <button class="btn btn-outline-primary btn-block">
+                    <i class="fab fa-facebook-f mr-2"></i> Sign up with Facebook
+                </button>
             </div>
-            <button type="submit">Create account</button>
-            <div class="alternative">
+            <div class="divider">
                 <span>OR</span>
-                <button type="button" class="google-btn">Continue with Google</button>
             </div>
-        </form>
-        <a href="#" class="login-link" id="login-method" onclick="redirectToLogin()">Log in instead</a>
+            <form id="userForm" method="post" action="http://localhost:8080/register?type=farmer">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="firstName" name="firstName" required
+                        placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="lastName" name="lastName" required
+                        placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" required
+                        placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required
+                        placeholder="Phone Number">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="homeAddress" name="homeAddress" required
+                        placeholder="Home Address">
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" required>
+                    <label class="form-check-label" for="terms">By creating an account, I agree to our Terms of Use and
+                        Privacy Policy</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create account</button>
+            </form>
+            <div class="text-center mt-4">
+                <p>Already have an account?</p>
+                <a href="#" class="btn btn-outline-primary" id="login-method" onclick="redirectToLogin()">Log in</a>
+            </div>
+        </div>
     </div>
-</div>
-<script src="../js/Register.js"></script>
+    <script src="../js/Register.js"></script>
 </body>
+
 </html>
