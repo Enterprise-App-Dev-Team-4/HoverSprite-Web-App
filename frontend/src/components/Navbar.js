@@ -15,7 +15,6 @@ function returnNavBar(data) {
       <a class="nav-link" href="#">Home</a>
       <a class="nav-link" href="/about-us">About</a>
       <a class="nav-link" href="/service">Services</a>
-      <a class="nav-link" href="/booking">Booking</a>
       <a class="nav-link" href="/order-list">Orders</a>
     </div>
     <div class="profile-badge ms-auto">
