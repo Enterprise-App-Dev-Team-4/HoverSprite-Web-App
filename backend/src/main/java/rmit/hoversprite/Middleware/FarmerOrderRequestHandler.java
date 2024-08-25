@@ -17,6 +17,7 @@ public class FarmerOrderRequestHandler {
         order.setServiceTimeSlot(request.getServiceTimeSlot());
         order.setTotalCost(request.getTotalCost());
         order.setFarmer(request.getFarmer());
+        order.setLocation(request.getLocation());
         return order;
     }
 }

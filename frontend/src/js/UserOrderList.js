@@ -28,6 +28,7 @@ function getAllOrder() {
         sendRequestWithToken(orderAPI)
         .then(data => {
             orders = data;
+            console.log(orders);
             renderOrders(); // Render orders after they are fetched
         })
         .catch(error => {
@@ -38,17 +39,18 @@ function getAllOrder() {
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.id}" class="btn btn-success btn-sm w-100">View Details</a>`;
+    const viewDetailsButton = `<a href="/order-detail/${order.orderID}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Order #${order.id}</h5>
+                        <h5 class="card-title">Order #${order.orderID}</h5>
                         <p class="card-text">
                             <span class="badge bg-${getStatusColor(order.status)}">${order.status}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
+                            <strong>Location:</strong> ${order.location}<br>
                             <strong>Crop Type:</strong> ${order.sprayServices.cropType}<br>
                             <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>

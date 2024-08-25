@@ -352,6 +352,7 @@ function generateFarmObject(farmArea, farmLocation) {
 }
 
 function gatherFormData(farmArea, location, date, session, totalCost) {
+    console.log(location);
   return {
       farmer: sentUser,
       sprayServices: sendService,

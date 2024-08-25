@@ -1,3 +1,5 @@
+const orderDetailAPI = 'http://localhost:8080/order';
+
 document.addEventListener('DOMContentLoaded', () => {
     const orderId = window.location.pathname.split('/').pop();
     if (orderId) {
@@ -7,49 +9,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 function fetchOrderDetails(orderId) {
-    fetch('../js/fakeOrder.json')
-        .then(response => response.json())
+    const url = `${orderDetailAPI}?orderId=${orderId}`; // Attach the orderId to the URL
+    console.log(url);
+    sendRequestWithToken(url)
         .then(data => {
-            const order = data.orders.find(o => o.id === parseInt(orderId));
-            if (order) {
-                displayOrderDetails(order);
-            } else {
-                displayErrorMessage('Order not found');
-            }
+            console.log(data);
+            displayOrderDetails(data); // Directly use data assuming the API returns the order details
         })
         .catch(error => {
-            console.error('Error:', error);
-            displayErrorMessage('Failed to load order details');
+            console.error('Error fetching orders:', error);
         });
 }
 
 function displayOrderDetails(order) {
-    document.getElementById('orderId').textContent = order.id;
+    console.log(order);  // Debugging: Ensure the order object is correct
+
+    // Set order details
+    document.getElementById('orderId').textContent = order.orderID;
     document.getElementById('orderStatus').textContent = order.status;
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.status)}`);
     document.getElementById('orderDate').textContent = formatDate(order.date);
-    document.getElementById('farmerName').textContent = order.farmer.name;
-    document.getElementById('sprayerName').textContent = order.sprayer.name;
-    document.getElementById('farmArea').textContent = order.farm.area;
-    document.getElementById('cropType').textContent = order.farm.cropType;
-    document.getElementById('farmLocation').textContent = order.farm.location;
-    document.getElementById('serviceName').textContent = order.sprayService.name;
-    document.getElementById('serviceType').textContent = order.sprayService.type;
-    document.getElementById('timeSlot').textContent = order.sprayService.timeSlot;
-    document.getElementById('orderCost').textContent = `${order.cost.toLocaleString()} VND`;
-    if (order.feedback != null) {
+    document.getElementById('farmerName').textContent = order.farmer.fullName;
+
+    // Check if sprayer and sprayServices exist before accessing them
+    if (order.sprayer) {
+        document.getElementById('sprayerName').textContent = order.sprayer.name;
+    } else {
+        document.getElementById('sprayerName').textContent = 'N/A';
+    }
+
+    if (order.sprayServices) {
+        document.getElementById('cropType').textContent = order.sprayServices.cropType;
+        document.getElementById('serviceName').textContent = order.sprayServices.serviceName;
+        document.getElementById('serviceType').textContent = order.sprayServices.serviceType;
+    } else {
+        document.getElementById('cropType').textContent = 'N/A';
+        document.getElementById('serviceName').textContent = 'N/A';
+        document.getElementById('serviceType').textContent = 'N/A';
+    }
+
+    document.getElementById('farmLocation').textContent = order.location;
+    document.getElementById('timeSlot').textContent = order.serviceTimeSlot;
+    document.getElementById('orderCost').textContent = `${order.totalCost.toLocaleString()} VND`;
+
+    // Handle feedback
+    if (order.feedback) {
         document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedback.comment;
     } else {
-        document.getElementById('feedbackRating').textContent = `N/A`;
-        document.getElementById('feedbackComment').textContent = `N/A`;
+        document.getElementById('feedbackRating').textContent = 'N/A';
+        document.getElementById('feedbackComment').textContent = 'N/A';
     }
-
 
     animateNumbers();
 }
+
 
 function getStatusColor(status) {
     switch (status) {
@@ -93,3 +108,6 @@ function animateNumbers() {
         costElement.textContent = `${Math.round(currentCost).toLocaleString()} VND`;
     }, duration / steps);
 }
+
+loadNavBar();
+loadFooter();

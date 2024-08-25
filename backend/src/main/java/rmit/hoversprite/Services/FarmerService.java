@@ -93,4 +93,9 @@ public class FarmerService {
         Farmer requestFarmer = farmerRepository.findByEmail(getFarmerData().getEmail());
         return requestFarmer.getServicOrders();
     }
+
+    public Order farmerGetOrderById(String orderID)
+    {
+        return orderService.getOrderById(orderID);
+    }
 }

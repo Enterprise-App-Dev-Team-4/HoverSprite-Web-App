@@ -30,5 +30,8 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    
+    public Order getOrderById(String orderId)
+    {
+        return orderRepository.findByorderID(orderId);
+    }
 }

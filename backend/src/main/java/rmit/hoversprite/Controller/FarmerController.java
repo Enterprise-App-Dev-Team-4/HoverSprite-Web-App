@@ -114,4 +114,12 @@ public class FarmerController {
                                  .body("An error occurred while fetching orders");
         }
     }
+
+    @GetMapping("order")
+    
+    public ResponseEntity<?> farmerGetOrderDetail(@RequestParam String orderId)
+    {
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));
+        return ResponseEntity.ok(orderDTO);
+    }
 }
