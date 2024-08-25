@@ -126,6 +126,7 @@ function loadNavBar(userRole) {
     if (userAPI) {
         sendRequestWithToken(userAPI)
             .then(data => {
+                user = data;
                 navbarContainer.innerHTML = returnNavBar(data, role);
                 activeClick();
             })
