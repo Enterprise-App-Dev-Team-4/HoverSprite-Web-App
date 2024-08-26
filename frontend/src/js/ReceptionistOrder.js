@@ -65,7 +65,11 @@ function createOrderCard(order) {
                         </p>
                     </div>
                     <div class="card-footer bg-transparent border-0">
-                        ${viewDetailsButton}
+                        <div class="d-flex flex-wrap gap-2">
+                            ${viewDetailsButton}
+                            <button class="btn btn-warning btn-sm flex-fill" onclick="openStatusModal(${order.id})">Change Status</button>
+                            <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,8 +96,10 @@ function createOrderCard(order) {
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                             </div>
-                            <div class="col-md-3 col-lg-2">
+                            <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
+                                <button class="btn btn-warning btn-sm flex-fill" onclick="openStatusModal(${order.id})">Change Status</button>
+                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                             </div>
                         </div>
                     </div>
@@ -102,6 +108,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 const toggleViewBtn = document.getElementById('toggleViewBtn');
 toggleViewBtn.addEventListener('click', () => {
