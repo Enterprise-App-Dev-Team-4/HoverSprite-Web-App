@@ -39,8 +39,14 @@ function fetchRequestServer(user, action) {
         // Handle success
         console.log('Success:', data.token);
         setCookie('jwtToken', data.token, 7); // Save the token in a cookie for 7 days
+        
+        // Retrieve the user role to append to the /profile URL
+        var userRole = document.getElementById(instance).value;
+        console.log(userRole);
+        var profileUrl = `/profile?role=${encodeURIComponent(userRole)}`;
+
         alert('Login successful!');
-        window.location.href = '/profile';  // Redirect to home page or dashboard
+        window.location.href = profileUrl;  // Redirect to profile page with user role as a param
     })
     .catch((error) => {
         // Handle error

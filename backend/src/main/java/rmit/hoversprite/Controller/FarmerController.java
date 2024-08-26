@@ -59,7 +59,7 @@ public class FarmerController {
     }
 
     @GetMapping("userName")
-    @PreAuthorize("hasAuthority('Farmer')")
+    // @PreAuthorize("hasAuthority('Receptionist') or hasAuthority('Farmer')")
     public ResponseEntity<?> userName() 
     {
         UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmerService.getFarmerData());
@@ -67,7 +67,7 @@ public class FarmerController {
     }
     
     @PutMapping("updateProfile")
-    @PreAuthorize("hasAuthority('Farmer')")
+    // @PreAuthorize("hasAuthority('Receptionist') or hasAuthority('Farmer')")
 
     public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerUpdateProfileRequest request )
     {

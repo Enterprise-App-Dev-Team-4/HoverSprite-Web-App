@@ -82,4 +82,10 @@ public class AuthenticationResponse {
         String token = authFilter.getBrowserToken();
         return farmerRepository.findByToken(token);
     }
+
+    public Receptionist getReceptionistByToken()
+    {
+        String token = authFilter.getBrowserToken();
+        return receptionistRepository.findByToken(token);
+    }
 }
