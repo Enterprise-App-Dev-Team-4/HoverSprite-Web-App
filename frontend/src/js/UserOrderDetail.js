@@ -1,6 +1,13 @@
 const orderDetailAPI = 'http://localhost:8080/order';
+let role = null;
+
+function getUserRoleFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('role');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    role = getUserRoleFromUrl();  // Get the role from the URL
     const orderId = window.location.pathname.split('/').pop();
     if (orderId) {
         fetchOrderDetails(orderId);
@@ -20,6 +27,23 @@ function fetchOrderDetails(orderId) {
         .catch(error => {
             console.error('Error fetching orders:', error);
         });
+}
+
+// Function to handle "Back to Order List"
+document.addEventListener("DOMContentLoaded", function () {
+    const returnOrderListBtn = document.getElementById('returnOrderList');
+    console.log('ok');
+    if (returnOrderListBtn) {
+        returnOrderListBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+            returnToOrderList();
+        });
+    }
+});
+
+function returnToOrderList() {
+    console.log(role);
+    window.location.href = `/order-list?role=${encodeURIComponent(role)}`;
 }
 
 function displayOrderDetails(order) {

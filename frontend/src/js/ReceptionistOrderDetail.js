@@ -24,6 +24,7 @@ function fetchOrderDetails(orderId) {
         });
 }
 
+
 function displayOrderDetails(order) {
     document.getElementById('orderId').textContent = order.id;
     document.getElementById('orderStatus').textContent = order.status;
