@@ -48,7 +48,7 @@ function getAllOrder() {
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
+    const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
 
     if (isGridView) {
         return `

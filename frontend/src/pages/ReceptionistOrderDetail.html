@@ -53,7 +53,7 @@
                             <div class="col-md-6">
                                 <div class="info-card">
                                     <h5 class="text-muted mb-3"><i class="bi bi-person-badge me-2"></i>Sprayer(s)</h5>
-                                    <p class="fs-5" id="sprayerNames"></p>
+                                    <p class="fs-5" id="sprayerName"></p>
                                 </div>
                             </div>
                         </div>
@@ -88,8 +88,9 @@
                         </div>
                     </div>
                     <div class="card-footer bg-light p-4">
-                        <a href="/receptionist-order-list" class="btn btn-secondary"><i class="bi bi-arrow-left me-2"></i>Back
-                            to Order List</a>
+                        <a class="btn btn-secondary" id="returnOrderList">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Order List
+                        </a>
                     </div>
                 </div>
             </div>
@@ -98,9 +99,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/ReceptionistOrderDetail.js"></script>
-    <script src="../js/script.js"></script>
     <script src="../components/Navbar.js"></script>
     <script src="../components/Footer.js"></script>
+    <script src="../components/sendToken.js"></script>
 </body>
 
 </html>

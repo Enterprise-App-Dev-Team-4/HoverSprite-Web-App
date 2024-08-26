@@ -1,4 +1,13 @@
+let role = null;
+const orderDetailAPI = 'http://localhost:8080/order';
+
+function getUserRoleFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('role');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    role = getUserRoleFromUrl();  // Get the role from the URL
     const orderId = window.location.pathname.split('/').pop();
     if (orderId) {
         fetchOrderDetails(orderId);
@@ -8,52 +17,80 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchOrderDetails(orderId) {
-    fetch('../js/fakeOrder.json')
-        .then(response => response.json())
+    const url = `${orderDetailAPI}?orderId=${orderId}`; // Attach the orderId to the URL
+    console.log(url);
+    sendRequestWithToken(url)
         .then(data => {
-            const order = data.orders.find(o => o.id === parseInt(orderId));
-            if (order) {
-                displayOrderDetails(order);
-            } else {
-                displayErrorMessage('Order not found');
-            }
+            console.log(data);
+            displayOrderDetails(data); // Directly use data assuming the API returns the order details
         })
         .catch(error => {
-            console.error('Error:', error);
-            displayErrorMessage('Failed to load order details');
+            console.error('Error fetching orders:', error);
         });
 }
 
 
 function displayOrderDetails(order) {
-    document.getElementById('orderId').textContent = order.id;
-    document.getElementById('orderStatus').textContent = order.status;
-    document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.status)}`);
-    document.getElementById('orderDate').textContent = formatDate(order.date);
-    document.getElementById('farmerName').textContent = order.farmer.name;
-    document.getElementById('sprayerNames').textContent = order.assignedSprayers ? order.assignedSprayers.join(', ') : 'None';
-    document.getElementById('farmArea').textContent = order.farm.area;
-    document.getElementById('cropType').textContent = order.farm.cropType;
-    document.getElementById('farmLocation').textContent = order.farm.location;
-    document.getElementById('serviceName').textContent = order.sprayService.name;
-    document.getElementById('serviceType').textContent = order.sprayService.type;
-    document.getElementById('timeSlot').textContent = order.sprayService.timeSlot;
-    document.getElementById('orderCost').textContent = `${order.cost.toLocaleString()} VND`;
-    if (order.feedback != null) {
-        document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
-        document.getElementById('feedbackComment').textContent = order.feedback.comment;
+    console.log(order);  // Debugging: Ensure the order object is correct
+
+    document.getElementById('orderId').textContent = order.orderID || 'N/A';
+    document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
+    document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
+    document.getElementById('orderDate').textContent = formatDate(order.date || new Date());
+    document.getElementById('farmerName').textContent = order.farmer ? order.farmer.fullName : 'N/A';
+
+    if (order.sprayer) {
+        document.getElementById('sprayerName').textContent = order.sprayer.name || 'N/A';
     } else {
-        document.getElementById('feedbackRating').textContent = `N/A`;
-        document.getElementById('feedbackComment').textContent = `N/A`;
+        document.getElementById('sprayerName').textContent = 'N/A';
+    }
+
+    if (order.sprayServices) {
+        document.getElementById('cropType').textContent = order.sprayServices.cropType || 'N/A';
+        document.getElementById('serviceName').textContent = order.sprayServices.serviceName || 'N/A';
+        document.getElementById('serviceType').textContent = order.sprayServices.serviceType || 'N/A';
+    } else {
+        document.getElementById('cropType').textContent = 'N/A';
+        document.getElementById('serviceName').textContent = 'N/A';
+        document.getElementById('serviceType').textContent = 'N/A';
+    }
+
+    document.getElementById('farmLocation').textContent = order.location || 'N/A';
+    document.getElementById('timeSlot').textContent = order.serviceTimeSlot || 'N/A';
+    document.getElementById('orderCost').textContent = `${order.totalCost.toLocaleString()} VND`;
+
+    if (order.feedback) {
+        document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
+        document.getElementById('feedbackComment').textContent = order.feedback.comment || 'N/A';
+    } else {
+        document.getElementById('feedbackRating').textContent = 'N/A';
+        document.getElementById('feedbackComment').textContent = 'N/A';
     }
 
     animateNumbers();
 }
 
+// Function to handle "Back to Order List"
+document.addEventListener("DOMContentLoaded", function () {
+    const returnOrderListBtn = document.getElementById('returnOrderList');
+    if (returnOrderListBtn) {
+        console.log('ok');
+        returnOrderListBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+            returnToOrderList();
+        });
+    }
+});
+
+function returnToOrderList() {
+    console.log(role);
+    window.location.href = `/receptionist-order?role=${encodeURIComponent(role)}`;
+}
+
 function getStatusColor(status) {
     switch (status) {
-        case 'completed': return 'success';
-        case 'in_progress': return 'primary';
+        case 'COMPLETED': return 'success';
+        case 'PENDING': return 'primary';
         case 'confirmed': return 'info';
         case 'assigned': return 'warning';
         case 'cancelled': return 'danger';

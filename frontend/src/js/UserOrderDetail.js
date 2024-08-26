@@ -82,8 +82,8 @@ function displayOrderDetails(order) {
         document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedback.comment;
     } else {
-        document.getElementById('feedbackRating').textContent = 'N/A';
-        document.getElementById('feedbackComment').textContent = 'N/A';
+        document.getElementById('feedbackRating').textCotent = 'N/A';
+        document.getElementById('feedbackComment').textContent = 'N/A';n
     }
 
     animateNumbers();
