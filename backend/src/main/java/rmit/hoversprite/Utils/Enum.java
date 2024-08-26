@@ -13,7 +13,8 @@ public class Enum {
     {
         REJECTED,
         PENDING,
-        ACCEPTED
+        ACCEPTED,
+        ASSIGNED
     }
 
     public enum ServiceName

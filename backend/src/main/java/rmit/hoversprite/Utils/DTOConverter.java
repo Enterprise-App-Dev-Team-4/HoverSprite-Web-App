@@ -1,9 +1,13 @@
 package rmit.hoversprite.Utils;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.User;
 
@@ -27,7 +31,8 @@ public class DTOConverter {
                 farmer.getPhoneNumber(),
                 farmer.getHomeAddress(),
                 farmer.getRole(),
-                farmer.getToken()
+                farmer.getToken(),
+                farmer.getProfileImage()
             );
         }
         return null;
@@ -46,4 +51,38 @@ public class DTOConverter {
         }
         return null;
     }
+
+    public OrderDTO convertOrderDataToObject(Order order)
+    {
+        if(order != null)
+        {
+            return new OrderDTO(
+                order.getOrderID(),
+                order.getDate(),
+                order.getServiceTimeSlot(),
+                order.getOrderStatus(),
+                order.getTotalCost(),
+                order.getFarmer(),
+                order.getLocation(),
+                order.getSprayerServices()
+            );
+        }
+        return null;
+    }
+
+    public SprayServicesDTO convertServiceDataToObject(SprayServices services) {
+        if (services != null) {
+            return new SprayServicesDTO(
+                services.getId(),             // id
+                services.getPrice(),          // price
+                services.getServiceName(),    // serviceName
+                services.getServiceType(),    // serviceType
+                services.getCropType(),       // cropType
+                services.getDescription(),    // description
+                services.getTimeSlots()       // timeSlots
+            );
+        }
+        return null;
+    }
+    
 }

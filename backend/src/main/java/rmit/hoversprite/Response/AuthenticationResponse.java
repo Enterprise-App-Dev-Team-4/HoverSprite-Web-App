@@ -26,6 +26,7 @@ public class AuthenticationResponse {
     @Autowired
     private JwtAuthFilter authFilter;
 
+
     public Farmer authenticateFarmer(User user) {
         Farmer farmer = farmerRepository.findByEmail(user.getEmail());
         if (farmer == null) {
@@ -80,5 +81,11 @@ public class AuthenticationResponse {
     {
         String token = authFilter.getBrowserToken();
         return farmerRepository.findByToken(token);
+    }
+
+    public Receptionist getReceptionistByToken()
+    {
+        String token = authFilter.getBrowserToken();
+        return receptionistRepository.findByToken(token);
     }
 }

@@ -1,6 +1,10 @@
 package rmit.hoversprite.Model.Order;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +37,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "farmer_id")
+    @JsonBackReference (value = "ordered-farmer")
     private Farmer farmer;
 
     @ManyToOne
@@ -41,6 +46,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
+    @JsonBackReference (value = "service")
     private SprayServices sprayerServices;
 
     @ManyToMany
@@ -51,12 +57,14 @@ public class Order {
     )
     private List<Sprayer> sprayers;
 
+    private String location;
+
     // Default constructor
     public Order() {}
 
     // Parameterized constructor
     public Order(String orderID, String date, OrderStatus orderStatus, double totalCost, Farmer farmer,
-                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot) {
+                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot, String location) {
         this.orderID = orderID;
         this.date = date;
         this.orderStatus = orderStatus;
@@ -66,6 +74,7 @@ public class Order {
         this.sprayerServices = sprayerServices;
         this.sprayers = sprayers;
         this.serviceTimeSlot = serviceTimeSlot;
+        this.location = location;
     }
 
     // Getters and setters
@@ -75,6 +84,16 @@ public class Order {
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+
+    public String getLocation()
+    {
+        return this.location;
     }
 
     public String getServiceTimeSlot()

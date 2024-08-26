@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders</title>
+
+    <!-- Boostrap -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoverSprite - Order Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+
+    <!-- Css -->
+    <link rel="stylesheet" href="../css/ReceptionistOrder.css">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <section class="hero animated-bg mb-5">
+        <div class="container text-center text-white py-5">
+            <h1 class="display-4 mb-4">Mange Orders</h1>
+            <p class="lead">Monitor your spray orders with ease</p>
+        </div>
+    </section>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="search-box d-flex align-items-center">
+                    <i class="bi bi-search me-2"></i>
+                    <input type="text" class="form-control border-0" id="searchInput" placeholder="Search orders...">
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="d-flex justify-content-between">
+                    <select class="form-select me-2" id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <select class="form-select" id="dateFilter">
+                        <option value="">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="this_week">This Week</option>
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <button class="btn btn-outline-secondary" id="toggleModeBtn">
+                            <i class="bi bi-moon"></i> Dark Mode
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary" id="toggleViewBtn">
+                            <i class="bi bi-grid"></i> Grid View
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="orderList" class="row">
+            <!-- Order cards will be inserted here -->
+        </div>
+
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center" id="pagination">
+            </ul>
+        </nav>
+    </div>
+
+    <button id="backToTop" class="btn" title="Back to Top">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Status Change Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change Order Status</h5>
+                    <button type="button" class="close" onclick="document.getElementById('statusModal').style.display='none'">&times;</button>
+                </div>
+                <div id="statusModalBody" class="modal-body">
+                    <label for="statusSelect">Select New Status:</label>
+                    <select id="statusSelect" class="form-select">
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="assigned">Assigned</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="statusModalOrderId" value="">
+                    <button type="button" class="btn btn-primary" onclick="changeOrderStatus()">Change Status</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('statusModal').style.display='none'">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Sprayer Modal -->
+    <div id="assignSprayerModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign Sprayer</h5>
+                    <button type="button" class="close" onclick="document.getElementById('assignSprayerModal').style.display='none'">&times;</button>
+                </div>
+                <div id="assignSprayerModalBody" class="modal-body">
+                    <!-- Sprayer options will be dynamically inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="assignSprayerModalOrderId" value="">
+                    <button type="button" class="btn btn-primary" onclick="assignSprayer()">Assign</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('assignSprayerModal').style.display='none'">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Footer -->
+    
+<div id="footer-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/ReceptionistOrder.js"></script>
+    <script src="../components/Navbar.js"></script>
+    <script src="../components/Footer.js"></script>
+    <script src="../components/sendToken.js"></script>
+</body>
+
+</html>

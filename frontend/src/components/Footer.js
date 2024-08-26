@@ -1,91 +1,130 @@
-function returnFooter()
-{
+function returnFooter() {
     return `
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <footer class="footer mt-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <img src="../../../public/HoverSpriteLogo.png" alt="Company Logo" style="width: 50px;"> <!-- Replace 'new-logo-path.png' with your logo file path -->
-            </div>
-            <div class="col-md-2">
-                <h5>Company</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <h5>Spray Booking</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">Book Spray</a></li>
-                    <li><a href="#">Manage Orders</a></li>
-                    <li><a href="#">How It Works</a></li>
-                </ul>
-            </div>
-            <div class="col-md-2">
-                <h5>Contact Us</h5>
-                <p>Customer Support: 123-456-7890</p>
-                <p>Head Office: 123-456-7890</p>
-            </div>
-            <div class="col-md-3">
-                <h5>Socials</h5>
-                <div class="socials">
-                    <a href="#"><i class="fa fa-facebook" style="width: 24px; font-size: 24px;"></i></a>
-                    <a href="#"><i class="fa fa-twitter" style="width: 24px; font-size: 24px;"></i></a>
-                    <a href="#"><i class="fa fa-instagram" style="width: 24px; font-size: 24px;"></i></a>
-                    <a href="#"><i class="fa fa-linkedin" style="width: 24px; font-size: 24px;"></i></a>
-
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <img src="../../../public/HoverSpriteLogo.png" alt="HoverSprite Logo" class="footer-logo">
+                    <p class="mt-3">Revolutionizing farming services with cutting-edge technology and exceptional customer care.</p>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" aria-label="About Us">About Us</a></li>
+                        <li><a href="#" aria-label="Services">Services</a></li>
+                        <li><a href="#" aria-label="Privacy Policy">Privacy Policy</a></li>
+                        <li><a href="#" aria-label="Terms of Service">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Spray Booking</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" aria-label="Book Spray">Book Spray</a></li>
+                        <li><a href="#" aria-label="Manage Orders">Manage Orders</a></li>
+                        <li><a href="#" aria-label="How It Works">How It Works</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="tel:+11234567890" aria-label="Call Customer Support">Customer Support: 123-456-7890</a></li>
+                        <li><a href="tel:+11234567890" aria-label="Call Head Office">Head Office: 123-456-7890</a></li>
+                        <li><a href="mailto:info@hoversprite.com" aria-label="Email Us">info@hoversprite.com</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Connect With Us</h5>
+                    <div class="socials">
+                        <a href="#" aria-label="Facebook"><i class="fa fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Subscribe to Our Newsletter</h6>
+                        <form class="form-inline">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit" aria-label="Subscribe">Subscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 text-center">
-                © 2024 HoverSprite | All Rights Reserved
+            <hr class="mt-4 mb-3">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>&copy; 2024 HoverSprite | All Rights Reserved</p>
+                </div>
             </div>
         </div>
     </footer>
 
-        <style>
-        .footer {
-            background-color: #202020; /* Dark grey background */
-            color: #f8f9fa; /* Light grey text color for readability */
-            padding: 20px 0;
-        }
+    <style>
+    .footer {
+        background-color: #202020;
+        color: #f8f9fa;
+        padding: 40px 0 20px;
+        font-size: 14px;
+    }
 
-        .footer a {
-            color: #c7c7c7; /* Slightly lighter grey for links */
-            text-decoration: none; /* Removes underline from links */
-        }
+    .footer-logo {
+        height:70px;
+    }
 
-        .footer a:hover {
-            color: #ffffff; /* White color for links on hover for better visibility */
-        }
+    .footer h5 {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
 
-        .footer h5 {
-            color: #ffffff; /* Titles in white */
-            margin-bottom: 10px; /* Adds a little space below the title */
-        }
+    .footer ul {
+        padding: 0;
+        list-style-type: none;
+    }
 
-        .footer ul {
-            padding: 0; /* Removes padding for a cleaner look */
-            list-style-type: none; /* No bullets in lists */
-        }
+    .footer a {
+        color: #c7c7c7;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
 
-        .footer img {
-            filter: brightness(0) invert(1); /* Inverts icons to white, adjust as needed */
-            width: 24px; /* Standardizes social icon sizes */
-            margin-right: 10px; /* Space between icons */
-        }
+    .footer a:hover {
+        color: #ffffff;
+    }
 
-        /* Footer copyright text alignment and color */
-        .footer .row:last-child {
-            color: #aaa; /* Light grey for less emphasis */
-            text-align: center; /* Centers copyright text */
-            margin-top: 20px; /* Adds space above the copyright text */
+    .footer .socials a {
+        display: inline-block;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+
+    .footer .form-control {
+        background-color: #333;
+        border: none;
+        color: #fff;
+    }
+
+    .footer .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .footer hr {
+        border-top: 1px solid #444;
+    }
+
+    @media (max-width: 767px) {
+        .footer .col-md-2,
+        .footer .col-md-3 {
+            margin-bottom: 30px;
         }
-        </style>
+    }
+    </style>
     `;
 }
 

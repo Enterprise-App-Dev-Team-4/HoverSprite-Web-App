@@ -13,6 +13,13 @@ function parseUserRequestParam(parsedParam, object) {
     return actionURL;
 }
 
+function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiration date
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/;Secure;SameSite=Lax";
+}
+
 function fetchRequestServer(user, action) {
     fetch(action, {
         method: 'POST',
@@ -31,9 +38,15 @@ function fetchRequestServer(user, action) {
     .then(data => {
         // Handle success
         console.log('Success:', data.token);
-        localStorage.setItem('jwtToken', data.token); // Save the token in localStorage
+        setCookie('jwtToken', data.token, 7); // Save the token in a cookie for 7 days
+        
+        // Retrieve the user role to append to the /profile URL
+        var userRole = document.getElementById(instance).value;
+        console.log(userRole);
+        var profileUrl = `/profile?role=${encodeURIComponent(userRole)}`;
+
         alert('Login successful!');
-        window.location.href = '/profile';  // Redirect to home page or dashboard
+        window.location.href = profileUrl;  // Redirect to profile page with user role as a param
     })
     .catch((error) => {
         // Handle error
@@ -41,7 +54,6 @@ function fetchRequestServer(user, action) {
         alert('Wrong user name or Password');
     });
 }
-
 
 function sendLoginDataToServer() {
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -62,7 +74,7 @@ function sendLoginDataToServer() {
         // Construct the new action URL with the selected role as a parameter
         var actionURL = parseUserRequestParam(loginParam, instance);
         console.log(actionURL);
-
+        console.log(client);
         // Send the form data using fetch
         fetchRequestServer(client, actionURL);
     });

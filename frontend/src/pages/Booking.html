@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/Booking.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
+
 <body>
     <!-- Navbar -->
     <div id="navbar-container"></div>
@@ -25,22 +31,22 @@
         <h2>Request Spray Order</h2>
         <div class="row">
             <div class="col-md-6">
-                <form>
-                    <div class="form-group">
+                <form id="bookingForm">
+                    <!-- <div class="form-group">
                         <label for="name">Your Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Your name">
+                        <input type="text" class="form-control" id="name" placeholder="Your name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
-                    </div>
+                        <input type="email" class="form-control" id="email" placeholder="Email" required>
+                    </div> -->
                     <div class="form-group">
                         <label for="location">Location</label>
-                        <input type="text" class="form-control" id="location" placeholder="Location">
+                        <input type="text" class="form-control" id="location" placeholder="Location" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="orderType">Order Type</label>
-                        <select class="form-control" id="orderType">
+                        <select class="form-control" id="orderType" required>
                             <option>Crop Spray</option>
                             <option>Aerial Seeding</option>
                             <option>Surveying and Mapping</option>
@@ -48,23 +54,32 @@
                     </div>
                     <div class="form-group">
                         <label for="cropType">Type of Crop</label>
-                        <select class="form-control" id="cropType">
+                        <select class="form-control" id="cropType" required>
                             <option>Fruit</option>
                             <option>Vegetable</option>
                             <option>Cereal</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="area">Farmland Area (in hectares)</label>
-                        <input type="number" class="form-control" id="area" placeholder="Farmland area">
+                        <input type="number" class="form-control" id="area" placeholder="Farmland area" min="0"
+                            step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateType">Date Type</label>
+                        <select class="form-control" id="dateType" required>
+                            <option value="solar">Solar Calendar</option>
+                            <option value="lunar">Lunar Calendar</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="date">Date and Time</label>
-                        <input type="datetime-local" class="form-control" id="date">
+                        <input type="datetime-local" class="form-control" id="date" required>
                     </div>
+
                     <div class="form-group">
                         <label for="session">Available Sessions</label>
-                        <select class="form-control" id="session">
+                        <select class="form-control" id="session" required>
                             <option>04:00 - 05:00</option>
                             <option>05:00 - 06:00</option>
                             <option>06:00 - 07:00</option>
@@ -85,13 +100,12 @@
                 </form>
             </div>
             <div class="col-md-6">
-                <img src="path-to-map-image.jpg" class="img-fluid" alt="Map">
+                <div id="map" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    
     <div id="footer-container"></div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -99,6 +113,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../../components/Navbar.js"></script>
     <script src="../../components/Footer.js"></script>
+    <script src="../../components/sendToken.js"></script>
     <script src="../js/Booking.js"></script>
+
 </body>
+
 </html>

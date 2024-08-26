@@ -1,5 +1,7 @@
 package rmit.hoversprite.Model.Farm;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
@@ -26,6 +28,7 @@ public class Farm {
     // Many-to-One relationship with Farmer
     @ManyToOne
     @JoinColumn(name = "farmer_id")
+    @JsonBackReference (value = "farm")
     private Farmer farmer;
 
 

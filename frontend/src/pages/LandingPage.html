@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoverSprite</title>
+    <!-- Boostrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- css -->
+    <link rel="stylesheet" href="../css/LandingPage.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="../../public/HoverSpriteLogo.png" alt="HoverSprite Logo">
+                <span class="fw-bold text-white d-none d-sm-inline"> &nbsp HoverSprite</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-white" tabindex="-1" id="navbarOffcanvas"
+                aria-labelledby="navbarOffcanvasLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
+                    <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#features">
+                                <i class="bi bi-list-check me-2"></i>Features
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">
+                                <i class="bi bi-info-circle me-2"></i>About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#testimonials">
+                                <i class="bi bi-chat-quote me-2"></i>Testimonials
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">
+                                <i class="bi bi-envelope me-2"></i>Contact
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3 mt-lg-0">
+                            <a class="nav-link btn btn-outline-light px-3 rounded-pill" href="/signup">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <section class="hero">
+        <div class="container text-center text-white">
+            <h1 class="display-3 mb-4">Nurture Your Farm Naturally</h1>
+            <p class="lead mb-5">HoverSprite brings eco-friendly drone technology to organic farming. Book, manage, and
+                track your spraying services with ease.</p>
+            <a href="#" class="btn btn-success btn-lg">Get Started</a>
+        </div>
+    </section>
+
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 text-success">Our Organic Approach</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 bg-dark-green">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-check feature-icon mb-3"></i>
+                            <h3 class="card-title">Easy Booking</h3>
+                            <p class="card-text">Schedule your spraying services with just a few clicks. View available
+                                slots in both Gregorian and Lunar calendars.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 bg-dark-green">
+                        <div class="card-body text-center">
+                            <i class="bi bi-geo-alt feature-icon mb-3"></i>
+                            <h3 class="card-title">Real-time Tracking</h3>
+                            <p class="card-text">Monitor the status of your orders in real-time with our advanced
+                                notification system.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 bg-dark-green">
+                        <div class="card-body text-center">
+                            <i class="bi bi-star feature-icon mb-3"></i>
+                            <h3 class="card-title">Quality Feedback</h3>
+                            <p class="card-text">Rate and review our services to help us improve. Share your experience
+                                with photos and detailed ratings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="mb-4 text-success">About HoverSprite</h2>
+                    <p>HoverSprite is a leading agricultural solutions company based in the Southwest Provinces of
+                        Vietnam. We specialize in organic fertilizer and pesticide spraying services, utilizing a fleet
+                        of 15 advanced spraying drones to serve orchards, cereal fields, and vegetable farms.</p>
+                    <p>Our mission is to revolutionize farming practices by providing efficient, eco-friendly, and
+                        technology-driven solutions to farmers across the region.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Expert sprayers with varying levels
+                            of expertise</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Optimal route planning for
+                            efficient service delivery</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Transparent pricing at 30,000 VND
+                            per decare</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Dual confirmation system for
+                            completed services</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://image.vietnamnews.vn/uploadvnnews/Article/2020/6/19/94099_UAV2.jpg"
+                        alt="Organic farming" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonial py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 text-white">What Our Farmers Say</h2>
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="testimonial-card">
+                            <div class="testimonial-image">
+                                <img src="https://i.natgeofe.com/k/5e4ea67e-2219-4de4-9240-2992faef0cb6/trump-portrait.jpg"
+                                    alt="Do Nam Trung" class="rounded-circle">
+                            </div>
+                            <div class="testimonial-content">
+                                <p>"HoverSprite has transformed the way I manage my orchard. Their efficient service and
+                                    user-friendly platform make spraying hassle-free.
+                                    <br><br>
+                                    <strong>Make America Great Again</strong>
+                                </p>
+                                <h5 class="testimonial-name">Do Nam Trung</h5>
+                                <p class="testimonial-title">Fruit Farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-card">
+                            <div class="testimonial-image">
+                                <img src="https://www.rollingstone.com/wp-content/uploads/2022/04/R1363_MrBeast_1feature.jpg"
+                                    alt="Mit To Bich" class="rounded-circle">
+                            </div>
+                            <div class="testimonial-content">
+                                <p>"The real-time tracking and notification system keep me informed at every step. It's
+                                    a game-changer for my cereal fields."
+                                    <br><br>
+                                    <strong>This App is Amazing</strong>
+                                </p>
+
+                                <h5 class="testimonial-name">Mit To Bich</h5>
+                                <p class="testimonial-title">Cereal Farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-card">
+                            <div class="testimonial-image">
+                                <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Le Van C"
+                                    class="rounded-circle">
+                            </div>
+                            <div class="testimonial-content">
+                                <p>"As a vegetable farmer, precision is crucial. HoverSprite's expert sprayers and
+                                    advanced drones deliver exactly what my crops need."
+                                    <br><br>
+                                    <strong>This App is Amazing</strong>
+                                </p>
+                                <h5 class="testimonial-name">Le Van C</h5>
+                                <p class="testimonial-title">Vegetable Farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contact" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 text-success">Contact Us</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="card h-100 shadow">
+                        <div class="card-body">
+                            <h3 class="mb-4 text-success">Contact Information</h3>
+                            <p><strong>Address:</strong> 702 Đ. Nguyễn Văn Linh, Tân Hưng, Quận 7, Hồ Chí Minh</p>
+                            <p><strong>Phone:</strong> +84 123 456 789</p>
+                            <p><strong>Email:</strong> Team4@hoversprite.com</p>
+                            <p><strong>Hours:</strong> Monday - Friday: 8:00 AM - 5:00 PM</p>
+                            <div class="mt-4">
+                                <a href="#" class="btn btn-outline-success me-2 mb-2"><i class="bi bi-facebook"></i>
+                                    Facebook</a>
+                                <a href="#" class="btn btn-outline-success me-2 mb-2"><i class="bi bi-instagram"></i>
+                                    Instagram</a>
+                                <a href="#" class="btn btn-outline-success mb-2"><i class="bi bi-twitter"></i>
+                                    Twitter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 shadow">
+                        <div class="card-body">
+                            <h3 class="mb-4 text-success">Send Us a Message</h3>
+                            <form>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" placeholder="Your Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" placeholder="Your Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="tel" class="form-control" placeholder="Your Phone Number" required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" rows="5" placeholder="Your Message"
+                                        required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-lg w-100">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/LandingPage.js"></script>
+</body>
+
+</html>

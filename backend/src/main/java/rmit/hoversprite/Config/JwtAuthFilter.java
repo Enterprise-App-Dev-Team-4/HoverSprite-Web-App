@@ -2,6 +2,7 @@ package rmit.hoversprite.Config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // Retrieve the Authorization header
-        String authHeader = request.getHeader("Authorization");
+        // Retrieve the token from the cookie
         String token = null;
         String email = null;
 
-        // Check if the header starts with "Bearer "
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); // Extract token
-            setBrowserToken(token);
-            email = jwtUtil.extractEmail(token); // Extract email from token
+        Cookie[] cookies = request.getCookies();
+        // System.out.println("JwtAuthFilter: doFilterInternal called");
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    System.out.println("Token found in cookie: " + token);
+                    setBrowserToken(token);
+                    email = jwtUtil.extractEmail(token);
+                }
+            }
+        } else {
+            System.out.println("No cookies found in request");
         }
 
         // If the token is valid and no authentication is set in the context
@@ -50,9 +59,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // Validate token and set authentication
             if (jwtUtil.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);

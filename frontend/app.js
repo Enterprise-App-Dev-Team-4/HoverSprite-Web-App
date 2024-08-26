@@ -10,7 +10,12 @@ const servicePath = __dirname + '/src/pages/Services.html'
 const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
 const userOrderList = __dirname + '/src/pages/UserOrderList.html'
+const receptionistOrder = __dirname + '/src/pages/ReceptionistOrder.html'
+const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html';
+const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
+const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 
+const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
 
 // Serve static images from the public directory
@@ -28,6 +33,10 @@ app.use('/js', express.static('src/js'));
 
 // handle routing
 app.get('/', (req, res) => {
+    res.sendFile(landingPagePath);
+})
+
+app.get('/signup', (req, res) => {
     res.sendFile(SignupPath);
 })
 
@@ -58,6 +67,22 @@ app.get('/profile', (req, res) => {
 app.get('/order-list', (req, res) => {
     res.sendFile(userOrderList);
 })
+
+app.get('/order-detail/:id', (req, res) => {
+    res.sendFile(userOrderDetailPath);
+});
+
+app.get('/test', (req,res) => {
+    res.sendFile(testPath);
+})
+
+app.get('/receptionist-order', (req, res) => {
+    res.sendFile(receptionistOrder);
+})
+
+app.get('/receptionist-order-detail/:id', (req, res) => {
+    res.sendFile(receptionistOrderDetailPath);
+});
 
 app.listen(3000, () => {
     console.log("listen on port");
