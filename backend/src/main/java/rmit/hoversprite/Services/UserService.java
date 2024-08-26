@@ -36,4 +36,9 @@ public class UserService {
 
         return foundUser;
     }
+
+    public User logout(User user)
+    {
+        return signUpService.deleteTokenUser(user);
+    }
 }

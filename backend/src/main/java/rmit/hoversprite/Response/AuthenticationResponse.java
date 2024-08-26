@@ -76,6 +76,26 @@ public class AuthenticationResponse {
         return null;
     }
 
+    public User deleteTokenInDatabase(User user)
+    {
+        if(user instanceof Farmer)
+        {
+            Farmer farmer = farmerRepository.findByEmail(user.getEmail());
+            farmer.setToken(null);
+            farmerRepository.save(farmer);
+
+            return (User) farmer;
+        } else if(user instanceof Receptionist)
+        {
+            Receptionist receptionist = receptionistRepository.findByEmail(user.getEmail());
+            receptionist.setToken(null);
+            receptionistRepository.save(receptionist);
+
+            return (User) receptionist;
+        }
+        return null;
+    }
+
 
     public Farmer getFarmerByToken()
     {

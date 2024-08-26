@@ -40,4 +40,9 @@ public class SignUpService {
     {
         return authenticationResponse.saveTokenToDataBase(token, user);
     }
+
+    public User deleteTokenUser(User user)
+    {
+        return authenticationResponse.deleteTokenInDatabase(user);
+    }
 }

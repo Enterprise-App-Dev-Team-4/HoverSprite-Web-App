@@ -1,7 +1,10 @@
-// Navbar.js
-
+const logoutAPI = 'http://localhost:8080/log-out';
+var user = null;
+var user_role = null;
 function returnNavBar(data, role) {
   console.log('hello navbar');
+  user = data;
+  user_role = role;
   return `
   <nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
       <div class="container-fluid">
@@ -24,7 +27,7 @@ function returnNavBar(data, role) {
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                       <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle me-2"></i>View Profile</a></li>
-                      <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                      <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                   </ul>
               </div>
           </div>
@@ -71,16 +74,54 @@ function returnNavBar(data, role) {
   `;
 }
 
-
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 
 function activeClick() {
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', function () {
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function () {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Add an event listener for the logout link
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+            const headers = {
+              'Authorization': `Bearer ${token}`,
+          };
+
+          const token = getCookie('jwtToken'); // Retrieve the token from the cookie
+          
+          const fullLogoutURL = `${logoutAPI}?type=${user_role}`;
+          console.log(fullLogoutURL);
+            fetch(logoutAPI, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include', // Include credentials like cookies in the request
+                body: user
+            })
+            .then(data => console.log(data))
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to the login page or homepage after logout
+                    window.location.href = '/';
+                } else {
+                    console.error('Logout failed');
+                }
+            })
+            .catch(error => {
+                console.error('An error occurred during logout', error);
+            });
+        });
+    }
 }
 
 activeClick();

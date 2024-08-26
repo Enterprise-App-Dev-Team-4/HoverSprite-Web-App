@@ -99,6 +99,7 @@ public class UserController {
             return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
         }
     }
+
     
     @PostMapping("/login")
     public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
@@ -130,5 +131,37 @@ public class UserController {
         return ResponseEntity.badRequest().body("This user has been registered before");
     }
 
+    @PostMapping("log-out")
+    public ResponseEntity<?> userLogOut(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
+        User logoutUser = null;
+        if ("farmer".equals(type)) {
+            Farmer farmer = new Farmer();
+            farmer.setUser(user);
+            logoutUser = userService.logout(farmer);
+        }
+        if ("receptionist".equals(type)) {
+            Receptionist receptionist = new Receptionist();
+            receptionist.setUser(user);
+            logoutUser = userService.logout(receptionist);
+        }
 
+
+        if(logoutUser != null)
+        {
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(logoutUser);
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", null)
+            .httpOnly(true)
+            .secure(false) // Set to true in production (HTTPS)
+            .path("/")
+            .maxAge(0)  // Immediately expire the cookie
+            .sameSite("Lax")
+            .build();
+
+        // Add the expired cookie to the response to remove it from the browser
+            response.addHeader("Set-Cookie", jwtCookie.toString());
+            return ResponseEntity.ok(userDTO);
+        }
+        
+        return null;
+    }
 }
