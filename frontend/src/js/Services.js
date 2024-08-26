@@ -26,7 +26,7 @@ function displayServices(services) {
         const cropType = service.cropType ? service.cropType : "For All Croptype";
         const serviceCard = `
             <div class="col-12">
-                <div class="card service-card">
+                <div class="card service-card" data-service-id="${service.id}">
                     <div class="row no-gutters"> 
                         <div class="col-md-4">
                             <img src="../../public/drone-seeding.jpg" class="card-img" alt="ok">
@@ -46,19 +46,42 @@ function displayServices(services) {
         container.insertAdjacentHTML('beforeend', serviceCard);
     });
 
-    // Attach event listeners to the "Book Now" buttons
-    const bookNowButtons = document.querySelectorAll('.book-now-btn');
-    bookNowButtons.forEach(button => {
-        button.addEventListener('click', function() {
+    // Attach event listeners to service cards to open modal
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', function() {
             const serviceId = this.getAttribute('data-service-id');
-            const selectedService = services.find(service => service.id === serviceId);
-            if (selectedService && user) {
-                redirectToBooking(selectedService, user);
-            } else {
-                console.error('Service or user data not found');
-            }
+            const selectedService = services.find(service => service.id == serviceId);
+            openModal(selectedService);
         });
     });
+}
+
+function openModal(service) {
+    const modal = document.getElementById("serviceModal");
+    const modalContent = document.getElementById("modal-body-content");
+
+    modalContent.innerHTML = `
+        <h2>${service.serviceName}</h2>
+        <p><strong>Crop Type:</strong> ${service.cropType}</p>
+        <p><strong>Description:</strong> ${service.description}</p>
+        <p><strong>Service Type:</strong> ${service.serviceType}</p>
+        <p><strong>Price:</strong> ${service.price} VND</p>
+    `;
+
+    modal.style.display = "block";
+
+    // Close the modal when the user clicks on <span> (x)
+    const span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 }
 
 function redirectToBooking(service, user) {
