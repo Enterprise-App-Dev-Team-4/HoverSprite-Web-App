@@ -265,6 +265,13 @@ function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, loca
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
+        // Display the modal with booking details
+        showConfirmationModal(areaInput.value, dateInput.value, dateTypeSelect.value, locationInput.value, sessionSelect.value);
+    });
+
+    // Handle final confirmation
+    document.getElementById("confirmSubmitButton").addEventListener("click", function () {
+        // Finalize the booking request
         handleDateConversionIfNeeded(dateTypeSelect, dateInput);
         updateServiceTimeSlots(sessionSelect);
         const totalCost = calculateTotalCost(areaInput.value);
@@ -280,6 +287,19 @@ function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, loca
             redirectToServicePage();
         }, 2000); // 2000 milliseconds = 2 seconds
     });
+}
+
+function showConfirmationModal(area, date, dateType, location, session) {
+    // Set the confirmation modal values
+    document.getElementById('confirmLocation').textContent = location;
+    document.getElementById('confirmArea').textContent = area;
+    document.getElementById('confirmDateType').textContent = dateType === 'solar' ? 'Solar Calendar' : 'Lunar Calendar';
+    document.getElementById('confirmDate').textContent = date;
+    document.getElementById('confirmSession').textContent = session;
+
+    // Show the modal
+    const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    confirmationModal.show();
 }
 
 function handleDateConversionIfNeeded(dateTypeSelect, dateInput) {
