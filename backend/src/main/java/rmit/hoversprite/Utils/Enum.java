@@ -11,10 +11,11 @@ public class Enum {
 
     public enum OrderStatus
     {
-        REJECTED,
+        CANCELLED,
         PENDING,
-        ACCEPTED,
-        ASSIGNED
+        CONFIRMED,
+        ASSIGNED,
+        IN_PROGRESS
     }
 
     public enum ServiceName

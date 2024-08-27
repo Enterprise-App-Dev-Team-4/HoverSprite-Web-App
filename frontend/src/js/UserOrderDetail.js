@@ -93,7 +93,7 @@ function displayOrderDetails(order) {
 function getStatusColor(status) {
     switch (status) {
         case 'COMPLETED': return 'success';
-        case 'PENDING': return 'primary';
+        case 'IN_PROGRESS': return 'primary';
         case 'CONFIRM': return 'info';
         case 'assigned': return 'warning';
         case 'REJECTED': return 'danger';

@@ -116,7 +116,6 @@ public class FarmerController {
     }
 
     @GetMapping("order")
-    
     public ResponseEntity<?> farmerGetOrderDetail(@RequestParam String orderId)
     {
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));

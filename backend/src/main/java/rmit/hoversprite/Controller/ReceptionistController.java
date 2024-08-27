@@ -79,4 +79,10 @@ public class ReceptionistController {
         }
     }
 
+    @PutMapping("handleOrder")
+    public ResponseEntity<?> receptionistHandleOrder()
+    {
+        return null;
+    }
+
 }

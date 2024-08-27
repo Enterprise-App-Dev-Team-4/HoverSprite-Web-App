@@ -90,7 +90,7 @@ function returnToOrderList() {
 function getStatusColor(status) {
     switch (status) {
         case 'COMPLETED': return 'success';
-        case 'PENDING': return 'primary';
+        case 'IN_PROGRESS': return 'primary';
         case 'confirmed': return 'info';
         case 'assigned': return 'warning';
         case 'cancelled': return 'danger';
