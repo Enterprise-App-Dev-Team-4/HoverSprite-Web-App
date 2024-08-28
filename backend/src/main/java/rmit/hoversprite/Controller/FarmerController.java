@@ -24,6 +24,7 @@ import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
+import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
@@ -31,6 +32,7 @@ import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Request.FarmerAddFarmRequest;
 import rmit.hoversprite.Request.FarmerOrderRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
+import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Services.FarmService;
 import rmit.hoversprite.Services.FarmerService;
@@ -50,6 +52,9 @@ public class FarmerController {
 
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+
+    @Autowired
+    ReceptionistOrderCheckStatus receptionistOrderCheckStatus;
 
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
@@ -120,5 +125,12 @@ public class FarmerController {
     {
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));
         return ResponseEntity.ok(orderDTO);
+    }
+
+    @PutMapping("orderStatus")
+    public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
+    {
+        System.out.println("controlelr called");
+        return ResponseEntity.ok(receptionistOrderCheckStatus.checkOrderStatus(request));
     }
 }

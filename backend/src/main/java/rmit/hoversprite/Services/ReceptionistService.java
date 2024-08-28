@@ -48,4 +48,9 @@ public class ReceptionistService {
     {
         return receptionistOrderService.getAllOrders();
     }
+
+    public Order receptionistHandleSpecificOrder(Order order)
+    {
+        return receptionistOrderService.updateOrder(order);
+    }
 }

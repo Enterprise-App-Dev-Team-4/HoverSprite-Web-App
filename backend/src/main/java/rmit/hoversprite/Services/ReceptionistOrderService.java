@@ -17,4 +17,13 @@ public class ReceptionistOrderService {
     {
         return orderRepository.findAll();
     }
+
+    public Order updateOrder(Order order)
+    {
+        Order dbOrder = orderRepository.findByorderID(order.getOrderID());
+        dbOrder.setSprayers(order.getSprayers());
+        dbOrder.setOrderStatus(order.getOrderStatus());
+        dbOrder.setReceptionist(order.getReceptionist());
+        return orderRepository.save(dbOrder);
+    }
 }
