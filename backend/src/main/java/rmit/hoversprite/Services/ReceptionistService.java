@@ -51,6 +51,8 @@ public class ReceptionistService {
 
     public Order receptionistHandleSpecificOrder(Order order)
     {
+        Receptionist receptionistRequest = getReceptionistData();
+        order.setReceptionist(receptionistRequest);
         return receptionistOrderService.updateOrder(order);
     }
 }

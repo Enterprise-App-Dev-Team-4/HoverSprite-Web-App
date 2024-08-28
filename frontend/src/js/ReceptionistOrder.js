@@ -8,6 +8,7 @@ let role = null;
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
 const sprayerApiEndpoint = 'http://localhost:8080/sprayers'; // Assuming this is the correct endpoint for sprayers
 const navBarURL = 'http://localhost:8080/receptionist';
+const receptionistHandleOrderAPI = 'http://localhost:8080/orderStatus';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
@@ -67,8 +68,8 @@ function createOrderCard(order) {
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-flex flex-wrap gap-2">
                             ${viewDetailsButton}
-                            <button class="btn btn-warning btn-sm flex-fill" onclick="openStatusModal(${order.id})">Change Status</button>
-                            <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
+                            <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
+                            <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                         </div>
                     </div>
                 </div>
@@ -98,8 +99,8 @@ function createOrderCard(order) {
                             </div>
                             <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
-                                <button class="btn btn-warning btn-sm flex-fill" onclick="openStatusModal(${order.id})">Change Status</button>
-                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.id}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
+                                <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
+                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
                             </div>
                         </div>
                     </div>
@@ -223,22 +224,54 @@ backToTopBtn.addEventListener('click', () => {
     document.documentElement.scrollTop = 0;
 });
 
+function sendOrderUpdateToServer(order)
+{
+    const body = {
+        order: order
+    }
+    sendRequestWithToken(receptionistHandleOrderAPI)
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.change-status-button')) {
+            const orderId = event.target.getAttribute('data-order-id');
+            openStatusModal(orderId);
+        }
+    });
+});
+
 function openStatusModal(orderId) {
     document.getElementById('statusModalOrderId').value = orderId;
     document.getElementById('statusModal').style.display = 'block';
+    console.log(orderId);
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const changeStatusButton = document.querySelector('.btn.btn-primary');
+
+    if (changeStatusButton) {
+        changeStatusButton.addEventListener('click', changeOrderStatus);
+    }
+});
 
 function changeOrderStatus() {
     const orderId = document.getElementById('statusModalOrderId').value;
     const newStatus = document.getElementById('statusSelect').value;
 
-    const order = orders.find(o => o.id == orderId);
+    const order = orders.find(o => o.orderID == orderId);
+    console.log(orderId);
     if (order) {
+        console.log("ok");
         order.orderStatus = newStatus;
         renderOrders();
         sendStatusChangeEmail(orderId, newStatus);
     }
-
     document.getElementById('statusModal').style.display = 'none';
 }
 

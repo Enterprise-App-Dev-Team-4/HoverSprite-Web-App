@@ -53,9 +53,6 @@ public class FarmerController {
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
 
-    @Autowired
-    ReceptionistOrderCheckStatus receptionistOrderCheckStatus;
-
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
     {
@@ -127,10 +124,4 @@ public class FarmerController {
         return ResponseEntity.ok(orderDTO);
     }
 
-    @PutMapping("orderStatus")
-    public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
-    {
-        System.out.println("controlelr called");
-        return ResponseEntity.ok(receptionistOrderCheckStatus.checkOrderStatus(request));
-    }
 }

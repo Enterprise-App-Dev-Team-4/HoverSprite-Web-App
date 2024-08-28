@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Middleware.ReceptionistProfileUpdateRequest;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
+import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
 import rmit.hoversprite.Services.ReceptionistService;
 import rmit.hoversprite.Utils.DTOConverter;
@@ -34,6 +36,10 @@ public class ReceptionistController {
 
     @Autowired
     ReceptionistProfileUpdateRequest receptionistProfileUpdateRequest;
+
+    
+    @Autowired
+    ReceptionistOrderCheckStatus receptionistOrderCheckStatus;
 
 
     @GetMapping("receptionist")
@@ -79,10 +85,11 @@ public class ReceptionistController {
         }
     }
 
-    @PutMapping("handleOrder")
-    public ResponseEntity<?> receptionistHandleOrder()
+        @PutMapping("orderStatus")
+    public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
     {
-        return null;
+        System.out.println("controlelr called");
+        return ResponseEntity.ok(receptionistOrderCheckStatus.checkOrderStatus(request));
     }
 
 }

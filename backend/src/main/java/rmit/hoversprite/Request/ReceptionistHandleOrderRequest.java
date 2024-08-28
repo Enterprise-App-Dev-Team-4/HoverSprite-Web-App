@@ -1,6 +1,7 @@
 package rmit.hoversprite.Request;
 
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.User.Receptionist;
 
 public class ReceptionistHandleOrderRequest {
     private Order order;
