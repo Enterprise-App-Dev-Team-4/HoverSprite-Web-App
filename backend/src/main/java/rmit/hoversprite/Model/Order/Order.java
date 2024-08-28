@@ -161,4 +161,20 @@ public class Order {
     public void setSprayers(List<Sprayer> sprayers) {
         this.sprayers = sprayers;
     }
+
+    public void setOrder(Order order) {
+        if (order != null) {
+            this.orderID = order.getOrderID();
+            this.date = order.getDate();
+            this.orderStatus = order.getOrderStatus();
+            this.totalCost = order.getTotalCost();
+            this.farmer = order.getFarmer();
+            this.receptionist = order.getReceptionist();
+            this.sprayerServices = order.getSprayerServices();
+            this.sprayers = order.getSprayers();
+            this.serviceTimeSlot = order.getServiceTimeSlot();
+            this.location = order.getLocation();
+        }
+    }
+    
 }

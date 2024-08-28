@@ -15,24 +15,32 @@ public class ReceptionistOrderCheckStatus {
 
     private Order transferToOrderData(ReceptionistHandleOrderRequest request)
     {
+        
         Order order = new Order();
+        System.out.println("FOund R: ");
         order.setOrderID(request.getOrder().getOrderID());
         order.setOrderStatus(request.getOrder().getOrderStatus());
-        order.setReceptionist(request.getOrder().getReceptionist());
-        order.setSprayers(request.getOrder().getSprayers());
+        order.setLocation(request.getOrder().getLocation());
+        // order.setReceptionist(request.getOrder().getReceptionist());
+        
+        // order.setSprayers(request.getOrder().getSprayers());
         return order;
     }
 
-    public OrderStatus checkOrderStatus(ReceptionistHandleOrderRequest receptionistHandleOrderRequest)
+    public Order checkOrderStatus(ReceptionistHandleOrderRequest receptionistHandleOrderRequest)
     {
-        Order order = transferToOrderData(receptionistHandleOrderRequest);
+        
+        Order order = new Order();
+        order.setOrder(transferToOrderData(receptionistHandleOrderRequest));
+        System.out.println("Error here");
         Order savedOrder = receptionistService.receptionistHandleSpecificOrder(order);
+        
         // check if the order confirmed or rejeceted
-        if(order.getOrderStatus() == OrderStatus.CANCELLED)
-        {
-            // send proxy
+        // if(order.getOrderStatus() == OrderStatus.CANCELLED)
+        // {
+        //     // send proxy
             
-        }
-        return savedOrder.getOrderStatus();
+        // }
+        return savedOrder;
     }
 }

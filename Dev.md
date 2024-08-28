@@ -100,3 +100,10 @@ cd frontend/
 
 ## Reuse components:
 1. using bootstrap ``<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">``
+
+## To fix `` [ERROR: new row for relation "orders" violates check constraint "orders_order_status_check ``
+- run this script in Postgre:
+```sql
+ALTER TABLE farmer_detail.orders
+DROP CONSTRAINT orders_order_status_check;
+```

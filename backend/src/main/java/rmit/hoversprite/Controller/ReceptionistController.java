@@ -88,8 +88,8 @@ public class ReceptionistController {
         @PutMapping("orderStatus")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
     {
-       
-        return ResponseEntity.ok(receptionistOrderCheckStatus.checkOrderStatus(request));
+       OrderDTO orderReturn = new DTOConverter().convertOrderDataToObject(receptionistOrderCheckStatus.checkOrderStatus(request));
+        return ResponseEntity.ok(orderReturn);
     }
 
 }

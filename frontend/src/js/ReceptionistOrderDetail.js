@@ -91,9 +91,9 @@ function getStatusColor(status) {
     switch (status) {
         case 'COMPLETED': return 'success';
         case 'IN_PROGRESS': return 'primary';
-        case 'confirmed': return 'info';
-        case 'assigned': return 'warning';
-        case 'cancelled': return 'danger';
+        case 'CONFIRMED': return 'info';
+        case 'ASSIGNED': return 'warning';
+        case 'CANCELLED': return 'danger';
         default: return 'secondary';
     }
 }

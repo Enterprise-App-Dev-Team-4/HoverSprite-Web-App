@@ -53,8 +53,8 @@ public class ReceptionistService {
     {
         System.out.print("Farmer: ");
         Receptionist receptionistRequest = getReceptionistData();
-        System.out.println("Receptionist: " + receptionistRequest.getFullName());
         order.setReceptionist(receptionistRequest);
+        System.out.println("Receptionist: " + receptionistRequest.getFullName());
         // System.out.println(order);
         return receptionistOrderService.updateOrder(order);
     }

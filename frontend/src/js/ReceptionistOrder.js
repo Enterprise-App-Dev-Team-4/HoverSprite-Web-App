@@ -229,6 +229,7 @@ function sendOrderUpdateToServer(order)
     const body = {
         order: order
     }
+    console.log(body.order.orderStatus);
     sendRequestWithToken(receptionistHandleOrderAPI, 'PUT', body)
         .then(data => {
             console.log(data);
