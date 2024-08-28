@@ -51,8 +51,11 @@ public class ReceptionistService {
 
     public Order receptionistHandleSpecificOrder(Order order)
     {
+        System.out.print("Farmer: ");
         Receptionist receptionistRequest = getReceptionistData();
+        System.out.println("Receptionist: " + receptionistRequest.getFullName());
         order.setReceptionist(receptionistRequest);
+        // System.out.println(order);
         return receptionistOrderService.updateOrder(order);
     }
 }

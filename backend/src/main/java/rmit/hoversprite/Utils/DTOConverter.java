@@ -62,9 +62,13 @@ public class DTOConverter {
                 order.getServiceTimeSlot(),
                 order.getOrderStatus(),
                 order.getTotalCost(),
-                order.getFarmer(),
+                order.getFarmer().getEmail(),
+                order.getFarmer().getFullName(),
                 order.getLocation(),
-                order.getSprayerServices()
+                order.getSprayerServices().getId(),
+                order.getSprayerServices().getCropType(),
+                order.getSprayerServices().getServiceName(),
+                order.getSprayerServices().getServiceType()
             );
         }
         return null;

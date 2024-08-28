@@ -88,7 +88,7 @@ public class ReceptionistController {
         @PutMapping("orderStatus")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
     {
-        System.out.println("controlelr called");
+       
         return ResponseEntity.ok(receptionistOrderCheckStatus.checkOrderStatus(request));
     }
 

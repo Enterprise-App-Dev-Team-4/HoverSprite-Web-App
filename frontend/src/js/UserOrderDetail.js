@@ -54,7 +54,7 @@ function displayOrderDetails(order) {
     document.getElementById('orderStatus').textContent = order.orderStatus;
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
     document.getElementById('orderDate').textContent = formatDate(order.date);
-    document.getElementById('farmerName').textContent = order.farmer.fullName;
+    document.getElementById('farmerName').textContent = order.farmerFullName;
 
     // Check if sprayer and sprayServices exist before accessing them
     if (order.sprayer) {
@@ -63,10 +63,10 @@ function displayOrderDetails(order) {
         document.getElementById('sprayerName').textContent = 'N/A';
     }
 
-    if (order.sprayServices) {
-        document.getElementById('cropType').textContent = order.sprayServices.cropType;
-        document.getElementById('serviceName').textContent = order.sprayServices.serviceName;
-        document.getElementById('serviceType').textContent = order.sprayServices.serviceType;
+    if (order) {
+        document.getElementById('cropType').textContent = order.cropType;
+        document.getElementById('serviceName').textContent = order.serviceName;
+        document.getElementById('serviceType').textContent = order.serviceType;
     } else {
         document.getElementById('cropType').textContent = 'N/A';
         document.getElementById('serviceName').textContent = 'N/A';

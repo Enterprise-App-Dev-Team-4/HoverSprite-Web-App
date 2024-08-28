@@ -61,7 +61,7 @@ function createOrderCard(order) {
                             <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
-                            <strong>Crop Type:</strong> ${order.sprayServices.cropType}<br>
+                            <strong>Crop Type:</strong> ${order.cropType}<br>
                             <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>
                     </div>
@@ -229,7 +229,7 @@ function sendOrderUpdateToServer(order)
     const body = {
         order: order
     }
-    sendRequestWithToken(receptionistHandleOrderAPI)
+    sendRequestWithToken(receptionistHandleOrderAPI, 'PUT', body)
         .then(data => {
             console.log(data);
         })
@@ -268,9 +268,10 @@ function changeOrderStatus() {
     console.log(orderId);
     if (order) {
         console.log("ok");
-        order.orderStatus = newStatus;
+        order.orderStatus = newStatus.toUpperCase();
         renderOrders();
         sendStatusChangeEmail(orderId, newStatus);
+        sendOrderUpdateToServer(order);
     }
     document.getElementById('statusModal').style.display = 'none';
 }

@@ -1,6 +1,8 @@
 package rmit.hoversprite.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -105,7 +107,14 @@ public class AuthenticationResponse {
 
     public Receptionist getReceptionistByToken()
     {
-        String token = authFilter.getBrowserToken();
-        return receptionistRepository.findByToken(token);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName(); // The email was set as the principal during authentication
+            return receptionistRepository.findByEmail(email);
+        }
+
+        return null; // or throw an appropriate exception
+
     }
 }

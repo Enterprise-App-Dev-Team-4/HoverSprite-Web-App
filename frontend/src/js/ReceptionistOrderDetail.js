@@ -32,12 +32,12 @@ function fetchOrderDetails(orderId) {
 
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
-
+    
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
     document.getElementById('orderDate').textContent = formatDate(order.date || new Date());
-    document.getElementById('farmerName').textContent = order.farmer ? order.farmer.fullName : 'N/A';
+    document.getElementById('farmerName').textContent = order.farmerFullName ? order.farmerFullName : 'N/A';
 
     if (order.sprayer) {
         document.getElementById('sprayerName').textContent = order.sprayer.name || 'N/A';
@@ -45,10 +45,10 @@ function displayOrderDetails(order) {
         document.getElementById('sprayerName').textContent = 'N/A';
     }
 
-    if (order.sprayServices) {
-        document.getElementById('cropType').textContent = order.sprayServices.cropType || 'N/A';
-        document.getElementById('serviceName').textContent = order.sprayServices.serviceName || 'N/A';
-        document.getElementById('serviceType').textContent = order.sprayServices.serviceType || 'N/A';
+    if (order) {
+        document.getElementById('cropType').textContent = order.cropType || 'N/A';
+        document.getElementById('serviceName').textContent = order.serviceName || 'N/A';
+        document.getElementById('serviceType').textContent = order.serviceType || 'N/A';
     } else {
         document.getElementById('cropType').textContent = 'N/A';
         document.getElementById('serviceName').textContent = 'N/A';

@@ -56,7 +56,7 @@ function createOrderCard(order) {
                             <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
-                            <strong>Crop Type:</strong> ${order.sprayServices.cropType}<br>
+                            <strong>Crop Type:</strong> ${order.cropType}<br>
                             <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>
                     </div>
