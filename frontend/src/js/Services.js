@@ -29,7 +29,7 @@ function displayServices(services) {
                 <div class="card service-card" data-service-id="${service.id}">
                     <div class="row no-gutters"> 
                         <div class="col-md-4">
-                            <img src="../../public/drone-seeding.jpg" class="card-img" alt="ok">
+                            <img src="../../public/drone-seeding.jpg" class="card-img service-image" alt="Service Image" data-service-id="${service.id}">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -47,7 +47,7 @@ function displayServices(services) {
     });
 
     // Attach event listeners to service cards to open modal
-    document.querySelectorAll('.service-card').forEach(card => {
+    document.querySelectorAll('.service-image').forEach(card => {
         card.addEventListener('click', function() {
             const serviceId = this.getAttribute('data-service-id');
             const selectedService = services.find(service => service.id == serviceId);
