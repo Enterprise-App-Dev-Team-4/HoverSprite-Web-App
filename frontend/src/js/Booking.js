@@ -174,7 +174,7 @@ function getUrlParams() {
         name: params.get('serviceName'),
         cropType: params.get('cropType'),
         serviceType: params.get('serviceType'),
-        orders: JSON.parse(params.get('serviceOrders') || '[]'),
+        // orders: JSON.parse(params.get('serviceOrders') || '[]'),
         timeSlots: JSON.parse(params.get('serviceTimeSlots') || '[]')
     };
 

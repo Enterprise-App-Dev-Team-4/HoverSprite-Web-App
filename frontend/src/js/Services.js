@@ -63,14 +63,14 @@ function displayServices(services) {
 
 function redirectToBooking(service, user) {
     const timeSlotsSerialized = JSON.stringify(service.timeSlots);
-    const ordersSerialized = JSON.stringify(service.orders);
+    // const ordersSerialized = JSON.stringify(service.orders);
 
     const bookingParams = new URLSearchParams({
         serviceId: service.id,
         serviceName: service.serviceName,
         serviceType: service.serviceType,
         cropType: service.cropType,
-        serviceOrders: ordersSerialized, // Serialized orders list
+        // serviceOrders: ordersSerialized, // Serialized orders list
         serviceTimeSlots: timeSlotsSerialized, // Serialized timeSlots list
         userEmail: user.email, // Assuming the user object has an 'email' property
         role: role // Attach the user role to the booking URL

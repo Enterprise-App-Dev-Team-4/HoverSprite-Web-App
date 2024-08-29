@@ -1,19 +1,24 @@
 package rmit.hoversprite.Proxies;
 
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import rmit.hoversprite.Config.EmailSenderConfig;
-
-@Service
+@Component
 public class OrderEmailProxy {
-    @Autowired
-    EmailSenderConfig emailSender;
 
-    public void sendConfirmedEmail(String to, String subject, String text)
-    {
-        emailSender.sendSimpleEmail(to, subject, text);
+    private final EmailSenderService emailSender;
+
+    @Autowired
+    public OrderEmailProxy(EmailSenderService emailSender) {
+        this.emailSender = emailSender;
+    }
+
+    public void sendConfirmedEmail(String to) {
+        try {
+            emailSender.sendEmail(to, "Order Of Farmer", "Congratulations! Your order has been confirmed");
+        } catch (EmailException e) {
+            e.printStackTrace();
+        }
     }
 }

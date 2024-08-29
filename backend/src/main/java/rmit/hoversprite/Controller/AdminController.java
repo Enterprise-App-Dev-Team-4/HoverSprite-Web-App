@@ -1,6 +1,7 @@
 package rmit.hoversprite.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,22 +28,20 @@ public class AdminController {
     private SprayerFeatureServices sprayerService;
 
     @GetMapping("service/all")
-    public List<SprayServices> getAllServices(
+    public ResponseEntity<List<SprayServicesDTO>> getAllServices(
         @RequestParam(required = false) String searchTerm,
         @RequestParam(required = false) String cropType,
         @RequestParam(required = false) String serviceType,
         @RequestParam(required = false, defaultValue = "serviceName") String sortBy,
         @RequestParam(required = false, defaultValue = "asc") String sortOrder
-    )
-    {
+    ) {
         // Fetch all services initially
         List<SprayServices> services = sprayerService.listAllSprayServices();
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            System.out.println(searchTerm);
             services = sprayerService.filterBySearch(searchTerm);
         }
-        
+
         if (cropType != null && !cropType.isEmpty()) {
             services = sprayerService.filterByCropType(cropType);
         }
@@ -51,22 +50,19 @@ public class AdminController {
             services = sprayerService.filterByServiceType(serviceType);
         }
 
-        // Sort services (assuming sorting by service name or other criteria)
-        // services = services.stream()
-        //     .sorted((s1, s2) -> {
-        //         int comparison = 0;
-        //         if ("asc".equalsIgnoreCase(sortOrder)) {
-        //             comparison = s1.getServiceName().compareTo(s2.getServiceName());
-        //         } else if ("desc".equalsIgnoreCase(sortOrder)) {
-        //             comparison = s2.getServiceName().compareTo(s1.getServiceName());
-        //         }
-        //         return comparison;
-        //     })
-        //     .collect(Collectors.toList());
 
-        services = sprayerService.allBookableServices(services); // filter full service out of page
-        return services;
+        // Filter full service out of page
+        services = sprayerService.allBookableServices(services);
+
+        // Convert list of SprayServices to list of SprayServicesDTO
+        List<SprayServicesDTO> serviceDTOs = services.stream()
+            .map(new DTOConverter()::convertServiceDataToObject)
+            .collect(Collectors.toList());
+
+        // Return the list of SprayServicesDTO
+        return ResponseEntity.ok(serviceDTOs);
     }
+
 
     @PostMapping("services/add")
     public SprayServices addSprayServices(@RequestBody SprayServices sprayServices)
