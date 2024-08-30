@@ -85,7 +85,7 @@ public class ReceptionistController {
         }
     }
 
-        @PutMapping("orderStatus")
+     @PutMapping("orderStatus")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
     {
        OrderDTO orderReturn = new DTOConverter().convertOrderDataToObject(receptionistOrderCheckStatus.checkOrderStatus(request));

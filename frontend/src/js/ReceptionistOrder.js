@@ -36,6 +36,25 @@ function loadFooter() {
     content.innerHTML = returnFooter();
 }
 
+function sendEmail(order) {
+    console.log(order.farmerEmail);
+    Email.send({
+        Host: "sandbox.smtp.mailtrap.io", // Replace with your SMTP host
+        Port: 2525, // Using TLS
+        Username: "85fac4d8c8c01b", // Replace with your email
+        Password: "ce31d433cbd63e", // Replace with your email password
+        To: order.farmerEmail,
+        From: 'dinhminh181003@gmail.com',
+        Subject: 'Test Email',
+        Body: 'This is a test email sent using SMTPJS without a secure token.',
+    }).then(
+        message => alert("Mail sent successfully!")
+    ).catch(
+        error => console.error('Error:', error)
+    );
+}
+
+
 function getAllOrder() {
     sendRequestWithToken(orderApiEndpoint)
     .then(data => {
@@ -233,6 +252,7 @@ function sendOrderUpdateToServer(order)
     sendRequestWithToken(receptionistHandleOrderAPI, 'PUT', body)
         .then(data => {
             console.log(data);
+            sendEmail(data);
         })
         .catch(error => console.error('Error:', error));
 }

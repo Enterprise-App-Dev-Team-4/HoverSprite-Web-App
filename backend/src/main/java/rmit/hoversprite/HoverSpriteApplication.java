@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "rmit.hoversprite")
 public class HoverSpriteApplication {
 	private static final Logger logger = LogManager.getLogger(HoverSpriteApplication.class);
 	public static void main(String[] args) {
