@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,7 +87,7 @@ public class ReceptionistController {
     }
 
      @PutMapping("orderStatus")
-    public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request)
+    public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request) throws MailException
     {
        OrderDTO orderReturn = new DTOConverter().convertOrderDataToObject(receptionistOrderCheckStatus.checkOrderStatus(request));
         return ResponseEntity.ok(orderReturn);

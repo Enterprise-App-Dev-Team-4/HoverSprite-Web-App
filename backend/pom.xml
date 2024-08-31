@@ -100,23 +100,10 @@
     <scope>runtime</scope>
 </dependency>
 
-
-<dependency>
-    <groupId>commons-fileupload</groupId>
-    <artifactId>commons-fileupload</artifactId>
-    <version>1.4</version>
-</dependency>
-
-<dependency>
-    <groupId>com.google.firebase</groupId>
-    <artifactId>firebase-admin</artifactId>
-    <version>8.1.0</version>
-</dependency>
-
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>
-    <version>6.1.5</version>
+    <version>6.1.11</version>
 </dependency>
 
 <dependency>
@@ -124,10 +111,16 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 </dependency>
 
+
+
 	</dependencies>
 
 	<build>
 		<plugins>
+		<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 

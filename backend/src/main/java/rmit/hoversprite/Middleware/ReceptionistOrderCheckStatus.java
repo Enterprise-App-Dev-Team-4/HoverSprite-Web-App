@@ -1,11 +1,13 @@
 package rmit.hoversprite.Middleware;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Order.Order;
-// import rmit.hoversprite.Proxies.OrderEmailProxy;
+import rmit.hoversprite.Proxies.EmailSenderService;
+import rmit.hoversprite.Proxies.OrderEmailProxy;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Services.ReceptionistService;
 import rmit.hoversprite.Utils.Enum.OrderStatus;
@@ -15,8 +17,8 @@ public class ReceptionistOrderCheckStatus {
     @Autowired
     ReceptionistService receptionistService;
 
-    // @Autowired
-	// private OrderEmailProxy orderEmailProxy;
+    @Autowired
+	private OrderEmailProxy orderEmailProxy;
 
     private Order transferToOrderData(ReceptionistHandleOrderRequest request)
     {
@@ -32,7 +34,7 @@ public class ReceptionistOrderCheckStatus {
         return order;
     }
 
-    public Order checkOrderStatus(ReceptionistHandleOrderRequest receptionistHandleOrderRequest)
+    public Order checkOrderStatus(ReceptionistHandleOrderRequest receptionistHandleOrderRequest) throws MailException
     {
         
         Order order = new Order();
@@ -43,13 +45,8 @@ public class ReceptionistOrderCheckStatus {
         //check if the order confirmed or rejeceted
         if(savedOrder.getOrderStatus() == OrderStatus.CONFIRMED)
         {
-            // JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-            // mailSender.setHost("smtp.example.com");  // Set your SMTP host
-            // mailSender.setPort(587);                 // Set your SMTP port
-            // mailSender.setUsername("your-email@example.com");
-            // mailSender.setPassword("your-password");
             // send proxy
-            //orderEmailProxy.sendMail(savedOrder.getFarmer().getEmail());
+            orderEmailProxy.sendEmailOrderConfirmed(savedOrder.getFarmer().getEmail());
         }
         return savedOrder;
     }
