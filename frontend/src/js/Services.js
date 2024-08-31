@@ -54,7 +54,17 @@ function displayServices(services) {
             openModal(selectedService);
         });
     });
+
+    // Attach event listeners to "Book Now" buttons
+    document.querySelectorAll('.book-now-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-service-id');
+            const selectedService = services.find(service => service.id == serviceId);
+            redirectToBooking(selectedService, user);
+        });
+    });
 }
+
 
 function openModal(service) {
     const modal = document.getElementById("serviceModal");
@@ -98,7 +108,7 @@ function redirectToBooking(service, user) {
         userEmail: user.email, // Assuming the user object has an 'email' property
         role: role // Attach the user role to the booking URL
     });
-
+    console.log(`/booking?${bookingParams.toString()}`);
     window.location.href = `/booking?${bookingParams.toString()}`;
 }
 
