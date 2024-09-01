@@ -23,10 +23,11 @@ public class OrderEmailProxy {
                     .append("Order Date: ").append(order.getDate()).append("\n")
                     .append("Service Time Slot: ").append(order.getServiceTimeSlot()).append("\n")
                     .append("Order Status: ").append(order.getOrderStatus().name()).append("\n")
+                    .append("Order Location: ").append(order.getLocation()).append("\n")
                     .append("Total Cost: $").append(String.format("%.2f", order.getTotalCost())).append("\n\n")
                     .append("Thank you for choosing our service!\n\n")
                     .append("Best regards,\n")
-                    .append("Your Company Name");
+                    .append("Hover Sprite");
     
         // Send the email
         emailSenderService.sendSimpleEmail(
