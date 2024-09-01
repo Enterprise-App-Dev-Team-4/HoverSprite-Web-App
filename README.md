@@ -9,8 +9,8 @@ This project is developed by Team 4 for the [EEET2580] Enterprise Application De
 ## Team Members
 
 - **Member 1**: [Hua Nam Huy] (s3881103)
-- **Member 2**: [Bui Sy Quang] (s3958668)
-- **Member 3**: [Dinh Gia Bao] (s3877923)
+- **Member 2**: [Dinh Gia Bao] (s3877923)
+- **Member 3**: [Nguyen Duc Anh] (s3878010)
 - **Member 4**: [Dinh Ngoc Minh] (s3925113)
 - **Member 5**: [Tran Ngoc Minh] (s3911737)
 

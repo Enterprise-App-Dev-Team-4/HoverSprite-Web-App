@@ -14,10 +14,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import rmit.hoversprite.Model.Sprayer.Sprayer;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Utils.Enum.OrderStatus;
 
 @Entity(name = "orders")

@@ -2,6 +2,9 @@ const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const ReceptionistEditProfile = 'http://localhost:8080/receptionistProfile';
+const SprayerURL =  'http://localhost:8080/sprayer';
+const SprayerEditProfile = 'http://localhost:8080/sprayerProfile';
+
 // Global variable to store user data
 let userData = null;
 let role = null;
@@ -28,6 +31,9 @@ function fetchUserData(userRole) {
     } else if(userRole === 'farmer')
     {
         userAPI = UserURL;
+    } else if(userRole === 'sprayer')
+    {
+        userAPI = SprayerURL;
     }
 
     sendRequestWithToken(userAPI)
@@ -102,6 +108,9 @@ function initializeProfileButtons(userRole) {
         } else if(userRole === 'farmer')
         {
             userAPI = UpdateProfileUrl;
+        } else if(userRole === 'sprayer')
+        {
+            userAPI = SprayerEditProfile;
         }
         // Assuming uploadUserImage is a function that handles image uploading
         uploadUserImage(profileImageUpload.files[0]).then(profileImageUrl => {
@@ -126,7 +135,7 @@ function submitProfileFormWithImage(imageUrl, userAPI) {
         phoneNumber: document.getElementById('phoneNumber').value
     };
 
-    console.log(userProfile);
+    console.log(userProfile.email);
 
     sendRequestWithToken(userAPI, 'PUT', userProfile)
         .then(data => {
@@ -159,6 +168,9 @@ function loadNavBar(userRole) {
     } else if(userRole === 'farmer')
     {
         userAPI = UserURL;
+    } else if(userRole === 'sprayer')
+    {
+        userAPI = SprayerURL;
     }
     console.log(userAPI);
     sendRequestWithToken(userAPI)

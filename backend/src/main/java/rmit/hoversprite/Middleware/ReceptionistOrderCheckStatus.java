@@ -46,7 +46,7 @@ public class ReceptionistOrderCheckStatus {
         if(savedOrder.getOrderStatus() == OrderStatus.CONFIRMED)
         {
             // send proxy
-            orderEmailProxy.sendEmailOrderConfirmed(savedOrder.getFarmer().getEmail());
+            orderEmailProxy.sendEmailOrderConfirmed(savedOrder);
         }
         return savedOrder;
     }

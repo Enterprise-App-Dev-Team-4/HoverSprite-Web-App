@@ -34,6 +34,9 @@ function submitForm() {
             // Handle success
             console.log('Success:', data);
             displayAlert('success', 'Account created successfully! Check your email for verification.');
+            setTimeout(function() {
+                window.location.href = '/login';  // Redirect to profile page with user role as a param
+            }, 1500); // 2000 milliseconds = 2 seconds
             document.getElementById('userForm').reset(); // Reset the form
         })
         .catch((error) => {

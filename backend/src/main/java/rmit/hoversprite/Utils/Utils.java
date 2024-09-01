@@ -10,6 +10,7 @@ import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 
 @Component
@@ -103,5 +104,19 @@ public class Utils {
     
         // Return the new ID formatted with a prefix "FA" and a three-digit number
         return String.format("O%03d", numericPart);
+    }
+
+    public String generateSprayerId(List<Sprayer> sprayers) {
+        String lastId = sprayers.stream()
+            .map(Sprayer::getId)
+            .filter(id -> id.startsWith("SS")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("SS000"); // Default to "FA000" if no valid ID is found
+    
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("SS%03d", numericPart);
     }
 }

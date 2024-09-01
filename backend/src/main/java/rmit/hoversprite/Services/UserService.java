@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 
 @Component
@@ -19,6 +20,9 @@ public class UserService {
             return signUpService.registerFarmer(user);
         } else if (user instanceof Receptionist) {
             return signUpService.registerReceptionist(user);
+        } else if( user instanceof Sprayer)
+        {
+            return signUpService.registerSprayer(user);
         }
         return null;
     }
@@ -27,11 +31,17 @@ public class UserService {
         User foundUser = null;
         User userToken = signUpService.updateTokenToUser(token, user);
         if(userToken == null) return null;
-
+        
         if (user instanceof Farmer) {
+            System.out.println("It is Farmer");
             foundUser = signUpService.loginFarmer((Farmer) user);
         } else if (user instanceof Receptionist) {
+            System.out.println("It is Receptionist");
             foundUser = signUpService.loginReceptionist((Receptionist) user);
+        } else if(user instanceof Sprayer)
+        {
+            System.out.println("It is sprayer");
+            foundUser = signUpService.loginSprayer((Sprayer) user);
         }
 
         return foundUser;

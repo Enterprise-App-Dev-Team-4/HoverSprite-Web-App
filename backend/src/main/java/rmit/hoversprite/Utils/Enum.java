@@ -42,6 +42,7 @@ public class Enum {
     public enum Role
     {
         Farmer,
-        Receptionist
+        Receptionist,
+        Sprayer
     }
 }

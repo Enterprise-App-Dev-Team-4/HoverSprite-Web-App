@@ -15,6 +15,7 @@ import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Services.SprayerFeatureServices;
 import rmit.hoversprite.Services.UserService;
@@ -100,6 +101,34 @@ public class UserController {
         }
     }
 
+    private ResponseEntity<?> handleSprayerLoginRequest(User user, HttpServletResponse response) {
+        Sprayer sprayer = new Sprayer();
+        sprayer.setUser(user);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+        
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(sprayer.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(sprayer, token));
+
+            // Set token in a cookie
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                    .httpOnly(true)
+                    .secure(false) // Set to true in production (HTTPS)
+                    .path("/")
+                    .maxAge(7 * 24 * 60 * 60)  // Token valid for 7 days
+                    .sameSite("Lax")  // Prevent CSRF
+                    .build();
+
+            response.addHeader("Set-Cookie", jwtCookie.toString());
+            
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
+        }
+    }
+
     
     @PostMapping("/login")
     public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
@@ -108,6 +137,10 @@ public class UserController {
         }
         if ("receptionist".equals(type)) {
             return handleReceptionistLoginRequest(user, response);
+        }
+
+        if ("sprayer".equals(type)) {
+            return handleSprayerLoginRequest(user, response);
         }
 
         return ResponseEntity.badRequest().body("Invalid type parameter");
@@ -127,6 +160,12 @@ public class UserController {
             receptionist.setRole(Role.Receptionist);
             UserDTO receptionistDTO = new DTOConverter().convertUserDataToObject(userService.register(receptionist));
             return ResponseEntity.ok(receptionistDTO);
+        } else if(type.equals("sprayer")) {
+            Sprayer sprayer = new Sprayer();
+            sprayer.setUser(user);
+            sprayer.setRole(Role.Sprayer);
+            UserDTO sprayerDTO = new DTOConverter().convertUserDataToObject(userService.register(sprayer));
+            return ResponseEntity.ok(sprayerDTO);
         }
         return ResponseEntity.badRequest().body("This user has been registered before");
     }

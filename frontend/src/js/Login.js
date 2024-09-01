@@ -21,6 +21,7 @@ function setCookie(name, value, days) {
 }
 
 function fetchRequestServer(user, action) {
+    console.log(action);
     fetch(action, {
         method: 'POST',
         headers: {
@@ -37,6 +38,7 @@ function fetchRequestServer(user, action) {
     })
     .then(data => {
         // Handle success
+        console.log(data);
         console.log('Success:', data.token);
         setCookie('jwtToken', data.token, 7); // Save the token in a cookie for 7 days
         
@@ -45,14 +47,31 @@ function fetchRequestServer(user, action) {
         console.log(userRole);
         var profileUrl = `/profile?role=${encodeURIComponent(userRole)}`;
 
-        alert('Login successful!');
-        window.location.href = profileUrl;  // Redirect to profile page with user role as a param
+        displayAlert('success', 'Login successful!');
+
+        // Delay the redirect by 2 seconds (2000 milliseconds)
+        setTimeout(function() {
+            window.location.href = profileUrl;  // Redirect to profile page with user role as a param
+        }, 1500); // 2000 milliseconds = 2 seconds
     })
     .catch((error) => {
         // Handle error
         console.error('Error:', error);
-        alert('Wrong user name or Password');
+        displayAlert('danger', 'Wrong user name or Password');
     });
+}
+
+
+function displayAlert(type, message) {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
 }
 
 function sendLoginDataToServer() {
@@ -73,8 +92,6 @@ function sendLoginDataToServer() {
 
         // Construct the new action URL with the selected role as a parameter
         var actionURL = parseUserRequestParam(loginParam, instance);
-        console.log(actionURL);
-        console.log(client);
         // Send the form data using fetch
         fetchRequestServer(client, actionURL);
     });
