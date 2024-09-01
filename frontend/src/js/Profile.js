@@ -2,6 +2,7 @@ const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const ReceptionistEditProfile = 'http://localhost:8080/receptionistProfile';
+const SprayerURL =  'http://localhost:8080/sprayer';
 // Global variable to store user data
 let userData = null;
 let role = null;
@@ -28,6 +29,9 @@ function fetchUserData(userRole) {
     } else if(userRole === 'farmer')
     {
         userAPI = UserURL;
+    } else if(userRole === 'sprayer')
+    {
+        userAPI = SprayerURL;
     }
 
     sendRequestWithToken(userAPI)
@@ -159,6 +163,9 @@ function loadNavBar(userRole) {
     } else if(userRole === 'farmer')
     {
         userAPI = UserURL;
+    } else if(userRole === 'sprayer')
+    {
+        userAPI = SprayerURL;
     }
     console.log(userAPI);
     sendRequestWithToken(userAPI)

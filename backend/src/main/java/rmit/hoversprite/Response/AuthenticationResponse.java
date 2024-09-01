@@ -124,8 +124,16 @@ public class AuthenticationResponse {
 
     public Farmer getFarmerByToken()
     {
-        String token = authFilter.getBrowserToken();
-        return farmerRepository.findByToken(token);
+        // String token = authFilter.getBrowserToken();
+        // return farmerRepository.findByToken(token);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName(); // The email was set as the principal during authentication
+            return farmerRepository.findByEmail(email);
+        }
+
+        return null; // or throw an appropriate exception
     }
 
     public Receptionist getReceptionistByToken()
@@ -139,5 +147,17 @@ public class AuthenticationResponse {
 
         return null; // or throw an appropriate exception
 
+    }
+
+    public Sprayer getSprayerByToken()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName(); // The email was set as the principal during authentication
+            return sprayerRepository.findByEmail(email);
+        }
+
+        return null; // or throw an appropriate exception
     }
 }
