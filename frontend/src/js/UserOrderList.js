@@ -21,10 +21,13 @@ function getUserRoleFromUrl() {
 function loadNavBar() {
     const content = document.getElementById("navbar-container");
     sendRequestWithToken(navBarURL)
-        .then(data => content.innerHTML = returnNavBar(data, role))  // Pass role to returnNavBar
+        .then(data => {
+            content.innerHTML = returnNavBar(data, role);  
+            activeClick();  // Initialize event listeners after rendering the navbar
+        })
         .catch(error => console.error(error));
-    activeClick();
 }
+
 
 function loadFooter() {
     const content = document.getElementById("footer-container");
