@@ -47,14 +47,27 @@ function fetchRequestServer(user, action) {
         console.log(userRole);
         var profileUrl = `/profile?role=${encodeURIComponent(userRole)}`;
 
-        alert('Login successful!');
+        displayAlert('success', 'Login successful!');
         window.location.href = profileUrl;  // Redirect to profile page with user role as a param
     })
     .catch((error) => {
         // Handle error
         console.error('Error:', error);
-        alert('Wrong user name or Password');
+        displayAlert('danger', 'Wrong user name or Password');
     });
+}
+
+
+function displayAlert(type, message) {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
 }
 
 function sendLoginDataToServer() {
