@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Response.ValidRegistrationResponse;
@@ -24,6 +25,11 @@ public class SignUpService {
 
     public Receptionist registerReceptionist(User user) {
         return registrationService.registerReceptionist(user);
+    }
+
+    public Sprayer registerSprayer(User user)
+    {
+        return registrationService.registerSprayer(user);
     }
 
     public Farmer loginFarmer(Farmer farmer)

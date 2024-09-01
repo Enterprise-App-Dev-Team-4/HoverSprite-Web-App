@@ -15,6 +15,7 @@ import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Services.SprayerFeatureServices;
 import rmit.hoversprite.Services.UserService;
@@ -127,6 +128,12 @@ public class UserController {
             receptionist.setRole(Role.Receptionist);
             UserDTO receptionistDTO = new DTOConverter().convertUserDataToObject(userService.register(receptionist));
             return ResponseEntity.ok(receptionistDTO);
+        } else if(type.equals("sprayer")) {
+            Sprayer sprayer = new Sprayer();
+            sprayer.setUser(user);
+            sprayer.setRole(Role.Sprayer);
+            UserDTO sprayerDTO = new DTOConverter().convertUserDataToObject(userService.register(sprayer));
+            return ResponseEntity.ok(sprayerDTO);
         }
         return ResponseEntity.badRequest().body("This user has been registered before");
     }
