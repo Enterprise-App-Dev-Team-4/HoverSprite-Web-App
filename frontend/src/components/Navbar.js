@@ -1,7 +1,3 @@
-const logoutAPI = 'http://localhost:8080/log-out';
-var user = null;
-var user_role = null;
-
 function returnNavBar(data, role) {
     console.log('hello navbar');
     user = data;
@@ -17,6 +13,9 @@ function returnNavBar(data, role) {
         orderUrl = '/sprayer-order';
     }
 
+    // Conditional rendering of the Services tab
+    const servicesTab = role !== 'sprayer' ? `<a class="nav-link" href="/service?role=${encodeURIComponent(role)}">Services</a>` : '';
+
     return `
     <nav class="navbar navbar-expand-lg navbar-custom" id="navbar-container">
         <div class="container-fluid">
@@ -30,7 +29,7 @@ function returnNavBar(data, role) {
                 <div class="navbar-nav">
                     <a class="nav-link" href="#">Home</a>
                     <a class="nav-link" href="/about-us">About</a>
-                    <a class="nav-link" href="/service?role=${encodeURIComponent(role)}">Services</a>
+                    ${servicesTab}  <!-- Services tab is conditionally rendered -->
                     <a class="nav-link" href="${orderUrl}?role=${encodeURIComponent(role)}">Orders</a>
                 </div>
                 <div class="dropdown ms-auto">
