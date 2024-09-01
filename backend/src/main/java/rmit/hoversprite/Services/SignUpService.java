@@ -42,6 +42,11 @@ public class SignUpService {
         return authenticationResponse.authenticateReceptionist(receptionist);
     }
 
+    public Sprayer loginSprayer(Sprayer sprayer)
+    {
+        return authenticationResponse.authenticateSprayer(sprayer);
+    }
+
     public User updateTokenToUser(String token, User user)
     {
         return authenticationResponse.saveTokenToDataBase(token, user);

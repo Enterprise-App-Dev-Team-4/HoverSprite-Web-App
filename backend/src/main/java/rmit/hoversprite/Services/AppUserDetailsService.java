@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
 import rmit.hoversprite.Repositories.DBReceptionistRepository;
+import rmit.hoversprite.Repositories.DBSprayerRepository;
 
 @Component
 public class AppUserDetailsService implements UserDetailsService{
@@ -19,6 +21,9 @@ public class AppUserDetailsService implements UserDetailsService{
 
     @Autowired
     private DBReceptionistRepository receptionistRepository;
+
+    @Autowired
+    private DBSprayerRepository sprayerRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -32,6 +37,12 @@ public class AppUserDetailsService implements UserDetailsService{
         Receptionist receptionist = receptionistRepository.findByEmail(email);
         if (receptionist != null) {
             return mapToUserDetails(receptionist);
+        }
+
+        Sprayer sprayer = sprayerRepository.findByEmail(email);
+        if(sprayer != null)
+        {
+            return mapToUserDetails((User) sprayer);
         }
 
         // If not found in either, throw an exception

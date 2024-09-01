@@ -8,4 +8,6 @@ import rmit.hoversprite.Model.User.Sprayer;
 
 public interface DBSprayerRepository extends JpaRepository<Sprayer, String>{
     Sprayer findByEmail(String sprayerEmail);
+
+    Sprayer findByPhoneNumber(String phonNumber);
 }

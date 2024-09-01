@@ -21,6 +21,7 @@ function setCookie(name, value, days) {
 }
 
 function fetchRequestServer(user, action) {
+    console.log(action);
     fetch(action, {
         method: 'POST',
         headers: {
@@ -37,6 +38,7 @@ function fetchRequestServer(user, action) {
     })
     .then(data => {
         // Handle success
+        console.log(data);
         console.log('Success:', data.token);
         setCookie('jwtToken', data.token, 7); // Save the token in a cookie for 7 days
         
@@ -73,8 +75,6 @@ function sendLoginDataToServer() {
 
         // Construct the new action URL with the selected role as a parameter
         var actionURL = parseUserRequestParam(loginParam, instance);
-        console.log(actionURL);
-        console.log(client);
         // Send the form data using fetch
         fetchRequestServer(client, actionURL);
     });

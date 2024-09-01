@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 import rmit.hoversprite.Config.JwtAuthFilter;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Repositories.DBFarmerRepository;
 import rmit.hoversprite.Repositories.DBReceptionistRepository;
+import rmit.hoversprite.Repositories.DBSprayerRepository;
 
 @Component
 public class AuthenticationResponse {
@@ -21,6 +23,9 @@ public class AuthenticationResponse {
 
     @Autowired
     private DBReceptionistRepository receptionistRepository;
+
+    @Autowired
+    private DBSprayerRepository sprayerRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -53,6 +58,18 @@ public class AuthenticationResponse {
         return null;
     }
 
+    public Sprayer authenticateSprayer(User user) {
+        Sprayer sprayer = sprayerRepository.findByEmail(user.getEmail());
+        if (sprayer == null) {
+            sprayer = sprayerRepository.findByPhoneNumber(user.getPhoneNumber());
+        }
+
+        if (sprayer != null && passwordEncoder.matches(user.getPassword(), sprayer.getPassword())) {
+            return sprayer;
+        }
+        return null;
+    }
+
     /**
      * Update token 
      * @param token
@@ -74,6 +91,12 @@ public class AuthenticationResponse {
             receptionistRepository.save(receptionist);
 
             return (User) receptionist;
+        } else if(user instanceof Sprayer)
+        {
+            Sprayer sprayer = sprayerRepository.findByEmail(user.getEmail());
+            sprayer.setToken(token);
+            sprayerRepository.save(sprayer);
+            return (User) sprayer;
         }
         return null;
     }

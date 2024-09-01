@@ -31,11 +31,17 @@ public class UserService {
         User foundUser = null;
         User userToken = signUpService.updateTokenToUser(token, user);
         if(userToken == null) return null;
-
+        
         if (user instanceof Farmer) {
+            System.out.println("It is Farmer");
             foundUser = signUpService.loginFarmer((Farmer) user);
         } else if (user instanceof Receptionist) {
+            System.out.println("It is Receptionist");
             foundUser = signUpService.loginReceptionist((Receptionist) user);
+        } else if(user instanceof Sprayer)
+        {
+            System.out.println("It is sprayer");
+            foundUser = signUpService.loginSprayer((Sprayer) user);
         }
 
         return foundUser;

@@ -101,6 +101,34 @@ public class UserController {
         }
     }
 
+    private ResponseEntity<?> handleSprayerLoginRequest(User user, HttpServletResponse response) {
+        Sprayer sprayer = new Sprayer();
+        sprayer.setUser(user);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+        
+        if (authentication.isAuthenticated()) {
+            String token = jwtUtil.generateToken(sprayer.getEmail());
+            UserDTO userDTO = new DTOConverter().convertUserDataToObject(userService.login(sprayer, token));
+
+            // Set token in a cookie
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                    .httpOnly(true)
+                    .secure(false) // Set to true in production (HTTPS)
+                    .path("/")
+                    .maxAge(7 * 24 * 60 * 60)  // Token valid for 7 days
+                    .sameSite("Lax")  // Prevent CSRF
+                    .build();
+
+            response.addHeader("Set-Cookie", jwtCookie.toString());
+            
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Incorrect email, phone number, or password.");
+        }
+    }
+
     
     @PostMapping("/login")
     public ResponseEntity<?> returnUserData(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
@@ -109,6 +137,10 @@ public class UserController {
         }
         if ("receptionist".equals(type)) {
             return handleReceptionistLoginRequest(user, response);
+        }
+
+        if ("sprayer".equals(type)) {
+            return handleSprayerLoginRequest(user, response);
         }
 
         return ResponseEntity.badRequest().body("Invalid type parameter");
