@@ -48,7 +48,11 @@ function fetchRequestServer(user, action) {
         var profileUrl = `/profile?role=${encodeURIComponent(userRole)}`;
 
         displayAlert('success', 'Login successful!');
-        window.location.href = profileUrl;  // Redirect to profile page with user role as a param
+
+        // Delay the redirect by 2 seconds (2000 milliseconds)
+        setTimeout(function() {
+            window.location.href = profileUrl;  // Redirect to profile page with user role as a param
+        }, 1500); // 2000 milliseconds = 2 seconds
     })
     .catch((error) => {
         // Handle error
