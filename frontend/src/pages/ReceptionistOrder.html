@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Orders</title>
+    <link rel="shortcut icon" href="../../public/HoverSpriteLogo.png" type="image/x-icon">
 
     <!-- Boostrap -->
     <meta charset="UTF-8">
@@ -99,7 +100,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Change Order Status</h5>
-                    <button type="button" class="close" onclick="document.getElementById('statusModal').style.display='none'">&times;</button>
+                    <button type="button" class="close"
+                        onclick="document.getElementById('statusModal').style.display='none'">&times;</button>
                 </div>
                 <div id="statusModalBody" class="modal-body">
                     <label for="statusSelect">Select New Status:</label>
@@ -113,7 +115,8 @@
                 <div class="modal-footer">
                     <input type="hidden" id="statusModalOrderId" value="">
                     <button type="button" class="btn btn-primary">Change Status</button>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('statusModal').style.display='none'">Cancel</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="document.getElementById('statusModal').style.display='none'">Cancel</button>
                 </div>
             </div>
         </div>
@@ -125,7 +128,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Assign Sprayer</h5>
-                    <button type="button" class="close" onclick="document.getElementById('assignSprayerModal').style.display='none'">&times;</button>
+                    <button type="button" class="close"
+                        onclick="document.getElementById('assignSprayerModal').style.display='none'">&times;</button>
                 </div>
                 <div id="assignSprayerModalBody" class="modal-body">
                     <!-- Sprayer options will be dynamically inserted here -->
@@ -133,15 +137,16 @@
                 <div class="modal-footer">
                     <input type="hidden" id="assignSprayerModalOrderId" value="">
                     <button type="button" class="btn btn-primary" onclick="assignSprayer()">Assign</button>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('assignSprayerModal').style.display='none'">Cancel</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="document.getElementById('assignSprayerModal').style.display='none'">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
-        <!-- Footer -->
-    
-<div id="footer-container"></div>
+    <!-- Footer -->
+
+    <div id="footer-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
