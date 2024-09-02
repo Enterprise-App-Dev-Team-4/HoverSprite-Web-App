@@ -55,6 +55,11 @@ function getAllOrder() {
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
 
+    // Only show the "Assign Sprayer" button if the order status is "CONFIRMED"
+    const assignSprayerButton = order.orderStatus === 'CONFIRMED' 
+        ? `<button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal('${order.orderID}')">Assign Sprayer</button>`
+        : '';
+
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
@@ -73,7 +78,7 @@ function createOrderCard(order) {
                         <div class="d-flex flex-wrap gap-2">
                             ${viewDetailsButton}
                             <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
-                            <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
+                            ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
                         </div>
                     </div>
                 </div>
@@ -104,7 +109,7 @@ function createOrderCard(order) {
                             <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
                                 <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
-                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.orderID})">Assign Sprayer</button>
+                                ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
                             </div>
                         </div>
                     </div>
@@ -113,6 +118,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 
 const toggleViewBtn = document.getElementById('toggleViewBtn');
