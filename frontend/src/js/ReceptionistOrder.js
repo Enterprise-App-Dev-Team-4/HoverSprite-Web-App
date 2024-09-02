@@ -6,7 +6,7 @@ let role = null;
 
 // API Endpoints
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
-const sprayerApiEndpoint = 'http://localhost:8080/sprayers'; // Assuming this is the correct endpoint for sprayers
+const sprayerApiEndpoint = 'http://localhost:8080/allSprayer'; // Assuming this is the correct endpoint for sprayers
 const navBarURL = 'http://localhost:8080/receptionist';
 const receptionistHandleOrderAPI = 'http://localhost:8080/orderStatus';
 
@@ -104,7 +104,7 @@ function createOrderCard(order) {
                             <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
                                 <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
-                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.id})">Assign Sprayer</button>
+                                <button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal(${order.orderID})">Assign Sprayer</button>
                             </div>
                         </div>
                     </div>
@@ -304,7 +304,8 @@ function sendStatusChangeEmail(orderId, status) {
 function openAssignSprayerModal(orderId) {
     sendRequestWithToken(sprayerApiEndpoint)
         .then(data => {
-            const sprayerOptions = data.sprayers.map(sprayer => `<option value="${sprayer.id}">${sprayer.name} (${sprayer.expertise})</option>`).join('');
+            console.log(data);
+            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.id}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
             document.getElementById('assignSprayerModalBody').innerHTML = `
                 <div>
                     <label for="sprayerSelect">Select Sprayer:</label>

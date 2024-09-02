@@ -1,5 +1,7 @@
 package rmit.hoversprite.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +37,12 @@ public class SprayerService {
     public Sprayer updateSprayerProfile(Sprayer sprayer)
     {
         Sprayer oldSprayer = getSprayerData();
-        Sprayer editedSprayer = new Sprayer();
         Sprayer updateSprayer = sprayerProfileUpdateRequest.sprayerToSprayer(sprayer, oldSprayer);
         return sprayerRepository.save(updateSprayer);
+    }
+
+    public List<Sprayer> allSprayer()
+    {
+        return sprayerRepository.findAll();
     }
 }

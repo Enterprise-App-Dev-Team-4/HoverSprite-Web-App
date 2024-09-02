@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.ReceptionistHandleSprayer;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Middleware.ReceptionistProfileUpdateRequest;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
@@ -41,6 +44,9 @@ public class ReceptionistController {
     
     @Autowired
     ReceptionistOrderCheckStatus receptionistOrderCheckStatus;
+
+    @Autowired
+    ReceptionistHandleSprayer receptionistHandleSprayerMiddleware;
 
 
     @GetMapping("receptionist")
@@ -93,4 +99,17 @@ public class ReceptionistController {
         return ResponseEntity.ok(orderReturn);
     }
 
+    @GetMapping("allSprayer")
+    public ResponseEntity<?> receptionistGetAllSprayer()
+    {
+        List<Sprayer> returnedSprayer = receptionistHandleSprayerMiddleware.getAllSprayer();
+
+        if (returnedSprayer.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<SprayerDTO> returnedList = returnedSprayer.stream()
+                                                    .map(new DTOConverter()::convertSprayerDataToObject)
+                                                    .collect(Collectors.toList());
+       return ResponseEntity.ok(returnedList);
+    }
 }

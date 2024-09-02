@@ -4,11 +4,13 @@ import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
+import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
 
 public class DTOConverter {
@@ -33,6 +35,27 @@ public class DTOConverter {
                 farmer.getRole(),
                 farmer.getToken(),
                 farmer.getProfileImage()
+            );
+        }
+        return null;
+    }
+
+    public SprayerDTO convertSprayerDataToObject(Sprayer sprayer)
+    {
+        if(sprayer != null)
+        {
+            return new SprayerDTO(
+                sprayer.getId(),
+                sprayer.getEmail(),
+                sprayer.getFullName(),
+                sprayer.getFirstName(),
+                sprayer.getLastName(),
+                sprayer.getPhoneNumber(),
+                sprayer.getHomeAddress(),
+                sprayer.getRole(),
+                sprayer.getToken(),
+                sprayer.getProfileImage(),
+                sprayer.getSprayerExpertise()
             );
         }
         return null;

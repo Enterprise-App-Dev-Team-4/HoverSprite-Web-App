@@ -21,6 +21,7 @@ import rmit.hoversprite.Services.SprayerFeatureServices;
 import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
 import rmit.hoversprite.Utils.Enum.Role;
+import rmit.hoversprite.Utils.Enum.SprayerExpertise;
 import rmit.hoversprite.Utils.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -164,6 +165,7 @@ public class UserController {
             Sprayer sprayer = new Sprayer();
             sprayer.setUser(user);
             sprayer.setRole(Role.Sprayer);
+            sprayer.setSprayerExpertise(SprayerExpertise.AdeptSprayer);
             UserDTO sprayerDTO = new DTOConverter().convertUserDataToObject(userService.register(sprayer));
             return ResponseEntity.ok(sprayerDTO);
         }
