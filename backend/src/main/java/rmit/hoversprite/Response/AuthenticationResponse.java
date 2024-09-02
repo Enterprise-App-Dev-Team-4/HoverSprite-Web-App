@@ -105,6 +105,7 @@ public class AuthenticationResponse {
     {
         if(user instanceof Farmer)
         {
+            System.out.println("Farmer is here:");
             Farmer farmer = farmerRepository.findByEmail(user.getEmail());
             farmer.setToken(null);
             farmerRepository.save(farmer);
@@ -117,6 +118,13 @@ public class AuthenticationResponse {
             receptionistRepository.save(receptionist);
 
             return (User) receptionist;
+        } else if(user instanceof Sprayer)
+        {
+            Sprayer sprayer = sprayerRepository.findByEmail(user.getEmail());
+            sprayer.setToken(null);
+            sprayerRepository.save(sprayer);
+
+            return (User) sprayer;
         }
         return null;
     }

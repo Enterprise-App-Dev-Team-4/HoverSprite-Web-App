@@ -1,3 +1,6 @@
+const logoutAPI = 'http://localhost:8080/log-out';
+var user = null;
+var user_role = null;
 function returnNavBar(data, role) {
     console.log('hello navbar');
     user = data;
@@ -85,10 +88,8 @@ function returnNavBar(data, role) {
     `;
 }
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+function deleteCookie(name) {
+    document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + ';';
 }
 
 function activeClick() {
@@ -99,38 +100,26 @@ function activeClick() {
         });
     });
 
-    // Add an event listener for the logout link
-    const logoutLink = document.getElementById('logout-link');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent the default link behavior
-            const token = getCookie('jwtToken'); // Retrieve the token from the cookie
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            };
-
-            const fullLogoutURL = `${logoutAPI}?type=${user_role}`;
-            console.log(fullLogoutURL);
-
-            fetch(logoutAPI, {
-                method: 'POST',
-                headers: headers,
-                credentials: 'include', // Include credentials like cookies in the request
-                body: JSON.stringify({ user }) // Correct the body format
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Redirect to the login page or homepage after logout
-                    window.location.href = '/';
-                } else {
-                    console.error('Logout failed');
-                }
-            })
-            .catch(error => {
-                console.error('An error occurred during logout', error);
-            });
-        });
-    }
+     // Add an event listener for the logout link
+     const logoutLink = document.getElementById('logout-link');
+     if (logoutLink) {
+         logoutLink.addEventListener('click', function (event) {
+             event.preventDefault(); // Prevent the default link behavior
+            var logOutURL = logoutAPI + `?type=${encodeURIComponent(user_role)}`;
+            console.log(logOutURL);
+             // Send the logout request using sendRequestWithToken
+             sendRequestWithToken(logOutURL, 'POST', user)
+                 .then(data => {
+                     // Redirect to the login page or homepage after logout
+                     // Delete the JWT token from the cookie
+                    deleteCookie('jwtToken');
+                     window.location.href = '/';
+                 })
+                 .catch(error => {
+                     console.error('Logout failed', error);
+                 });
+         });
+     }
 }
 
 activeClick();

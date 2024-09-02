@@ -183,6 +183,11 @@ public class UserController {
             receptionist.setUser(user);
             logoutUser = userService.logout(receptionist);
         }
+        if ("sprayer".equals(type)) {
+            Sprayer sprayer = new Sprayer();
+            sprayer.setUser(user);
+            logoutUser = userService.logout(sprayer);
+        }
 
 
         if(logoutUser != null)
