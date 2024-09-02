@@ -173,12 +173,14 @@ public class UserController {
     @PostMapping("log-out")
     public ResponseEntity<?> userLogOut(@RequestBody User user, @RequestParam String type, HttpServletResponse response) {
         User logoutUser = null;
+        System.out.println("Receptionist here");
         if ("farmer".equals(type)) {
             Farmer farmer = new Farmer();
             farmer.setUser(user);
             logoutUser = userService.logout(farmer);
         }
         if ("receptionist".equals(type)) {
+            
             Receptionist receptionist = new Receptionist();
             receptionist.setUser(user);
             logoutUser = userService.logout(receptionist);

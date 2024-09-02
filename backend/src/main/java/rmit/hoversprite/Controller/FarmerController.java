@@ -29,6 +29,7 @@ import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Proxies.OrderEmailProxy;
 import rmit.hoversprite.Request.FarmerAddFarmRequest;
 import rmit.hoversprite.Request.FarmerOrderRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
@@ -52,6 +53,9 @@ public class FarmerController {
 
     @Autowired
     FarmerProfileUpdateRequestHandler farmerUpdateProfileRequest;
+
+    @Autowired
+	private OrderEmailProxy orderEmailProxy;
 
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
@@ -87,7 +91,8 @@ public class FarmerController {
         Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
         Order savedOrder = farmerService.farmerCreateOrder(order);
 
-
+        // send email proxy
+        orderEmailProxy.sendEmailOrderCreated(savedOrder);
         // System.out.println("Success");
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(savedOrder);
         //put the order in the farmerservice to get order

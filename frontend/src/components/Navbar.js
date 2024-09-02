@@ -15,6 +15,7 @@ function returnNavBar(data, role) {
     } else if (role === 'sprayer') {
         orderUrl = '/sprayer-order';
     }
+    console.log(user);
 
     // Conditional rendering of the Services tab
     const servicesTab = role !== 'sprayer' ? `<a class="nav-link" href="/service?role=${encodeURIComponent(role)}">Services</a>` : '';
@@ -97,30 +98,37 @@ function activeClick() {
         link.addEventListener('click', function () {
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
+            console.log("Hello");
         });
     });
-
+    console.log("Hello");
      // Add an event listener for the logout link
      const logoutLink = document.getElementById('logout-link');
-     if (logoutLink) {
-         logoutLink.addEventListener('click', function (event) {
-             event.preventDefault(); // Prevent the default link behavior
+    console.log('Logout link:', logoutLink); // Add this to check if logout-link is correctly selected
+
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function (event) {
+            console.log('Logout clicked'); // Add this to ensure the click event is firing
+            event.preventDefault(); // Prevent the default link behavior
+
             var logOutURL = logoutAPI + `?type=${encodeURIComponent(user_role)}`;
-            console.log(logOutURL);
-             // Send the logout request using sendRequestWithToken
-             sendRequestWithToken(logOutURL, 'POST', user)
-                 .then(data => {
-                     // Redirect to the login page or homepage after logout
-                     // Delete the JWT token from the cookie
+            console.log('Logout URL:', logOutURL); // Check the URL being used for logout
+
+            // Send the logout request using sendRequestWithToken
+            sendRequestWithToken(logOutURL, 'POST', user)
+                .then(data => {
+                    console.log('Logout successful:', data); // Log success data
+                    // Delete the JWT token from the cookie
                     deleteCookie('jwtToken');
-                     window.location.href = '/';
-                 })
-                 .catch(error => {
-                     console.error('Logout failed', error);
-                 });
-         });
-     }
+                    window.location.href = '/';
+                })
+                .catch(error => {
+                    console.error('Logout failed', error); // Log any errors
+                });
+        });
+    }
+
 }
 
-activeClick();
 returnNavBar();
+activeClick();

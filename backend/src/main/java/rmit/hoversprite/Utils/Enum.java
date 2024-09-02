@@ -15,7 +15,8 @@ public class Enum {
         PENDING,
         CONFIRMED,
         ASSIGNED,
-        IN_PROGRESS
+        IN_PROGRESS, 
+        COMPLETED
     }
 
     public enum ServiceName

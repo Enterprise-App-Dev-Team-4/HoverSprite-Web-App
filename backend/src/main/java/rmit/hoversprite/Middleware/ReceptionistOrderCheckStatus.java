@@ -34,6 +34,34 @@ public class ReceptionistOrderCheckStatus {
         return order;
     }
 
+    public void handleOrderEmail(Order order)
+    {
+        //check if the order confirmed or rejeceted
+        if(order.getOrderStatus() == OrderStatus.CONFIRMED)
+        {
+            // send proxy
+            orderEmailProxy.sendEmailOrderConfirmed(order);
+        }
+
+        if(order.getOrderStatus() == OrderStatus.CANCELLED)
+        {
+            // send proxy
+            orderEmailProxy.sendEmailOrderCancelled(order);
+        }
+
+        if(order.getOrderStatus() == OrderStatus.ASSIGNED)
+        {
+            // send proxy
+            orderEmailProxy.sendEmailOrderAssigned(order);
+        }
+
+        if(order.getOrderStatus() == OrderStatus.COMPLETED)
+        {
+            // send proxy
+            orderEmailProxy.sendEmailOrderCompleted(order);
+        }
+    }
+
     public Order checkOrderStatus(ReceptionistHandleOrderRequest receptionistHandleOrderRequest) throws MailException
     {
         
@@ -42,12 +70,9 @@ public class ReceptionistOrderCheckStatus {
         System.out.println("Error here");
         Order savedOrder = receptionistService.receptionistHandleSpecificOrder(order);
         
-        //check if the order confirmed or rejeceted
-        if(savedOrder.getOrderStatus() == OrderStatus.CONFIRMED)
-        {
-            // send proxy
-            orderEmailProxy.sendEmailOrderConfirmed(savedOrder);
-        }
+        //Proxy
+        handleOrderEmail(savedOrder);
+        
         return savedOrder;
     }
 }
