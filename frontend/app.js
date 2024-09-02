@@ -14,6 +14,7 @@ const receptionistOrder = __dirname + '/src/pages/ReceptionistOrder.html'
 const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html';
 const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
+const orderFeedBackPath = __dirname + '/src/pages/FeedBack.html'
 
 const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
@@ -72,7 +73,7 @@ app.get('/order-detail/:id', (req, res) => {
     res.sendFile(userOrderDetailPath);
 });
 
-app.get('/test', (req,res) => {
+app.get('/test', (req, res) => {
     res.sendFile(testPath);
 })
 
@@ -83,6 +84,10 @@ app.get('/receptionist-order', (req, res) => {
 app.get('/receptionist-order-detail/:id', (req, res) => {
     res.sendFile(receptionistOrderDetailPath);
 });
+
+app.get('/feed-back', (req, res) => { // add real id to feedback
+    res.sendFile(orderFeedBackPath);
+})
 
 app.listen(3000, () => {
     console.log("listen on port");

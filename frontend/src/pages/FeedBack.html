@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoverSprite - Service Feedback</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/FeedBack.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Your Feedback Grows Our Service!</h1>
+
+        <div class="section order-summary">
+            <h3>Order Summary</h3>
+            <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+            <p><strong>Service Date:</strong> <span id="serviceDate"></span></p>
+            <p><strong>Time Slot:</strong> <span id="timeSlot"></span></p>
+            <p><strong>Farm Location:</strong> <span id="farmLocation"></span></p>
+            <p><strong>Area (decares):</strong> <span id="area"></span></p>
+            <p><strong>Service:</strong> <span id="service"></span></p>
+            <p><strong>Cost:</strong> <span id="cost"></span> VND</p>
+            <p><strong>Sprayer Team:</strong> <span id="sprayerTeam"></span></p>
+        </div>
+
+        <div class="section rating-section">
+            <h3>Rate Your Experience</h3>
+            <div class="star-rating" id="overallRating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+        </div>
+
+        <div class="section feedback-section">
+            <h3>Your Feedback</h3>
+            <textarea id="feedbackText" rows="5"
+                placeholder="How was your experience with our service? Your thoughts help us grow!"></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
+    </div>
+
+    <div class="popup" id="thankYouPopup">
+        <div class="popup-content">
+            <h2>Thank You!</h2>
+            <p>Your feedback has been successfully submitted.</p>
+            <p>We appreciate your input and will use it to improve our services.</p>
+            <button class="close-popup" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <script src="../js/FeedBack.js"></script>
+</body>
+
+</html>
