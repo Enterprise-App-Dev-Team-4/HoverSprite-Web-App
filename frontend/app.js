@@ -9,11 +9,14 @@ const aboutPath = __dirname + '/src/pages/About.html'
 const servicePath = __dirname + '/src/pages/Services.html'
 const bookingPath = __dirname + '/src/pages/Booking.html'
 const profilePath = __dirname + '/src/pages/Profile.html'
-const userOrderList = __dirname + '/src/pages/UserOrderList.html'
-const receptionistOrder = __dirname + '/src/pages/ReceptionistOrder.html'
-const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html';
+const userOrderListPath = __dirname + '/src/pages/UserOrderList.html'
 const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
+const receptionistOrderPath = __dirname + '/src/pages/ReceptionistOrder.html'
+const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html'
+const sprayerOrderPath = __dirname + '/src/pages/SprayerOrder.html'
+const sprayerOrderDetailPath = __dirname + '/src/pages/SprayerOrder.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
+const orderFeedBackPath = __dirname + '/src/pages/FeedBack.html'
 
 const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
@@ -65,24 +68,36 @@ app.get('/profile', (req, res) => {
 })
 
 app.get('/order-list', (req, res) => {
-    res.sendFile(userOrderList);
+    res.sendFile(userOrderListPath);
 })
 
 app.get('/order-detail/:id', (req, res) => {
     res.sendFile(userOrderDetailPath);
 });
 
-app.get('/test', (req,res) => {
+app.get('/test', (req, res) => {
     res.sendFile(testPath);
 })
 
 app.get('/receptionist-order', (req, res) => {
-    res.sendFile(receptionistOrder);
+    res.sendFile(receptionistOrderPath);
 })
 
 app.get('/receptionist-order-detail/:id', (req, res) => {
     res.sendFile(receptionistOrderDetailPath);
 });
+
+app.get('/sprayer-order', (req, res) => {
+    res.sendFile(sprayerOrderPath);
+})
+
+app.get('/sprayer-order-detail/:id', (req, res) => {
+    res.sendFile(sprayerOrderDetailPath);
+});
+
+app.get('/feed-back', (req, res) => { // add real id to feedback
+    res.sendFile(orderFeedBackPath);
+})
 
 app.listen(3000, () => {
     console.log("listen on port");
