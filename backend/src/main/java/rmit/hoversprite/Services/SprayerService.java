@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import rmit.hoversprite.Middleware.SprayerProfileUpdateRequest;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Repositories.DBSprayerRepository;
@@ -44,5 +45,18 @@ public class SprayerService {
     public List<Sprayer> allSprayer()
     {
         return sprayerRepository.findAll();
+    }
+
+    public Sprayer updateSprayer(Sprayer sprayer)
+    {
+        Sprayer oldSprayer = sprayerRepository.findByEmail(sprayer.getEmail());
+        Sprayer updateSprayer = sprayerProfileUpdateRequest.sprayerToSprayer(sprayer, oldSprayer);
+        return sprayerRepository.save(updateSprayer);
+    }
+
+    public List<Order> getAllOrder()
+    {
+        Sprayer sprayer = getSprayerData();
+        return sprayer.getOrders();
     }
 }

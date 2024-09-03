@@ -34,4 +34,17 @@ public class OrderService {
     {
         return orderRepository.findByorderID(orderId);
     }
+
+    public Order updateOrder(Order order)
+    {
+        Order oldOrder = getOrderById(order.getOrderID());
+        order.setDate(oldOrder.getDate());
+        order.setFarmer(oldOrder.getFarmer());
+        order.setLocation(oldOrder.getLocation());
+        order.setServiceTimeSlot(oldOrder.getServiceTimeSlot());
+        order.setSprayerServices(oldOrder.getSprayerServices());
+        order.setSprayers(oldOrder.getSprayers());
+        order.setTotalCost(oldOrder.getTotalCost());
+        return order;
+    }
 }

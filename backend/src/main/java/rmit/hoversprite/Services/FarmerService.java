@@ -98,4 +98,22 @@ public class FarmerService {
     {
         return orderService.getOrderById(orderID);
     }
+
+    public Farmer updateOrderFarmer(Order order)
+    {
+        Farmer farmer = order.getFarmer();
+        List<Order> listOfOrders= farmer.getServicOrders();
+        for(int i = 0; i < listOfOrders.size(); i++)
+        {
+            if(order.getOrderID().equals(listOfOrders.get(i).getOrderID()))
+            {
+                listOfOrders.remove(i);
+                break;
+            }
+        }
+
+        listOfOrders.add(order);
+        farmer.setServiceOrders(listOfOrders);
+        return farmerRepository.save(farmer);
+    }
 }

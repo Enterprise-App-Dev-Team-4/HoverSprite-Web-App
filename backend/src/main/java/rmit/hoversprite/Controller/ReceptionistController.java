@@ -10,6 +10,7 @@ import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
+import rmit.hoversprite.Request.AssignSprayerRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
@@ -111,5 +113,13 @@ public class ReceptionistController {
                                                     .map(new DTOConverter()::convertSprayerDataToObject)
                                                     .collect(Collectors.toList());
        return ResponseEntity.ok(returnedList);
+    }
+
+    @PostMapping("assign")
+    public ResponseEntity<?> receptionistAssignSprayer(@RequestBody AssignSprayerRequest request)
+    {
+        Order order = receptionistHandleSprayerMiddleware.assignSprayers(request);
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(order);
+        return ResponseEntity.ok(orderDTO);
     }
 }

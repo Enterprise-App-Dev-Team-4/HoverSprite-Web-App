@@ -1,5 +1,8 @@
 package rmit.hoversprite.Controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Middleware.SprayerProfileUpdateRequest;
+import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
@@ -47,5 +53,19 @@ public class SprayerController {
         System.out.println("Email: " + updateSprayer.getEmail());
         UserDTO userDTO = new DTOConverter().convertUserDataToObject(sprayerService.updateSprayerProfile(updateSprayer));
         return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("sprayerOrder")
+    public ResponseEntity<?> sprayerGetOrder()
+    {
+        List<Order> returnedOrders = sprayerService.getAllOrder();
+
+        if (returnedOrders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<OrderDTO> returnedList = returnedOrders.stream()
+                                                    .map(new DTOConverter()::convertOrderDataToObject)
+                                                    .collect(Collectors.toList());
+       return ResponseEntity.ok(returnedList);
     }
 }
