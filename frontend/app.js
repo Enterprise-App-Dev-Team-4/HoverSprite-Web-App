@@ -14,7 +14,7 @@ const userOrderDetailPath = __dirname + '/src/pages/UserOrderDetail.html'
 const receptionistOrderPath = __dirname + '/src/pages/ReceptionistOrder.html'
 const receptionistOrderDetailPath = __dirname + '/src/pages/ReceptionistOrderDetail.html'
 const sprayerOrderPath = __dirname + '/src/pages/SprayerOrder.html'
-const sprayerOrderDetailPath = __dirname + '/src/pages/SprayerOrder.html'
+const sprayerOrderDetailPath = __dirname + '/src/pages/SprayerOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 const orderFeedBackPath = __dirname + '/src/pages/FeedBack.html'
 

@@ -3,12 +3,14 @@ const itemsPerPage = 30;
 let currentPage = 1;
 let isGridView = true;
 let role = null;
+let listSPrayers = [];
 
 // API Endpoints
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
 const sprayerApiEndpoint = 'http://localhost:8080/allSprayer'; // Assuming this is the correct endpoint for sprayers
 const navBarURL = 'http://localhost:8080/receptionist';
 const receptionistHandleOrderAPI = 'http://localhost:8080/orderStatus';
+const assignSprayerAPI = 'http://localhost:8080/assign';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
@@ -311,7 +313,11 @@ function openAssignSprayerModal(orderId) {
     sendRequestWithToken(sprayerApiEndpoint)
         .then(data => {
             console.log(data);
-            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.id}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
+            for(let i = 0; i < data.length; i++)
+            {
+                listSPrayers.push(data[i]);
+            }
+            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.email}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
             document.getElementById('assignSprayerModalBody').innerHTML = `
                 <div>
                     <label for="sprayerSelect">Select Sprayer:</label>
@@ -328,22 +334,48 @@ function openAssignSprayerModal(orderId) {
 
 function assignSprayer() {
     const orderId = document.getElementById('assignSprayerModalOrderId').value;
-    const sprayerId = document.getElementById('sprayerSelect').value;
-    const sprayerName = document.querySelector(`#sprayerSelect option[value="${sprayerId}"]`).textContent;
+    const sprayerEmail = document.getElementById('sprayerSelect').value;
 
-    const order = orders.find(o => o.id == orderId);
-    if (order) {
-        if (!order.assignedSprayers) {
-            order.assignedSprayers = [];
-        }
-        order.assignedSprayers.push(sprayerName);
-        order.orderStatus = 'assigned';
+    // Find the sprayer in the listSprayers array by email
+    const selectedSprayer = listSPrayers.find(sprayer => sprayer.email === sprayerEmail);
+    
+    if (!selectedSprayer) {
+        console.error('Sprayer not found');
+        return;
     }
 
-    renderOrders();
-    document.getElementById('assignSprayerModal').style.display = 'none';
-    console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
+    const sprayerName = `${selectedSprayer.fullName}`;
+
+    // Prepare the request body to be sent to the backend
+    const request = {
+        'orderID': orderId,
+        'sprayers': [selectedSprayer] // Assuming your backend expects an array of sprayer objects
+    };
+    console.log(request.sprayers);
+    // Send the assignment request to the backend
+    sendRequestWithToken(assignSprayerAPI, 'POST', request)
+        .then(response => {
+            console.log('Sprayer assigned successfully:', response);
+
+            // Update the local orders array
+            // const order = orders.find(o => o.orderID == orderId);
+            // if (order) {
+            //     if (!order.assignedSprayers) {
+            //         order.assignedSprayers = [];
+            //     }
+            //     order.assignedSprayers.push(sprayerName);
+            //     order.orderStatus = 'ASSIGNED';
+            // }
+
+            renderOrders(); // Re-render orders after assignment
+            document.getElementById('assignSprayerModal').style.display = 'none';
+            console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
+        })
+        .catch(error => {
+            console.error('Error assigning sprayer:', error);
+        });
 }
+
 
 console.log('Orders:', orders);
 console.log('Current Page:', currentPage);

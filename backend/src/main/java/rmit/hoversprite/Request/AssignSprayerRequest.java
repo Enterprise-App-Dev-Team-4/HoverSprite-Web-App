@@ -8,31 +8,30 @@ public class AssignSprayerRequest {
     private List<Sprayer> sprayers;
     private String orderID;
 
+    // Default constructor
     public AssignSprayerRequest() {}
 
-    public AssignSprayerRequest(List<Sprayer> sprayers, String orderID)
-    {
+    // Parameterized constructor
+    public AssignSprayerRequest(List<Sprayer> sprayers, String orderID) {
         this.sprayers = sprayers;
         this.orderID = orderID;
     }
 
-    public void setSprayer(List<Sprayer> sprayers)
-    {
+    // Getter and setter for sprayers
+    public List<Sprayer> getSprayers() {
+        return sprayers;
+    }
+
+    public void setSprayers(List<Sprayer> sprayers) {
         this.sprayers = sprayers;
     }
 
-    public List<Sprayer> getSprayer()
-    {
-        return this.sprayers;
+    // Getter and setter for orderID
+    public String getOrderID() {
+        return orderID;
     }
 
-    public String getOrderID()
-    {
-        return this.orderID;
-    }
-
-    public void setOrderID(String orderID)
-    {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 }

@@ -1,5 +1,6 @@
 package rmit.hoversprite.Middleware;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,28 +34,34 @@ public class ReceptionistHandleSprayer {
         return sprayerService.allSprayer();
     }
     
-    public Order assignSprayers(AssignSprayerRequest request)
-    {
+    public Order assignSprayers(AssignSprayerRequest request) {
         Order order = orderService.getOrderById(request.getOrderID());
-        order.setSprayers(request.getSprayer());
+        order.setSprayers(request.getSprayers());
+    
         order.setOrderStatus(OrderStatus.ASSIGNED);
-        // update in the service
-        
-        // update each sprayer with corresponding order
-        for(int i = 0; i < order.getSprayers().size(); i++)
-        {
+    
+        // Iterate over the sprayers and update each one with the order
+        for(int i = 0; i < order.getSprayers().size(); i++) {
             Sprayer sprayer = order.getSprayers().get(i);
-            List<Order> listOfOrders = sprayer.getOrders();
+            List<Order> listOfOrders = new ArrayList<>();
+            if(sprayer.getOrders() != null)
+            {
+                listOfOrders = sprayer.getOrders();
+            }
             listOfOrders.add(order);
             sprayer.setOrders(listOfOrders);
             sprayerService.updateSprayer(sprayer);
         }
-
-        //update order
+    
+        // Update the order in the database
         order = orderService.updateOrder(order);
-
-        //update farmer
+    
+        // Update the associated farmer's orders
         farmerService.updateOrderFarmer(order);
+
+        //proxy email to farmer
+    
         return order;
     }
+    
 }

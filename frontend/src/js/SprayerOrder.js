@@ -1,13 +1,14 @@
 let orders = [];
-const orderAPI = 'http://localhost:8080/order/all'; // Replace with sprayer order api
+const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order api
 const itemsPerPage = 30;
 let currentPage = 1;
 let isGridView = true;
-const navBarURL = 'http://localhost:8080/userName';
+const navBarURL = 'http://localhost:8080/sprayer';
 let role = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
+    console.log(role);
     loadNavBar();
     loadFooter();
     getAllOrder();  // Fetch and display orders after the page loads
@@ -47,7 +48,7 @@ function getAllOrder() {
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
+    const viewDetailsButton = `<a href="/sprayer-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
     
     // Only show the "Confirm" button if the order status is "Assigned"
     // const confirmButton = order.orderStatus === 'ASSIGNED' ? 
