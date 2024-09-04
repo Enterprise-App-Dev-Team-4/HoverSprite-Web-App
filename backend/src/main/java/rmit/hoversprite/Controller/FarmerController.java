@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
+import rmit.hoversprite.Middleware.FeedbackRequestHandler;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
@@ -31,6 +33,7 @@ import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
 import rmit.hoversprite.Request.FarmerAddFarmRequest;
+import rmit.hoversprite.Request.FarmerFeedbackRequest;
 import rmit.hoversprite.Request.FarmerOrderRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
@@ -56,6 +59,9 @@ public class FarmerController {
 
     @Autowired
 	private OrderEmailProxy orderEmailProxy;
+
+    @Autowired
+    private FeedbackRequestHandler feedbackRequestHandler;
 
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
@@ -129,4 +135,11 @@ public class FarmerController {
         return ResponseEntity.ok(orderDTO);
     }
 
+    @PostMapping("feedback")
+    public ResponseEntity<?> farmerFeedbackOrder(@RequestBody FarmerFeedbackRequest request)
+    {
+        // add feedback dto
+        FeedbackDTO feedbackDTO = new DTOConverter().convertFeedbackDataToObject(feedbackRequestHandler.farmerFeedback(request));
+        return ResponseEntity.ok(feedbackDTO);
+    }
 }

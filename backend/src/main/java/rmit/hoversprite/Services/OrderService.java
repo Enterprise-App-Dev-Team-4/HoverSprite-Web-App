@@ -45,6 +45,8 @@ public class OrderService {
         order.setSprayerServices(oldOrder.getSprayerServices());
         order.setSprayers(oldOrder.getSprayers());
         order.setTotalCost(oldOrder.getTotalCost());
-        return order;
+        return orderRepository.save(order);
     }
+
+    // public Order saveFeedbackToOrder()
 }

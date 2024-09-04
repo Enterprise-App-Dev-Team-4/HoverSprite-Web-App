@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
@@ -18,17 +19,15 @@ public class Feedback {
 
     private double ratingScore;
 
-    @ManyToOne
-    @JoinColumn(name = "farmer_id")
-    private Farmer farmer;
+    private String farmer;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
     public Feedback() {}
 
-    public Feedback(String feedbackID, String content, double ratingScore, Farmer farmer, Order order)
+    public Feedback(String feedbackID, String content, double ratingScore, String farmer, Order order)
     {
         this.feedbackID = feedbackID;
         this.content = content;
@@ -67,12 +66,12 @@ public class Feedback {
         return this.ratingScore;
     }
 
-    public void setFarmer(Farmer farmer)
+    public void setFarmer(String farmer)
     {
         this.farmer = farmer;
     }
 
-    public Farmer getFarmer()
+    public String getFarmer()
     {
         return this.farmer;
     }

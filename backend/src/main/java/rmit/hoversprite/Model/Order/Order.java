@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,7 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import rmit.hoversprite.Model.Feedback.Feedback;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
@@ -57,6 +60,9 @@ public class Order {
     )
     private List<Sprayer> sprayers;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Feedback feedback;
+
     private String location;
 
     // Default constructor
@@ -64,7 +70,7 @@ public class Order {
 
     // Parameterized constructor
     public Order(String orderID, String date, OrderStatus orderStatus, double totalCost, Farmer farmer,
-                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot, String location) {
+                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot, String location, Feedback feedback) {
         this.orderID = orderID;
         this.date = date;
         this.orderStatus = orderStatus;
@@ -75,6 +81,7 @@ public class Order {
         this.sprayers = sprayers;
         this.serviceTimeSlot = serviceTimeSlot;
         this.location = location;
+        this.feedback = feedback;
     }
 
     // Getters and setters
@@ -84,6 +91,16 @@ public class Order {
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public void setFeedback(Feedback feedback)
+    {
+        this.feedback = feedback;
+    }
+
+    public Feedback getFeedback()
+    {
+        return this.feedback;
     }
 
     public void setLocation(String location)

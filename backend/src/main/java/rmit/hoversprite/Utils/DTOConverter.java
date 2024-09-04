@@ -1,12 +1,14 @@
 package rmit.hoversprite.Utils;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Feedback.Feedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
@@ -112,4 +114,16 @@ public class DTOConverter {
         return null;
     }
     
+    public FeedbackDTO convertFeedbackDataToObject(Feedback feedback)
+    {
+        if (feedback != null) {
+            return new FeedbackDTO(
+                feedback.getFeedbackID(),
+                feedback.getContent(),
+                feedback.getRatingScore(),
+                feedback.getFarmer()
+            );
+        }
+        return null;
+    }
 }

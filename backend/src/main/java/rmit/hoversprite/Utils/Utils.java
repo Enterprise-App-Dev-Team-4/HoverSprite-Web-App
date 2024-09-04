@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Feedback.Feedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
@@ -118,5 +119,19 @@ public class Utils {
     
         // Return the new ID formatted with a prefix "FA" and a three-digit number
         return String.format("SS%03d", numericPart);
+    }
+
+    public String generateFeedbackId(List<Feedback> feedbacks) {
+        String lastId = feedbacks.stream()
+            .map(Feedback::getFeedbackID)
+            .filter(id -> id.startsWith("FB")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("FB000"); // Default to "FA000" if no valid ID is found
+    
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("FB%03d", numericPart);
     }
 }
