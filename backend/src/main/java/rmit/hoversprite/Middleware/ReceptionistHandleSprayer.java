@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Sprayer;
+import rmit.hoversprite.Proxies.OrderEmailProxy;
 import rmit.hoversprite.Request.AssignSprayerRequest;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.OrderService;
@@ -28,6 +29,9 @@ public class ReceptionistHandleSprayer {
 
     @Autowired
     FarmerService farmerService;
+
+    @Autowired
+    OrderEmailProxy orderEmailProxy;
 
     public List<Sprayer> getAllSprayer()
     {
@@ -60,7 +64,7 @@ public class ReceptionistHandleSprayer {
         farmerService.updateOrderFarmer(order);
 
         //proxy email to farmer
-    
+        orderEmailProxy.sendEmailOrderAssigned(order);
         return order;
     }
     

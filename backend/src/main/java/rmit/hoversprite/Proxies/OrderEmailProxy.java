@@ -3,6 +3,7 @@ package rmit.hoversprite.Proxies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.User.Sprayer;
 
 @Service
 public class OrderEmailProxy {
@@ -104,8 +105,15 @@ public class OrderEmailProxy {
                     .append("Order Date: ").append(order.getDate()).append("\n")
                     .append("Service Time Slot: ").append(order.getServiceTimeSlot()).append("\n")
                     .append("Order Status: ").append(order.getOrderStatus().name()).append("\n")
-                    .append("Order Location: ").append(order.getLocation()).append("\n")
-                    .append("Total Cost: $").append(String.format("%.2f", order.getTotalCost())).append("\n\n")
+                    .append("Order Location: ").append(order.getLocation()).append("\n");
+                    // Add details of all sprayers assigned
+                    emailContent.append("Sprayer(s) Assigned:\n");
+                    for (Sprayer sprayer : order.getSprayers()) {
+                        emailContent.append(" - Name: ").append(sprayer.getFullName()).append("\n")
+                                    .append("   Phone: ").append(sprayer.getPhoneNumber()).append("\n")
+                                    .append("   Email: ").append(sprayer.getEmail()).append("\n\n");
+                    }
+                    emailContent.append("Total Cost: $").append(String.format("%.2f", order.getTotalCost())).append("\n\n")
                     .append("The service provider will contact you shortly to confirm further details.\n\n")
                     .append("Best regards,\n")
                     .append("Hover Sprite");

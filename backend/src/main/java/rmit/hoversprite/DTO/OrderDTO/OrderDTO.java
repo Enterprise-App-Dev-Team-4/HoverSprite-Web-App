@@ -1,7 +1,10 @@
 package rmit.hoversprite.DTO.OrderDTO;
 
+import java.util.List;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Utils.Enum.CropType;
@@ -32,6 +35,8 @@ public class OrderDTO {
 
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
+    
+    private List<SprayerDTO> sprayer;
 
     // Default constructor
     public OrderDTO() {}
@@ -40,7 +45,7 @@ public class OrderDTO {
     public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, 
                     double totalCost, String farmerEmail, String farmerFullName, 
                     String location, String sprayServicesId, CropType cropType,
-                    ServiceName serviceName, ServiceType serviceType) {
+                    ServiceName serviceName, ServiceType serviceType, List<SprayerDTO> sprayer) {
         this.orderID = orderID;
         this.date = date;
         this.serviceTimeSlot = serviceTimeSlot;
@@ -53,6 +58,7 @@ public class OrderDTO {
         this.cropType = cropType;
         this.serviceName = serviceName;
         this.serviceType = serviceType;
+        this.sprayer = sprayer;
     }
 
     // Getter and Setter for orderID
@@ -62,6 +68,16 @@ public class OrderDTO {
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public List<SprayerDTO> getSprayer()
+    {
+        return this.sprayer;
+    }
+
+    public void setSprayer(List<SprayerDTO> sprayer)
+    {
+        this.sprayer = sprayer;
     }
 
     public ServiceName getServiceName() {

@@ -1,5 +1,8 @@
 package rmit.hoversprite.Utils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
@@ -77,6 +80,16 @@ public class DTOConverter {
         return null;
     }
 
+    // New method to convert a list of Sprayer to a list of SprayerDTO
+    public List<SprayerDTO> convertSprayerDataToObject(List<Sprayer> sprayers) {
+        if (sprayers != null && !sprayers.isEmpty()) {
+            return sprayers.stream()
+                .map(this::convertSprayerDataToObject)
+                .collect(Collectors.toList());
+        }
+        return null;
+    }
+
     public OrderDTO convertOrderDataToObject(Order order)
     {
         if(order != null)
@@ -93,7 +106,8 @@ public class DTOConverter {
                 order.getSprayerServices().getId(),
                 order.getSprayerServices().getCropType(),
                 order.getSprayerServices().getServiceName(),
-                order.getSprayerServices().getServiceType()
+                order.getSprayerServices().getServiceType(),
+                convertSprayerDataToObject(order.getSprayers())
             );
         }
         return null;

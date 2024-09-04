@@ -39,26 +39,45 @@ function displayOrderDetails(order) {
     document.getElementById('orderDate').textContent = formatDate(order.date || new Date());
     document.getElementById('farmerName').textContent = order.farmerFullName ? order.farmerFullName : 'N/A';
 
-    if (order.sprayer) {
-        document.getElementById('sprayerName').textContent = order.sprayer.name || 'N/A';
+    // Handle table for sprayers
+    const sprayerTableBody = document.getElementById('sprayerTableBody');
+    sprayerTableBody.innerHTML = '';  // Clear any existing rows
+
+    if (order.sprayer && order.sprayer.length > 0) {
+        order.sprayer.forEach(sprayer => {
+            const row = document.createElement('tr');
+            
+            // Create table data for sprayer name
+            const nameCell = document.createElement('td');
+            nameCell.textContent = sprayer.fullName || 'N/A';
+            row.appendChild(nameCell);
+            
+            // Create table data for sprayer expertise
+            const expertiseCell = document.createElement('td');
+            expertiseCell.textContent = sprayer.sprayerExpertise || 'N/A';
+            row.appendChild(expertiseCell);
+            
+            // Append the row to the table body
+            sprayerTableBody.appendChild(row);
+        });
     } else {
-        document.getElementById('sprayerName').textContent = 'N/A';
+        const row = document.createElement('tr');
+        const noDataCell = document.createElement('td');
+        noDataCell.textContent = 'No sprayers assigned';
+        noDataCell.colSpan = 2;
+        row.appendChild(noDataCell);
+        sprayerTableBody.appendChild(row);
     }
 
-    if (order) {
-        document.getElementById('cropType').textContent = order.cropType || 'N/A';
-        document.getElementById('serviceName').textContent = order.serviceName || 'N/A';
-        document.getElementById('serviceType').textContent = order.serviceType || 'N/A';
-    } else {
-        document.getElementById('cropType').textContent = 'N/A';
-        document.getElementById('serviceName').textContent = 'N/A';
-        document.getElementById('serviceType').textContent = 'N/A';
-    }
-
+    // Other order details
+    document.getElementById('cropType').textContent = order.cropType || 'N/A';
+    document.getElementById('serviceName').textContent = order.serviceName || 'N/A';
+    document.getElementById('serviceType').textContent = order.serviceType || 'N/A';
     document.getElementById('farmLocation').textContent = order.location || 'N/A';
     document.getElementById('timeSlot').textContent = order.serviceTimeSlot || 'N/A';
     document.getElementById('orderCost').textContent = `${order.totalCost.toLocaleString()} VND`;
 
+    // Handle feedback
     if (order.feedback) {
         document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedback.comment || 'N/A';
@@ -67,8 +86,10 @@ function displayOrderDetails(order) {
         document.getElementById('feedbackComment').textContent = 'N/A';
     }
 
+    // Trigger number animations (if applicable)
     animateNumbers();
 }
+
 
 // Function to handle "Back to Order List"
 document.addEventListener("DOMContentLoaded", function () {
