@@ -3,6 +3,8 @@ package rmit.hoversprite.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,10 +94,10 @@ public class FarmerService {
         return savedOrder;
     }
 
-    public List<Order> farmerGetAllOrder()
+    public Page<Order> farmerGetAllOrder(Pageable pageable)
     {
         Farmer requestFarmer = farmerRepository.findByEmail(getFarmerData().getEmail());
-        return requestFarmer.getServicOrders();
+        return orderService.findOrderByFarmer(requestFarmer, pageable);
     }
 
     public Order farmerGetOrderById(String orderID)

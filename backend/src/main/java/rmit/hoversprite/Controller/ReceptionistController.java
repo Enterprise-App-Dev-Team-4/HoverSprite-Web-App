@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
@@ -71,28 +75,35 @@ public class ReceptionistController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("receptionistOrder")
-    public ResponseEntity<?> receptionistGetAllOrder() {
-        System.out.println("get data:");
-        try {
-            List<Order> listOrder = receptionistService.receptionistHandleAllOrder();
+   @GetMapping("receptionistOrder")
+public ResponseEntity<?> receptionistGetAllOrder(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "12") int size) { // Default page size is now 12
+    
+    try {
+        Page<Order> orderPage = receptionistService.receptionistHandleAllOrder(PageRequest.of(page, size));
 
-            if (listOrder.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-
-            // Convert the list of Order entities to a list of OrderDTOs
-            List<OrderDTO> orderDTOList = listOrder.stream()
-                                                   .map(new DTOConverter()::convertOrderDataToObject)
-                                                   .collect(Collectors.toList());
-
-            // Return the list of OrderDTOs wrapped in a ResponseEntity with HTTP 200 OK status
-            return ResponseEntity.ok(orderDTOList);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("An error occurred while fetching orders");
+        if (orderPage.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+
+        // Convert the list of Order entities to a list of OrderDTOs
+        List<OrderDTO> orderDTOList = orderPage.getContent().stream()
+                                               .map(new DTOConverter()::convertOrderDataToObject)
+                                               .collect(Collectors.toList());
+
+        // Create a paginated response using PageImpl
+        Page<OrderDTO> orderDTOPage = new PageImpl<>(orderDTOList, PageRequest.of(page, size), orderPage.getTotalElements());
+
+        // Return the paginated OrderDTOs wrapped in a ResponseEntity with HTTP 200 OK status
+        return ResponseEntity.ok(orderDTOPage);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body("An error occurred while fetching orders");
     }
+}
+
+
 
      @PutMapping("orderStatus")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestBody ReceptionistHandleOrderRequest request) throws MailException

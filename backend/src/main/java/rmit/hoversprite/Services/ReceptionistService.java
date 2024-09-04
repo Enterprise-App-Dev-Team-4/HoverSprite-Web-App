@@ -3,6 +3,8 @@ package rmit.hoversprite.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +46,9 @@ public class ReceptionistService {
         return receptionistRepository.save(updateReceptionist);
     }
 
-    public List<Order> receptionistHandleAllOrder()
+    public Page<Order> receptionistHandleAllOrder(Pageable pageable)
     {
-        return receptionistOrderService.getAllOrders();
+        return receptionistOrderService.getAllOrders(pageable);
     }
 
     public Order receptionistHandleSpecificOrder(Order order)

@@ -1,5 +1,5 @@
 let orders = [];
-const itemsPerPage = 30;
+const itemsPerPage = 12;
 let currentPage = 1;
 let isGridView = true;
 let role = null;
@@ -43,16 +43,25 @@ function loadFooter() {
 
 
 function getAllOrder() {
-    sendRequestWithToken(orderApiEndpoint)
+    const page = currentPage - 1; 
+    const size = itemsPerPage;
+    
+    const apiUrl = `${orderApiEndpoint}?page=${page}&size=${size}`;
+    
+    sendRequestWithToken(apiUrl)
     .then(data => {
-        orders = data;
-        console.log(orders);
+        // Assuming the response includes both the paginated content and metadata such as total pages, total elements, etc.
+        orders = data.content; // Update orders to reflect the content from the backend
+        totalOrders = data.totalElements; // Total number of orders, used for pagination
+        totalPages = data.totalPages; // Total number of pages for the current dataset
+        
         renderOrders(); // Render orders after they are fetched
     })
     .catch(error => {
         console.error('Error fetching orders:', error);
     });
 }
+
 
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
@@ -150,15 +159,15 @@ function getStatusColor(status) {
 
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageOrders = orders.slice(startIndex, endIndex);
-    orderList.innerHTML = pageOrders.map(createOrderCard).join('');
-    renderPagination();
+    
+    // Render the order cards directly from the `orders` array which already contains paginated data
+    orderList.innerHTML = orders.map(createOrderCard).join('');
+    
+    renderPagination(); // Update pagination controls
 }
 
+
 function renderPagination() {
-    const totalPages = Math.ceil(orders.length / itemsPerPage);
     const pagination = document.getElementById('pagination');
     let paginationHTML = '';
 
@@ -172,14 +181,16 @@ function renderPagination() {
 
     pagination.innerHTML = paginationHTML;
 
+    // Add event listener to pagination links
     pagination.addEventListener('click', (e) => {
         e.preventDefault();
         if (e.target.tagName === 'A') {
             currentPage = parseInt(e.target.dataset.page);
-            renderOrders();
+            getAllOrder(); // Fetch orders for the selected page
         }
     });
 }
+
 
 function filterOrders() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();

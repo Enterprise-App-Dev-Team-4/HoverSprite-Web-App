@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -106,10 +109,12 @@ public class FarmerController {
     }
 
     @GetMapping("order/all")
-    public ResponseEntity<?> farmerGetAllOrder() {
+    public ResponseEntity<?> farmerGetAllOrder(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "12") int size) {
         System.out.println("get data:");
         try {
-            List<Order> listOrder = farmerService.farmerGetAllOrder();
+            Page<Order> listOrder = farmerService.farmerGetAllOrder(PageRequest.of(page, size));
 
             if (listOrder.isEmpty()) {
                 return ResponseEntity.noContent().build();
@@ -120,8 +125,9 @@ public class FarmerController {
                                                    .map(new DTOConverter()::convertOrderDataToObject)
                                                    .collect(Collectors.toList());
 
+            Page<OrderDTO> orderDTOPage = new PageImpl<>(orderDTOList, PageRequest.of(page, size), listOrder.getTotalElements());
             // Return the list of OrderDTOs wrapped in a ResponseEntity with HTTP 200 OK status
-            return ResponseEntity.ok(orderDTOList);
+            return ResponseEntity.ok(orderDTOPage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body("An error occurred while fetching orders");

@@ -3,6 +3,8 @@ package rmit.hoversprite.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -15,9 +17,9 @@ public class ReceptionistOrderService {
     @Autowired
     DBOrderRepository orderRepository;
 
-    public List<Order> getAllOrders()
+    public Page<Order> getAllOrders(Pageable pageable)
     {
-        return orderRepository.findAll();
+        return orderRepository.findAll(pageable);
     }
 
     @Transactional

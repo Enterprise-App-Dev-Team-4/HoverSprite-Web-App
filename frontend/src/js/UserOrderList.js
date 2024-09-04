@@ -1,10 +1,11 @@
 let orders = [];
-const orderAPI = 'http://localhost:8080/order/all';
-const itemsPerPage = 30;
+const orderAPI = 'http://localhost:8080/order/all'; // Updated variable name
+const itemsPerPage = 12;
 let currentPage = 1;
+let totalPages = 0; // To track total pages from server
+let role = null;
 let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
-let role = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
@@ -28,17 +29,22 @@ function loadNavBar() {
         .catch(error => console.error(error));
 }
 
-
 function loadFooter() {
     const content = document.getElementById("footer-container");
     content.innerHTML = returnFooter();
 }
 
 function getAllOrder() {
-    sendRequestWithToken(orderAPI)
+    const page = currentPage - 1; // Page is zero-indexed
+    const size = itemsPerPage;
+    
+    const apiUrl = `${orderAPI}?page=${page}&size=${size}`;
+    
+    sendRequestWithToken(apiUrl)
     .then(data => {
-        orders = data;
-        console.log(orders);
+        orders = data.content; // Paginated order content
+        totalPages = data.totalPages; // Total number of pages from the server
+
         renderOrders(); // Render orders after they are fetched
     })
     .catch(error => {
@@ -122,15 +128,14 @@ function getStatusColor(status) {
 
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageOrders = orders.slice(startIndex, endIndex);
-    orderList.innerHTML = pageOrders.map(createOrderCard).join('');
-    renderPagination();
+    
+    // Render the order cards directly from the `orders` array which already contains paginated data
+    orderList.innerHTML = orders.map(createOrderCard).join('');
+    
+    renderPagination(); // Update pagination controls
 }
 
 function renderPagination() {
-    const totalPages = Math.ceil(orders.length / itemsPerPage);
     const pagination = document.getElementById('pagination');
     let paginationHTML = '';
 
@@ -144,12 +149,16 @@ function renderPagination() {
 
     pagination.innerHTML = paginationHTML;
 
-    pagination.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (e.target.tagName === 'A') {
+    // Remove previous event listeners to prevent multiple calls
+    pagination.replaceChildren(...pagination.children);
+
+    // Add event listener to pagination links
+    pagination.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
             currentPage = parseInt(e.target.dataset.page);
-            renderOrders();
-        }
+            getAllOrder(); // Fetch orders for the selected page
+        });
     });
 }
 
@@ -214,6 +223,3 @@ backToTopBtn.addEventListener('click', () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 });
-
-console.log('Orders:', orders);
-console.log('Current Page:', currentPage);
