@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
@@ -56,9 +61,12 @@ public class SprayerController {
     }
 
     @GetMapping("sprayerOrder")
-    public ResponseEntity<?> sprayerGetOrder()
+    public ResponseEntity<?> sprayerGetOrder(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "12") int size
+    )
     {
-        List<Order> returnedOrders = sprayerService.getAllOrder();
+        Page<Order> returnedOrders = sprayerService.getAllOrder(PageRequest.of(page, size));
 
         if (returnedOrders.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -66,6 +74,7 @@ public class SprayerController {
         List<OrderDTO> returnedList = returnedOrders.stream()
                                                     .map(new DTOConverter()::convertOrderDataToObject)
                                                     .collect(Collectors.toList());
-       return ResponseEntity.ok(returnedList);
+        Page<OrderDTO> orderDTOPage = new PageImpl<>(returnedList, PageRequest.of(page, size), returnedOrders.getTotalElements());
+       return ResponseEntity.ok(orderDTOPage);
     }
 }

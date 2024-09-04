@@ -3,6 +3,8 @@ package rmit.hoversprite.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +12,7 @@ import rmit.hoversprite.Middleware.SprayerProfileUpdateRequest;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
+import rmit.hoversprite.Repositories.DBOrderRepository;
 import rmit.hoversprite.Repositories.DBSprayerRepository;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Utils.Utils;
@@ -28,6 +31,9 @@ public class SprayerService {
 
     @Autowired
     DBSprayerRepository sprayerRepository;
+
+    @Autowired
+    OrderService orderService;
 
     public Sprayer getSprayerData()
     {
@@ -54,9 +60,9 @@ public class SprayerService {
         return sprayerRepository.save(updateSprayer);
     }
 
-    public List<Order> getAllOrder()
+    public Page<Order> getAllOrder(Pageable pageable)
     {
         Sprayer sprayer = getSprayerData();
-        return sprayer.getOrders();
+        return orderService.findOrderBySprayer(sprayer, pageable);
     }
 }

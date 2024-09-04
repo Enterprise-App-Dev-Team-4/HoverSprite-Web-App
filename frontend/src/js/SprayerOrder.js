@@ -1,17 +1,18 @@
 let orders = [];
-const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order api
+let totalPages = 0;  // Total pages from backend
+let currentPage = 1; // Current page
 const itemsPerPage = 30;
-let currentPage = 1;
-let isGridView = true;
+const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order API
 const navBarURL = 'http://localhost:8080/sprayer';
 let role = null;
+let isGridView = true;
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
     console.log(role);
     loadNavBar();
     loadFooter();
-    getAllOrder();  // Fetch and display orders after the page loads
+    getAllOrders();  // Fetch and display orders after the page loads
 });
 
 function getUserRoleFromUrl() {
@@ -29,34 +30,40 @@ function loadNavBar() {
         .catch(error => console.error(error));
 }
 
-
 function loadFooter() {
     const content = document.getElementById("footer-container");
     content.innerHTML = returnFooter();
 }
 
-function getAllOrder() {
-    sendRequestWithToken(orderAPI)
-    .then(data => {
-        orders = data;
-        console.log(orders);
-        renderOrders(); // Render orders after they are fetched
-    })
-    .catch(error => {
-        console.error('Error fetching orders:', error);
-    });
+function getAllOrders() {
+    const page = currentPage - 1; // Backend is 0-indexed
+    const size = itemsPerPage;
+
+    const apiUrl = `${orderAPI}?page=${page}&size=${size}`;
+
+    sendRequestWithToken(apiUrl)
+        .then(data => {
+            // Assuming data contains pagination metadata
+            orders = data.content; // List of orders
+            totalPages = data.totalPages; // Total number of pages from the backend
+            
+            console.log("Orders:", orders);
+            console.log("Total Pages:", totalPages);
+            
+            renderOrders(); // Render the orders after they are fetched
+        })
+        .catch(error => {
+            console.error('Error fetching orders:', error);
+        });
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/sprayer-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
-    
-    // Only show the "Confirm" button if the order status is "Assigned"
-    // const confirmButton = order.orderStatus === 'ASSIGNED' ? 
-    //     `<button class="btn btn btn-primary btn-sm w-100" onclick="confirmOrder(${order.orderID})">Confirm</button>` 
-    //     : '';
+    const viewDetailsButton = `<a href="/sprayer-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
-    // For test viewing only, use above
-    const confirmButton = `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder(${order.orderID})">Confirm</button>`;
+    // Only show the "Confirm" button if the order status is "ASSIGNED"
+    const confirmButton = order.orderStatus === 'ASSIGNED' ? 
+        `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder(${order.orderID})">Confirm</button>` 
+        : '';
 
     if (isGridView) {
         return `
@@ -97,7 +104,7 @@ function createOrderCard(order) {
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.sprayServices.cropType}
+                                <strong>Crop:</strong> ${order.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Location:</strong> ${order.location}
@@ -141,7 +148,7 @@ function sendOrderUpdateToServer(order) {
         order: order
     }
     console.log(body.order.orderStatus);
-    sendRequestWithToken(orderAPI, 'PUT', body) // Update with sprayer order api
+    sendRequestWithToken(orderAPI, 'PUT', body) // Update with sprayer order API
         .then(data => {
             console.log(data);
         })
@@ -168,15 +175,14 @@ function getStatusColor(status) {
 
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageOrders = orders.slice(startIndex, endIndex);
-    orderList.innerHTML = pageOrders.map(createOrderCard).join('');
-    renderPagination();
+    
+    // Render the order cards directly from the `orders` array which already contains paginated data
+    orderList.innerHTML = orders.map(createOrderCard).join('');
+    
+    renderPagination(); // Update pagination controls
 }
 
 function renderPagination() {
-    const totalPages = Math.ceil(orders.length / itemsPerPage);
     const pagination = document.getElementById('pagination');
     let paginationHTML = '';
 
@@ -190,76 +196,15 @@ function renderPagination() {
 
     pagination.innerHTML = paginationHTML;
 
-    pagination.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (e.target.tagName === 'A') {
+    // Remove previous event listeners to prevent multiple calls
+    pagination.replaceChildren(...pagination.children);
+
+    // Add event listener to pagination links
+    pagination.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
             currentPage = parseInt(e.target.dataset.page);
-            renderOrders();
-        }
+            getAllOrders(); // Fetch orders for the selected page
+        });
     });
 }
-
-function filterOrders() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const statusFilter = document.getElementById('statusFilter').value;
-    const dateFilter = document.getElementById('dateFilter').value;
-
-    const filteredOrders = orders.filter(order => {
-        const matchesSearch = order.orderID.toString().includes(searchTerm) ||
-            order.sprayServices.cropType.toLowerCase().includes(searchTerm);
-        const matchesStatus = statusFilter === '' || order.orderStatus === statusFilter;
-        const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
-
-        return matchesSearch && matchesStatus && matchesDate;
-    });
-
-    currentPage = 1;
-    orders = filteredOrders;
-    renderOrders();
-}
-
-function matchesDateFilter(orderDate, filter) {
-    const date = new Date(orderDate);
-    const now = new Date();
-    switch (filter) {
-        case 'today':
-            return date.toDateString() === now.toDateString();
-        case 'this_week':
-            const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
-            return date >= weekStart;
-        case 'this_month':
-            return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-        case 'last_month':
-            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-            return date >= lastMonth && date <= lastMonthEnd;
-        default:
-            return true;
-    }
-}
-
-// Dark mode toggle
-const toggleModeBtn = document.getElementById('toggleModeBtn');
-toggleModeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    toggleModeBtn.innerHTML = isDarkMode ? '<i class="bi bi-sun"></i> Light Mode' : '<i class="bi bi-moon"></i> Dark Mode';
-});
-
-// Back to Top button
-const backToTopBtn = document.getElementById('backToTop');
-window.onscroll = function () {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopBtn.style.display = "block";
-    } else {
-        backToTopBtn.style.display = "none";
-    }
-};
-
-backToTopBtn.addEventListener('click', () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-});
-
-console.log('Orders:', orders);
-console.log('Current Page:', currentPage);

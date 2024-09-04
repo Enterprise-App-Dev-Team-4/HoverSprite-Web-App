@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Repositories.DBOrderRepository;
 import rmit.hoversprite.Utils.Utils;
 
@@ -55,4 +56,9 @@ public class OrderService {
         return orderRepository.findByFarmer(farmer, pageable);
     }
     // public Order saveFeedbackToOrder()
+
+    public Page<Order> findOrderBySprayer(Sprayer sprayer, Pageable pageable)
+    {
+        return orderRepository.findBySprayers(sprayer, pageable);
+    }
 }
