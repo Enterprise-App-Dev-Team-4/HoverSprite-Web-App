@@ -55,11 +55,17 @@ function getAllOrder() {
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
+    const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
     // Only show the "Assign Sprayer" button if the order status is "CONFIRMED"
     const assignSprayerButton = order.orderStatus === 'CONFIRMED' 
         ? `<button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal('${order.orderID}')">Assign Sprayer</button>`
+        : '';
+
+    // Hide the "Change Status" button if the status is ASSIGNED, IN_PROGRESS, or COMPLETED
+    const hideChangeStatusButton = ['ASSIGNED', 'IN_PROGRESS', 'COMPLETED'].includes(order.orderStatus);
+    const changeStatusButton = !hideChangeStatusButton 
+        ? `<button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>` 
         : '';
 
     if (isGridView) {
@@ -79,7 +85,7 @@ function createOrderCard(order) {
                     <div class="card-footer bg-transparent border-0">
                         <div class="d-flex flex-wrap gap-2">
                             ${viewDetailsButton}
-                            <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
+                            ${changeStatusButton} <!-- Conditionally rendered Change Status button -->
                             ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
                         </div>
                     </div>
@@ -110,7 +116,7 @@ function createOrderCard(order) {
                             </div>
                             <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
-                                <button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>
+                                ${changeStatusButton} <!-- Conditionally rendered Change Status button -->
                                 ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
                             </div>
                         </div>
@@ -120,6 +126,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 
 
