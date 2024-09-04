@@ -101,17 +101,25 @@ function initializeProfileButtons(userRole) {
 
     profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        // Validate phone number before submission
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const phoneRegex = /^(0|\+84)\s?\d{2,3}\s?\d{3}\s?\d{3,4}$/;
+
+        if (!phoneRegex.test(phoneNumber)) {
+            displayAlert('danger','Phone number must start with 0 or +84, followed by 9 or 10 digits, and can include spaces.');
+            return; // Stop form submission if validation fails
+        }
+
         var userAPI = null;
-        if(userRole === 'receptionist')
-        {
+        if(userRole === 'receptionist') {
             userAPI = ReceptionistEditProfile;
-        } else if(userRole === 'farmer')
-        {
+        } else if(userRole === 'farmer') {
             userAPI = UpdateProfileUrl;
-        } else if(userRole === 'sprayer')
-        {
+        } else if(userRole === 'sprayer') {
             userAPI = SprayerEditProfile;
         }
+
         // Assuming uploadUserImage is a function that handles image uploading
         uploadUserImage(profileImageUpload.files[0]).then(profileImageUrl => {
             if (profileImageUrl) {
@@ -121,7 +129,7 @@ function initializeProfileButtons(userRole) {
             }
         }).catch(error => {
             console.error('Error uploading image:', error);
-            alert('Failed to upload image.');
+            displayAlert('danger', error.message);
         });
     });
 }
@@ -144,7 +152,7 @@ function submitProfileFormWithImage(imageUrl, userAPI) {
         })
         .catch(error => {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile.');
+            displayAlert('danger', error.message);
         });
 }
 
@@ -158,6 +166,7 @@ function finalizeProfileUpdate() {
     editBtn.style.display = 'block';
     fetchUserData(); // Refresh the profile info
 }
+
 
 function loadNavBar(userRole) {
     const navbarContainer = document.getElementById("navbar-container");
@@ -180,6 +189,19 @@ function loadNavBar(userRole) {
         })
         .catch(error => console.error('Error loading navbar:', error));
 }
+
+function displayAlert(type, message) {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
+}
+
 
 function loadFooter() {
     const footerContainer = document.getElementById("footer-container");

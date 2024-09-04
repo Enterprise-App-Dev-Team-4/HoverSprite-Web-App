@@ -4,6 +4,19 @@ function submitForm() {
         var form = this;
         var full_name = form.firstName.value + " " + form.lastName.value;
 
+        // Get the phone number value
+        var phoneNumber = form.phoneNumber.value;
+
+        // Regex to validate the phone number format (starts with 0 or +84, followed by 9 or 10 digits, allowing spaces)
+        var phoneRegex = /^(0|\+84)\s?\d{2,3}\s?\d{3}\s?\d{3,4}$/;
+
+        // Validate the phone number
+        if (!phoneRegex.test(phoneNumber)) {
+            // Show an error message if validation fails
+            displayAlert('danger', 'Phone number must start with 0 or +84, followed by 9 or 10 digits, and can include spaces.');
+            return; // Stop form submission
+        }
+
         // Create a JSON object with the user input
         var user = {
             firstName: form.firstName.value,
@@ -11,7 +24,7 @@ function submitForm() {
             fullName: full_name,
             password: form.password.value,
             email: form.email.value,
-            phoneNumber: form.phoneNumber.value,
+            phoneNumber: phoneNumber,
             homeAddress: form.homeAddress.value,
             profileImage: 'https://firebasestorage.googleapis.com/v0/b/hoversprite-3d6b3.appspot.com/o/user-avatar.png?alt=media&token=ebc0c97d-28c7-4316-9ce2-a68215fe9c22'
         };
@@ -36,7 +49,7 @@ function submitForm() {
             displayAlert('success', 'Account created successfully! Check your email for verification.');
             setTimeout(function() {
                 window.location.href = '/login';  // Redirect to profile page with user role as a param
-            }, 1500); // 2000 milliseconds = 2 seconds
+            }, 1500); // 1500 milliseconds = 1.5 seconds
             document.getElementById('userForm').reset(); // Reset the form
         })
         .catch((error) => {
