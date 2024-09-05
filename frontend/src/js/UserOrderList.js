@@ -1,17 +1,18 @@
 let orders = [];
-const orderAPI = 'http://localhost:8080/order/all'; // Updated variable name
+const orderAPI = 'http://localhost:8080/order/all';
 const itemsPerPage = 12;
 let currentPage = 1;
-let totalPages = 0; // To track total pages from server
+let totalPages = 0;
 let role = null;
 let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
 
 document.addEventListener("DOMContentLoaded", function () {
-    role = getUserRoleFromUrl();  // Get the role from the URL
+    role = getUserRoleFromUrl();
     loadNavBar();
     loadFooter();
-    getAllOrder();  // Fetch and display orders after the page loads
+    getAllOrder();
+    setupEventListeners();
 });
 
 function getUserRoleFromUrl() {
@@ -23,8 +24,8 @@ function loadNavBar() {
     const content = document.getElementById("navbar-container");
     sendRequestWithToken(navBarURL)
         .then(data => {
-            content.innerHTML = returnNavBar(data, role);  
-            activeClick();  // Initialize event listeners after rendering the navbar
+            content.innerHTML = returnNavBar(data, role);
+            activeClick();
         })
         .catch(error => console.error(error));
 }
@@ -35,25 +36,24 @@ function loadFooter() {
 }
 
 function getAllOrder() {
-    const page = currentPage - 1; // Page is zero-indexed
+    const page = currentPage - 1;
     const size = itemsPerPage;
-    
-    const apiUrl = `${orderAPI}?page=${page}&size=${size}`;
-    
-    sendRequestWithToken(apiUrl)
-    .then(data => {
-        orders = data.content; // Paginated order content
-        totalPages = data.totalPages; // Total number of pages from the server
 
-        renderOrders(); // Render orders after they are fetched
-    })
-    .catch(error => {
-        console.error('Error fetching orders:', error);
-    });
+    const apiUrl = `${orderAPI}?page=${page}&size=${size}`;
+
+    sendRequestWithToken(apiUrl)
+        .then(data => {
+            orders = data.content;
+            totalPages = data.totalPages;
+            renderOrders();
+        })
+        .catch(error => {
+            console.error('Error fetching orders:', error);
+        });
 }
 
 function createOrderCard(order) {
-    const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`; // Attach role to URL
+    const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
     if (isGridView) {
         return `
@@ -89,7 +89,7 @@ function createOrderCard(order) {
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.sprayServices.cropType}
+                                <strong>Crop:</strong> ${order.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Location:</strong> ${order.location}
@@ -108,31 +108,22 @@ function createOrderCard(order) {
     }
 }
 
-const toggleViewBtn = document.getElementById('toggleViewBtn');
-toggleViewBtn.addEventListener('click', () => {
-    isGridView = !isGridView;
-    toggleViewBtn.innerHTML = isGridView ? '<i class="bi bi-list"></i> List View' : '<i class="bi bi-grid"></i> Grid View';
-    renderOrders();
-});
-
 function getStatusColor(status) {
-    switch (status) {
-        case 'COMPLETED': return 'success';
-        case 'IN_PROGRESS': return 'primary';
-        case 'CONFIRMED': return 'info';
-        case 'ASSIGNED': return 'warning';
-        case 'CANCELLED': return 'danger';
-        default: return 'secondary';
-    }
+    const colors = {
+        'COMPLETED': 'success',
+        'IN_PROGRESS': 'primary',
+        'CONFIRMED': 'info',
+        'ASSIGNED': 'warning',
+        'CANCELLED': 'danger',
+        'PENDING': 'secondary'
+    };
+    return colors[status] || 'secondary';
 }
 
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    
-    // Render the order cards directly from the `orders` array which already contains paginated data
     orderList.innerHTML = orders.map(createOrderCard).join('');
-    
-    renderPagination(); // Update pagination controls
+    renderPagination();
 }
 
 function renderPagination() {
@@ -148,16 +139,11 @@ function renderPagination() {
     }
 
     pagination.innerHTML = paginationHTML;
-
-    // Remove previous event listeners to prevent multiple calls
-    pagination.replaceChildren(...pagination.children);
-
-    // Add event listener to pagination links
     pagination.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             currentPage = parseInt(e.target.dataset.page);
-            getAllOrder(); // Fetch orders for the selected page
+            getAllOrder();
         });
     });
 }
@@ -166,20 +152,45 @@ function filterOrders() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const statusFilter = document.getElementById('statusFilter').value;
     const dateFilter = document.getElementById('dateFilter').value;
+    const sortOrder = document.getElementById('sortOrder').value;
 
     const filteredOrders = orders.filter(order => {
-        const matchesSearch = order.orderID.toString().includes(searchTerm) ||
-            order.sprayServices.cropType.toLowerCase().includes(searchTerm);
+        const matchesSearch =
+            order.orderID.toLowerCase().includes(searchTerm) ||
+            order.location.toLowerCase().includes(searchTerm) ||
+            order.cropType.toLowerCase().includes(searchTerm) ||
+            order.orderStatus.toLowerCase().includes(searchTerm) ||
+            order.totalCost.toString().toLowerCase().includes(searchTerm) ||
+            (order.farmerName && order.farmerName.toLowerCase().includes(searchTerm)) ||
+            (order.farmerEmail && order.farmerEmail.toLowerCase().includes(searchTerm)) ||
+            (order.address && order.address.toLowerCase().includes(searchTerm)) ||
+            (order.pilotName && order.pilotName.toLowerCase().includes(searchTerm)) ||
+            (order.pilotEmail && order.pilotEmail.toLowerCase().includes(searchTerm));
+
         const matchesStatus = statusFilter === '' || order.orderStatus === statusFilter;
         const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
 
         return matchesSearch && matchesStatus && matchesDate;
     });
 
-    currentPage = 1;
-    orders = filteredOrders;
-    renderOrders();
+    // Sort the filtered orders
+    filteredOrders.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
+    // Sort by price if needed
+    if (sortOrder === 'price_low_high') {
+        filteredOrders.sort((a, b) => a.totalCost - b.totalCost);
+    } else if (sortOrder === 'price_high_low') {
+        filteredOrders.sort((a, b) => b.totalCost - a.totalCost);
+    }
+
+    const orderList = document.getElementById('orderList');
+    orderList.innerHTML = filteredOrders.map(createOrderCard).join('');
 }
+
 
 function matchesDateFilter(orderDate, filter) {
     const date = new Date(orderDate);
@@ -201,25 +212,35 @@ function matchesDateFilter(orderDate, filter) {
     }
 }
 
-// Dark mode toggle
-const toggleModeBtn = document.getElementById('toggleModeBtn');
-toggleModeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    toggleModeBtn.innerHTML = isDarkMode ? '<i class="bi bi-sun"></i> Light Mode' : '<i class="bi bi-moon"></i> Dark Mode';
-});
+function setupEventListeners() {
+    const toggleViewBtn = document.getElementById('toggleViewBtn');
+    toggleViewBtn.addEventListener('click', () => {
+        isGridView = !isGridView;
+        toggleViewBtn.innerHTML = isGridView ? '<i class="bi bi-list"></i> List View' : '<i class="bi bi-grid"></i> Grid View';
+        renderOrders();
+    });
 
-// Back to Top button
-const backToTopBtn = document.getElementById('backToTop');
-window.onscroll = function () {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopBtn.style.display = "block";
-    } else {
-        backToTopBtn.style.display = "none";
-    }
-};
+    const backToTopBtn = document.getElementById('backToTop');
+    window.onscroll = function () {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            backToTopBtn.style.display = "block";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
 
-backToTopBtn.addEventListener('click', () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-});
+    backToTopBtn.addEventListener('click', () => {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
+
+    // Add event listeners for filter inputs
+    document.getElementById('searchInput').addEventListener('input', filterOrders);
+    document.getElementById('statusFilter').addEventListener('change', filterOrders);
+    document.getElementById('dateFilter').addEventListener('change', filterOrders);
+    document.getElementById('sortOrder').addEventListener('change', filterOrders);
+}
+
+// Initialize the page
+getAllOrder();
+setupEventListeners();
