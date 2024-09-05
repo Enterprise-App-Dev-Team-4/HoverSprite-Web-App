@@ -152,4 +152,41 @@ public class OrderEmailProxy {
                 emailContent.toString()
         );
     }
+
+    public void sendEmailOrderInProgress(Order order) {
+        // Construct the email subject and content
+        String emailSubject = "Order In Progress - Order ID: " + order.getOrderID();
+        StringBuilder emailContent = new StringBuilder();
+    
+        emailContent.append("Dear ")
+                    .append(order.getFarmer().getFullName())
+                    .append(",\n\n")
+                    .append("We are pleased to inform you that your order is now in progress. Here are the details of your order:\n\n")
+                    .append("Order ID: ").append(order.getOrderID()).append("\n")
+                    .append("Order Date: ").append(order.getDate()).append("\n")
+                    .append("Service Time Slot: ").append(order.getServiceTimeSlot()).append("\n")
+                    .append("Order Status: ").append(order.getOrderStatus().name()).append("\n")
+                    .append("Order Location: ").append(order.getLocation()).append("\n\n")
+                    .append("Sprayer(s) Assigned:\n");
+    
+        // Add details of all sprayers assigned
+        for (Sprayer sprayer : order.getSprayers()) {
+            emailContent.append(" - Name: ").append(sprayer.getFullName()).append("\n")
+                        .append("   Phone: ").append(sprayer.getPhoneNumber()).append("\n")
+                        .append("   Email: ").append(sprayer.getEmail()).append("\n\n");
+        }
+    
+        emailContent.append("The service is now being executed and we will notify you once it's completed.\n\n")
+                    .append("Thank you for choosing our service!\n\n")
+                    .append("Best regards,\n")
+                    .append("Hover Sprite");
+    
+        // Send the email
+        emailSenderService.sendSimpleEmail(
+                order.getFarmer().getEmail(), 
+                emailSubject, 
+                emailContent.toString()
+        );
+    }
+    
 }

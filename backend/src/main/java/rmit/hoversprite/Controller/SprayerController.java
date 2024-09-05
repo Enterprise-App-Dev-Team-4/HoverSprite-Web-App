@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.SprayerHandleOrderMiddleware;
 import rmit.hoversprite.Middleware.SprayerProfileUpdateRequest;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Receptionist;
@@ -40,6 +41,9 @@ public class SprayerController {
     @Autowired
     SprayerProfileUpdateRequest sprayerProfileUpdateRequest;
 
+    @Autowired
+    SprayerHandleOrderMiddleware sprayerHandleOrderMiddleware;
+
     @GetMapping("sprayer")
     public ResponseEntity<?> getSprayerResponseEntity() 
     {
@@ -50,7 +54,7 @@ public class SprayerController {
 
     @PutMapping("sprayerProfile")
 
-    public ResponseEntity<?> receptionistUpdateProfile(@RequestBody SprayerUpdateProfileRequest request )
+    public ResponseEntity<?> sprayerUpdateProfile(@RequestBody SprayerUpdateProfileRequest request )
     {
         Sprayer sprayer = new Sprayer();
         
@@ -76,5 +80,14 @@ public class SprayerController {
                                                     .collect(Collectors.toList());
         Page<OrderDTO> orderDTOPage = new PageImpl<>(returnedList, PageRequest.of(page, size), returnedOrders.getTotalElements());
        return ResponseEntity.ok(orderDTOPage);
+    }
+
+
+    @PutMapping("sprayerConfirm")
+
+    public ResponseEntity<?> sprayerConfirmAssignedOrder(@RequestParam String orderID)
+    {
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(sprayerHandleOrderMiddleware.sprayerConfirmAssignedOrder(orderID));
+        return ResponseEntity.ok(orderDTO);
     }
 }

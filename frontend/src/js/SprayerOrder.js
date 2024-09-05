@@ -3,6 +3,7 @@ let totalPages = 0;  // Total pages from backend
 let currentPage = 1; // Current page
 const itemsPerPage = 30;
 const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order API
+const confirmOrderAPI = 'http://localhost:8080/sprayerConfirm';
 const navBarURL = 'http://localhost:8080/sprayer';
 let role = null;
 let isGridView = true;
@@ -62,7 +63,12 @@ function createOrderCard(order) {
 
     // Only show the "Confirm" button if the order status is "ASSIGNED"
     const confirmButton = order.orderStatus === 'ASSIGNED' ? 
-        `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder(${order.orderID})">Confirm</button>` 
+        `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder('${order.orderID}')">Confirm</button>` 
+        : '';
+
+    // Only show the "Complete Order" button if the order status is "IN_PROGRESS", and make it orange
+    const completeButton = order.orderStatus === 'IN_PROGRESS' ? 
+        `<button class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>` 
         : '';
 
     if (isGridView) {
@@ -85,6 +91,7 @@ function createOrderCard(order) {
                         </div>
                         <div class="flex-fill">
                             ${confirmButton}
+                            ${completeButton} <!-- Complete button will only show if status is "IN_PROGRESS" -->
                         </div>
                     </div>
                 </div>
@@ -118,6 +125,7 @@ function createOrderCard(order) {
                                 </div>
                                 <div class="flex-fill">
                                     ${confirmButton}
+                                    ${completeButton} <!-- Complete button will only show if status is "IN_PROGRESS" -->
                                 </div>
                             </div>
                         </div>
@@ -128,27 +136,44 @@ function createOrderCard(order) {
     }
 }
 
-function confirmOrder(orderId) {
-    const order = orders.find(o => o.orderID == orderId);
+
+
+
+function completeOrder(orderId) {
+    console.log(`Order #${orderId} marked as completed.`);
     
-    if (order) {
-        // Update the order status to 'IN_PROGRESS'
-        order.orderStatus = 'IN_PROGRESS';
+    // Update the order on the server to mark as "COMPLETED"
+    const completeOrderURL = `${confirmOrderAPI}?orderID=${encodeURIComponent(orderId)}&status=COMPLETED`;
+    sendRequestWithToken(completeOrderURL, 'PUT') // Assuming you have an endpoint to mark it as complete
+        .then(data => {
+            console.log(data);
+            alert(`Order #${orderId} has been marked as completed.`);
+            getAllOrders(); // Refresh the orders list to reflect the updated status
+        })
+        .catch(error => console.error('Error completing the order:', error));
+}
+
+
+function confirmOrder(orderId) {
+    console.log(orderId);
+    if (orderId) {
         
         // Update the order on the server
-        sendOrderUpdateToServer(order);
+        sendOrderUpdateToServer(orderId);
 
         renderOrders();
         console.log(`Order #${orderId} status updated to 'In Progress'`);
     }
 }
 
-function sendOrderUpdateToServer(order) {
+function sendOrderUpdateToServer(orderId) {
+    let confirmURL = confirmOrderAPI + `?orderID=${encodeURIComponent(orderId)}`;
     const body = {
-        order: order
-    }
-    console.log(body.order.orderStatus);
-    sendRequestWithToken(orderAPI, 'PUT', body) // Update with sprayer order API
+        orderID: orderId
+    };
+
+    console.log(body);
+    sendRequestWithToken(confirmURL, 'PUT', body) // Update with sprayer order API
         .then(data => {
             console.log(data);
         })
