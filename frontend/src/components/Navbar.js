@@ -32,7 +32,7 @@ function returnNavBar(data, role) {
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link" href="#">Home</a>
-                    <a class="nav-link" href="/about-us">About</a>
+                    <a class="nav-link" href="/about-us?role=${encodeURIComponent(role)}">About</a>
                     ${servicesTab}  <!-- Services tab is conditionally rendered -->
                     <a class="nav-link" href="${orderUrl}?role=${encodeURIComponent(role)}">Orders</a>
                 </div>
@@ -41,7 +41,7 @@ function returnNavBar(data, role) {
                         <img src=${data.profileImage} alt="Profile" class="rounded-circle" style="width: 40px;"> ${data.fullName}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle me-2"></i>View Profile</a></li>
+                        <li><a class="dropdown-item" href="/profile?role=${encodeURIComponent(role)}"><i class="bi bi-person-circle me-2"></i>View Profile</a></li>
                         <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                     </ul>
                 </div>
@@ -102,8 +102,8 @@ function activeClick() {
         });
     });
     console.log("Hello");
-     // Add an event listener for the logout link
-     const logoutLink = document.getElementById('logout-link');
+    // Add an event listener for the logout link
+    const logoutLink = document.getElementById('logout-link');
     console.log('Logout link:', logoutLink); // Add this to check if logout-link is correctly selected
 
     if (logoutLink) {
