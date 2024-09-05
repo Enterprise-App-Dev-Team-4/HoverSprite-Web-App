@@ -4,16 +4,13 @@ const apiEndpoint = 'http://localhost:8080/requestOrder';
 const addFarmAPI = 'http://localhost:8080/farm/add-farm';
 const updateServicesAPI = 'http://localhost:8080/services/update';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
-const stripeAPI = 'http://localhost:8080/simulate-visa-payment'
+const stripeAPI = 'http://localhost:8080/simulate-visa-payment';
 
-let role = null;  // Ensure role is let, not const, so it can be reassigned
+let role = null;  // To allow reassignment later
 let sentUser = null;
 let sendService = null;
 
-// Ensure Stripe.js is included in your HTML
-var card;
-
-// Array of session times
+// Session times for the form
 const availableSessions = [
     "04:00 - 05:00",
     "05:00 - 06:00",
@@ -23,29 +20,32 @@ const availableSessions = [
     "17:00 - 18:00"
 ];
 
+// On document load, initialize the app
 document.addEventListener("DOMContentLoaded", function () {
-    role = getUserRoleFromUrl();  // Extract role from URL
+    role = getUserRoleFromUrl();
     initializeApp();
 });
 
+// Initialization function
 function initializeApp() {
     loadNavBar();
     loadFooter();
     initMap();
     extractAndStoreUrlParams();
-    setupFormHandlers();
+    setupFormHandlers(); // Sets up form, including payment handling
     setInitialDate();
-    populateSessionOptions(); // Populate the session select element
+    populateSessionOptions();
 }
 
+// Extract user role from the URL
 function getUserRoleFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get('role');
 }
 
+// Populate session times in the select box
 function populateSessionOptions() {
     const sessionSelect = document.getElementById("session");
-
     sessionSelect.innerHTML = ""; // Clear existing options
 
     availableSessions.forEach((session, index) => {
@@ -60,16 +60,10 @@ function populateSessionOptions() {
     });
 }
 
+// Load navbar based on role
 function loadNavBar() {
     const navbarContainer = document.getElementById("navbar-container");
-
-    let userAPI = null;
-
-    if (role === 'receptionist') {
-        userAPI = ReceptionistURL;
-    } else if (role === 'farmer') {
-        userAPI = UserURL;
-    }
+    let userAPI = role === 'receptionist' ? ReceptionistURL : role === 'farmer' ? UserURL : null;
 
     if (userAPI) {
         sendRequestWithToken(userAPI)
@@ -78,16 +72,16 @@ function loadNavBar() {
                 activeClick();
             })
             .catch(error => console.error('Error loading navbar:', error));
-    } else {
-        console.error('Invalid role or user API could not be determined.');
     }
 }
 
+// Load footer content
 function loadFooter() {
     const footerContainer = document.getElementById("footer-container");
     footerContainer.innerHTML = returnFooter();
 }
 
+// Initialize map and marker
 function initMap() {
     const defaultLocation = [10.7285, 106.7151];
     map = L.map('map').setView(defaultLocation, 15);
@@ -111,6 +105,7 @@ function initMap() {
     updateLocationInput(defaultLocation[0], defaultLocation[1]);
 }
 
+// Update location input based on lat/lon
 function updateLocationInput(lat, lon) {
     const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
 
@@ -119,12 +114,7 @@ function updateLocationInput(lat, lon) {
         .then(data => {
             const locationInput = document.getElementById("location");
             if (data && data.address) {
-                const address = data.address;
-                const ward = address.suburb || "";
-                const district = address.city_district || address.district || "";
-                const city = address.city || address.town || address.village || "";
-                const country = address.country || "";
-
+                const { suburb: ward = "", city_district: district = "", city = "", country = "" } = data.address;
                 locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
             } else {
                 locationInput.value = "Address not found";
@@ -133,97 +123,76 @@ function updateLocationInput(lat, lon) {
         .catch(error => console.error("Error:", error));
 }
 
+// Updates the map with a new address
 function updateMap(address) {
     const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-
     fetch(geocodeUrl)
         .then(response => response.json())
         .then(data => {
-            if (data && data.length > 0) {
+            if (data.length > 0) {
                 const lat = parseFloat(data[0].lat);
                 const lon = parseFloat(data[0].lon);
                 map.setView([lat, lon], 15);
                 marker.setLatLng([lat, lon]);
-                updateLocationInput(lat, lon); // Update location input with address
-            } else {
-                console.log("Address not found");
+                updateLocationInput(lat, lon);
             }
         })
         .catch(error => console.error("Error:", error));
 }
 
+// Date conversion between solar and lunar calendars
 function convertDate(date, fromType, toType) {
     const momentDate = moment(date);
-
-    if (fromType === 'solar' && toType === 'lunar') {
-        const lunarDate = momentDate.subtract(1, 'days');
-        return lunarDate.format('YYYY-MM-DDTHH:mm');
-    } else if (fromType === 'lunar' && toType === 'solar') {
-        const solarDate = momentDate.add(1, 'days');
-        return solarDate.format('YYYY-MM-DDTHH:mm');
-    }
-
-    return momentDate.format('YYYY-MM-DDTHH:mm');
+    return fromType === 'solar' && toType === 'lunar'
+        ? momentDate.subtract(1, 'days').format('YYYY-MM-DDTHH:mm')
+        : momentDate.add(1, 'days').format('YYYY-MM-DDTHH:mm');
 }
 
-function getUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-
-    const user = {
-        email: params.get('userEmail')
-    };
-
-    const service = {
-        id: params.get('serviceId'),
-        name: params.get('serviceName'),
-        cropType: params.get('cropType'),
-        serviceType: params.get('serviceType'),
-        // orders: JSON.parse(params.get('serviceOrders') || '[]'),
-        timeSlots: JSON.parse(params.get('serviceTimeSlots') || '[]')
-    };
-
-    return { user, service };
-}
-
+// Extract user and service data from the URL
 function extractAndStoreUrlParams() {
     const { user, service } = getUrlParams();
     sentUser = user;
     sendService = service;
-
-    console.log('User:', sentUser);
-    console.log('Service:', sendService);
 }
 
-function sendAddFarmRequest(farm) {
-    const addFarmData = {
-        farm: farm,
-        farmerEmail: sentUser.email
+// Parse URL parameters
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        user: { email: params.get('userEmail') },
+        service: {
+            id: params.get('serviceId'),
+            name: params.get('serviceName'),
+            cropType: params.get('cropType'),
+            serviceType: params.get('serviceType'),
+            timeSlots: JSON.parse(params.get('serviceTimeSlots') || '[]')
+        }
     };
-    sendRequestWithToken(addFarmAPI, 'POST', addFarmData)
-        .then(response => {
-            if (response.ok) {
-                console.log('Request submitted successfully');
-            } else {
-                console.error('Failed to submit request:', response.statusText);
-            }
-        })
-        .catch(error => {
-            console.error('Error submitting request:', error);
-        });
 }
 
+// Send add farm request
+function sendAddFarmRequest(farm) {
+    const addFarmData = { farm, farmerEmail: sentUser.email };
+    sendRequestWithToken(addFarmAPI, 'POST', addFarmData)
+        .then(response => response.ok ? console.log('Request submitted successfully') : console.error('Failed to submit request:', response.statusText))
+        .catch(error => console.error('Error submitting request:', error));
+}
+
+// Send booking request to the server
 function sendRequestOrder(formData) {
     sendRequestWithToken(apiEndpoint, 'POST', formData)
         .then(data => console.log('order response:', data))
         .catch(error => console.error('Error submitting request:', error));
 }
 
+// Send updated service data
 function sendRequestUpdateService(services) {
     sendRequestWithToken(updateServicesAPI, 'PUT', services)
         .then(data => console.log('service response:', data))
         .catch(error => console.error('Error submitting request:', error));
 }
 
+// Set up event listeners for the form
 function setupFormHandlers() {
     const form = document.querySelector('form');
     const areaInput = document.getElementById("area");
@@ -236,104 +205,84 @@ function setupFormHandlers() {
     setupDateTypeChangeHandler(dateTypeSelect, dateInput);
     setupLocationInputHandler(locationInput);
     setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect);
+    setupInputFormattingHandlers();
 }
 
+// Ensure the area input doesn't accept negative values
 function setupAreaInputHandler(areaInput) {
     areaInput.addEventListener("input", function () {
-        if (this.value < 0) {
-            this.value = 0;
-        }
+        if (this.value < 0) this.value = 0;
     });
 }
 
+// Handle switching between lunar and solar calendars
 function setupDateTypeChangeHandler(dateTypeSelect, dateInput) {
     dateTypeSelect.addEventListener('change', function () {
-        const currentDate = dateInput.value;
-        const currentType = this.value === 'lunar' ? 'solar' : 'lunar';
-        const newType = this.value;
-
-        if (currentDate) {
-            const convertedDate = convertDate(currentDate, currentType, newType);
-            dateInput.value = convertedDate;
+        if (dateInput.value) {
+            dateInput.value = convertDate(dateInput.value, this.value === 'lunar' ? 'solar' : 'lunar', this.value);
         }
     });
 }
 
+// Update the map when the location input changes
 function setupLocationInputHandler(locationInput) {
     locationInput.addEventListener('change', function () {
         updateMap(this.value);
     });
 }
 
-// Function to initialize the Stripe card element
-function initializeStripeCardElement() {
-    card = elements.create('card');
-    card.mount('#card-element');  // Mount card element into the div
-}
-
-
-// Setup form submit handler
+// Setup form submit handler for booking
 function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect) {
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         showConfirmationModal(areaInput.value, dateInput.value, dateTypeSelect.value, locationInput.value, sessionSelect.value);
     });
 
-    setupConfirmationModalHandler();
-    setupPaymentHandlers();
-    setupInputFormattingHandlers();
-}
-
-// Function to show confirmation modal
-function showConfirmationModal(area, date, dateType, location, session) {
-    // Set the confirmation modal values
-    document.getElementById('confirmLocation').textContent = location;
-    document.getElementById('confirmArea').textContent = area;
-    document.getElementById('confirmDateType').textContent = dateType === 'solar' ? 'Solar Calendar' : 'Lunar Calendar';
-    document.getElementById('confirmDate').textContent = date;
-    document.getElementById('confirmSession').textContent = session;
-
-    // Show the confirmation modal
-    const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    confirmationModal.show();
-}
-
-// Function to show payment modal
-function showPaymentModal() {
-    const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-    paymentModal.show();
-}
-
-// Function to show Visa payment modal
-function showVisaPaymentModal() {
-    const visaPaymentModal = new bootstrap.Modal(document.getElementById('visaPaymentModal'));
-    visaPaymentModal.show();
-}
-
-// Setup event listener for the confirmation modal buttons
-function setupConfirmationModalHandler() {
+    // Handle confirmation and payment selection
     document.getElementById("confirmSubmitButton").addEventListener("click", function () {
         const confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
-        confirmationModal.hide();
-        showPaymentModal();
-    });
-}
+        confirmationModal.hide(); // Hide the confirmation modal
 
-// Setup payment method handlers
-function setupPaymentHandlers() {
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        paymentModal.show(); // Show the payment modal
+    });
+
+    // Handle cash payment
+    document.getElementById("payByCashButton").addEventListener("click", function () {
+        const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+        paymentModal.hide();
+
+        handleDateConversionIfNeeded(dateTypeSelect, dateInput);
+        updateServiceTimeSlots(sessionSelect);
+
+        const totalCost = calculateTotalCost(areaInput.value);
+        const farm = generateFarmObject(areaInput.value, locationInput.value);
+        sendAddFarmRequest(farm);
+        sendRequestUpdateService(sendService);
+
+        const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionSelect.value, totalCost);
+        formData.paymentMethod = "cash";
+
+        sendRequestOrder(formData);
+        setTimeout(redirectToServicePage, 2000);
+    });
+
+    // Handle Visa payment
     document.getElementById("payByCardButton").addEventListener("click", function () {
         const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
         paymentModal.hide();
-        showVisaPaymentModal();
+
+        const visaPaymentModal = new bootstrap.Modal(document.getElementById('visaPaymentModal'));
+        visaPaymentModal.show(); // Show Visa modal for payment
     });
 
     document.getElementById("submitVisaPaymentButton").addEventListener("click", handleVisaPayment);
 }
 
-// Handle the Visa payment submission
 function handleVisaPayment(event) {
     event.preventDefault();
-    const cardNumber = document.getElementById("cardNumber").value.replace(/\s+/g, ''); // Remove spaces for validation
+
+    const cardNumber = document.getElementById("cardNumber").value.replace(/\s+/g, ''); // Remove spaces
     const expiryDate = document.getElementById("expiryDate").value;
     const cvv = document.getElementById("cvv").value;
     const totalCost = calculateTotalCost(document.getElementById('area').value);
@@ -371,10 +320,9 @@ function handleVisaPayment(event) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         if (data.success) {
             console.log('Payment successful:', data);
-            processBooking(true);  // Trigger booking after successful payment
+            processBooking(true); // Trigger booking after successful payment
         } else {
             document.getElementById('visa-errors').textContent = "Payment failed: " + data.message;
         }
@@ -385,8 +333,19 @@ function handleVisaPayment(event) {
     });
 }
 
-// Setup input formatting for card number and expiry date
-// Format card number input and restrict to 16 digits
+// Function to setup input formatting for card number and expiry date
+function setupInputFormattingHandlers() {
+    const cardNumberInput = document.getElementById("cardNumber");
+    const expiryDateInput = document.getElementById("expiryDate");
+
+    // Format the card number to add spaces every 4 digits and restrict to 16 digits
+    cardNumberInput.addEventListener("input", formatCardNumber);
+
+    // Format the expiry date to MM/YY and restrict to 5 characters
+    expiryDateInput.addEventListener("input", formatExpiryDate);
+}
+
+// Format card number input to add space every 4 digits and limit to 16 digits
 function formatCardNumber(event) {
     let cardNumber = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
 
@@ -398,16 +357,6 @@ function formatCardNumber(event) {
     // Format the card number to add space every 4 digits
     event.target.value = cardNumber.replace(/(.{4})/g, '$1 ').trim(); // Add a space every 4 digits
 }
-
-// Setup input formatting for card number with digit restriction
-function setupInputFormattingHandlers() {
-    const cardNumberInput = document.getElementById("cardNumber");
-    const expiryDateInput = document.getElementById("expiryDate");
-
-    cardNumberInput.addEventListener("input", formatCardNumber);
-    expiryDateInput.addEventListener("input", formatExpiryDate);
-}
-
 
 // Format expiry date input and restrict to MM/YY format
 function formatExpiryDate(event) {
@@ -427,46 +376,34 @@ function formatExpiryDate(event) {
 }
 
 
-// Validation functions
+// Utility functions to validate card info
 function validateCardNumber(cardNumber) {
-    // Use Luhn's Algorithm to validate the card number
-    let sum = 0;
-    let shouldDouble = false;
+    let sum = 0, shouldDouble = false;
     for (let i = cardNumber.length - 1; i >= 0; i--) {
         let digit = parseInt(cardNumber[i]);
-
-        if (shouldDouble) {
-            digit *= 2;
-            if (digit > 9) digit -= 9;
-        }
-
+        if (shouldDouble) digit = digit * 2 > 9 ? digit * 2 - 9 : digit * 2;
         sum += digit;
         shouldDouble = !shouldDouble;
     }
-    return sum % 10 === 0; // Valid card number should pass this check
+    return sum % 10 === 0;
 }
 
 function validateExpiryDate(expiryDate) {
-    const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/; // Checks for MM/YY format
-    const currentYear = new Date().getFullYear() % 100; // Get last two digits of current year
-    const currentMonth = new Date().getMonth() + 1; // Get current month
+    const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+    const currentYear = new Date().getFullYear() % 100;
+    const currentMonth = new Date().getMonth() + 1;
 
-    if (!regex.test(expiryDate)) {
-        return false;
-    }
+    if (!regex.test(expiryDate)) return false;
+    const [expMonth, expYear] = expiryDate.split('/').map(Number);
 
-    const [expMonth, expYear] = expiryDate.split('/').map(num => parseInt(num));
-    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
-        return false; // Expired card
-    }
-
-    return true;
+    return expYear > currentYear || (expYear === currentYear && expMonth >= currentMonth);
 }
 
 function validateCVV(cvv) {
-    return /^\d{3,4}$/.test(cvv); // CVV must be 3 or 4 digits
+    return /^\d{3,4}$/.test(cvv);
 }
 
+// Process the booking and redirect
 function processBooking(isCardPayment) {
     const area = document.getElementById('area').value;
     const location = document.getElementById('location').value;
@@ -479,54 +416,32 @@ function processBooking(isCardPayment) {
     sendRequestUpdateService(sendService);
 
     const formData = gatherFormData(area, location, date, session, totalCost);
-    
-    if (isCardPayment) {
-        formData.paymentMethod = "card";
-    } else {
-        formData.paymentMethod = "cash";
-    }
+    formData.paymentMethod = isCardPayment ? "card" : "cash";
 
     sendRequestOrder(formData);
-    setTimeout(function () {
-        redirectToServicePage();
-    }, 2000);
+    setTimeout(redirectToServicePage, 2000);
 }
 
+// Show confirmation modal
 function showConfirmationModal(area, date, dateType, location, session) {
-    // Set the confirmation modal values
     document.getElementById('confirmLocation').textContent = location;
     document.getElementById('confirmArea').textContent = area;
     document.getElementById('confirmDateType').textContent = dateType === 'solar' ? 'Solar Calendar' : 'Lunar Calendar';
     document.getElementById('confirmDate').textContent = date;
     document.getElementById('confirmSession').textContent = session;
 
-    // Show the modal
     const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     confirmationModal.show();
 }
 
+// Helper functions for date conversion, cost calculation, and redirection
 function handleDateConversionIfNeeded(dateTypeSelect, dateInput) {
-    if (dateTypeSelect.value === 'lunar') {
-        const lunarDate = dateInput.value;
-        const solarDate = convertDate(lunarDate, 'lunar', 'solar');
-        dateInput.value = solarDate;
-    }
+    if (dateTypeSelect.value === 'lunar') dateInput.value = convertDate(dateInput.value, 'lunar', 'solar');
 }
 
 function updateServiceTimeSlots(sessionSelect) {
     const selectedSessionIndex = sessionSelect.selectedIndex;
-
-    if (sendService.timeSlots[selectedSessionIndex] > 0) {
-        sendService.timeSlots[selectedSessionIndex] -= 1;
-
-        console.log(`Time slot at index ${selectedSessionIndex} is now ${sendService.timeSlots[selectedSessionIndex]}`);
-
-        if (sendService.timeSlots[selectedSessionIndex] === 0) {
-            sessionSelect.options[selectedSessionIndex].disabled = true;
-        }
-    } else {
-        console.log('Selected time slot is already at 0, cannot decrement further');
-    }
+    if (sendService.timeSlots[selectedSessionIndex] > 0) sendService.timeSlots[selectedSessionIndex]--;
 }
 
 function calculateTotalCost(farmArea) {
@@ -535,22 +450,11 @@ function calculateTotalCost(farmArea) {
 }
 
 function generateFarmObject(farmArea, farmLocation) {
-    return {
-        farmArea: farmArea,
-        cropType: sendService.cropType,
-        farmLocation: farmLocation
-    };
+    return { farmArea, cropType: sendService.cropType, farmLocation };
 }
 
 function gatherFormData(farmArea, location, date, session, totalCost) {
-    return {
-        farmer: sentUser,
-        sprayServices: sendService,
-        date: date,
-        location: location,
-        serviceTimeSlot: session,
-        totalCost: totalCost
-    };
+    return { farmer: sentUser, sprayServices: sendService, date, location, serviceTimeSlot: session, totalCost };
 }
 
 function redirectToServicePage() {
