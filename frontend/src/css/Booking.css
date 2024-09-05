@@ -1,11 +1,9 @@
+/* Navbar brand logo height */
 .navbar-brand img {
     height: 50px;
 }
 
-h2 {
-    margin-bottom: 20px;
-}
-
+/* Hero section styling */
 .hero-image {
     background-image: url('../../public/drone-spray-4.jpeg');
     background-size: cover;
@@ -22,6 +20,7 @@ h2 {
     overflow: hidden;
 }
 
+/* Hero text styling */
 .hero-text {
     position: absolute;
     top: 25%;
@@ -31,14 +30,23 @@ h2 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-.display-4 {
-    font-size: 50px;
-}
-
+/* Booking form container styling */
 .booking-form {
     margin-top: 100px;
 }
 
+/* Display class styling for the hero section */
+.display-4 {
+    font-size: 50px;
+}
+
+/* Map container styling */
+#map {
+    width: 100%;
+    height: 400px;
+}
+
+/* Or-divider styling */
 .or-divider {
     margin: 20px 0;
     position: relative;
@@ -62,6 +70,7 @@ h2 {
     z-index: 0;
 }
 
+/* Call button styling */
 .call-btn {
     padding: 10px 20px;
     border-radius: 20px;
@@ -69,6 +78,7 @@ h2 {
     font-weight: bold;
 }
 
+/* Form input styling */
 .booking-form .form-group {
     margin-bottom: 20px;
     border-radius: 20px;
@@ -82,6 +92,7 @@ h2 {
     font-size: 16px;
 }
 
+/* Submit button styling */
 .form-group.text-center button[type="submit"] {
     border-radius: 20px;
     padding: 10px 20px;

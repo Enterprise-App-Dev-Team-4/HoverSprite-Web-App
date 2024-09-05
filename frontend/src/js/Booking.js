@@ -4,10 +4,14 @@ const apiEndpoint = 'http://localhost:8080/requestOrder';
 const addFarmAPI = 'http://localhost:8080/farm/add-farm';
 const updateServicesAPI = 'http://localhost:8080/services/update';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
+const stripeAPI = 'http://localhost:8080/simulate-visa-payment'
 
 let role = null;  // Ensure role is let, not const, so it can be reassigned
 let sentUser = null;
 let sendService = null;
+
+// Ensure Stripe.js is included in your HTML
+var card;
 
 // Array of session times
 const availableSessions = [
@@ -261,32 +265,173 @@ function setupLocationInputHandler(locationInput) {
     });
 }
 
+// Function to initialize the Stripe card element
+function initializeStripeCardElement() {
+    card = elements.create('card');
+    card.mount('#card-element');  // Mount card element into the div
+}
+
+
 function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect) {
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-
-        // Display the modal with booking details
         showConfirmationModal(areaInput.value, dateInput.value, dateTypeSelect.value, locationInput.value, sessionSelect.value);
     });
 
-    // Handle final confirmation
     document.getElementById("confirmSubmitButton").addEventListener("click", function () {
-        // Finalize the booking request
-        handleDateConversionIfNeeded(dateTypeSelect, dateInput);
-        updateServiceTimeSlots(sessionSelect);
-        const totalCost = calculateTotalCost(areaInput.value);
-
-        const farm = generateFarmObject(areaInput.value, locationInput.value);
-        sendAddFarmRequest(farm);
-        sendRequestUpdateService(sendService);
-
-        const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionSelect.value, totalCost);
-        sendRequestOrder(formData);
-
-        setTimeout(function() {
-            redirectToServicePage();
-        }, 2000); // 2000 milliseconds = 2 seconds
+        // Hide the confirmation modal and show the payment modal
+        const confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+        confirmationModal.hide();
+    
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        paymentModal.show();
     });
+    
+
+    // Handle Visa Payment
+    document.getElementById("payByCardButton").addEventListener("click", function () {
+        const confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+        confirmationModal.hide();
+
+        const visaPaymentModal = new bootstrap.Modal(document.getElementById('visaPaymentModal'));
+        visaPaymentModal.show();
+    });
+
+    document.getElementById("submitVisaPaymentButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        const cardNumber = document.getElementById("cardNumber").value.replace(/\s+/g, ''); // Remove spaces for validation
+        const expiryDate = document.getElementById("expiryDate").value;
+        const cvv = document.getElementById("cvv").value;
+        const totalCost = calculateTotalCost(document.getElementById('area').value);
+    
+        // Front-end validation
+        if (!validateCardNumber(cardNumber)) {
+            document.getElementById('visa-errors').textContent = "Invalid card number.";
+            return;
+        }
+    
+        if (!validateExpiryDate(expiryDate)) {
+            document.getElementById('visa-errors').textContent = "Invalid expiry date.";
+            return;
+        }
+    
+        if (!validateCVV(cvv)) {
+            document.getElementById('visa-errors').textContent = "Invalid CVV.";
+            return;
+        }
+    
+        // Simulate payment by sending data to backend
+        const paymentData = {
+            cardNumber: cardNumber,
+            expiryDate: expiryDate,
+            cvv: cvv,
+            amount: totalCost
+        };
+    
+        fetch(stripeAPI, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                console.log('Payment successful:', data);
+                processBooking(true);  // Trigger booking after successful payment
+            } else {
+                document.getElementById('visa-errors').textContent = "Payment failed: " + data.message;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('visa-errors').textContent = "Payment failed.";
+        });
+    });
+    
+    // Card number formatting
+    document.getElementById("cardNumber").addEventListener("input", function (event) {
+        const cardNumber = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+        event.target.value = cardNumber.replace(/(.{4})/g, '$1 ').trim(); // Add a space every 4 digits
+    });
+    
+    // Expiry date formatting
+    document.getElementById("expiryDate").addEventListener("input", function (event) {
+        const input = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+        if (input.length <= 2) {
+            event.target.value = input; // Only the month
+        } else {
+            event.target.value = input.slice(0, 2) + '/' + input.slice(2, 4); // Format MM/YY
+        }
+    });
+    
+}
+
+// Validation functions
+function validateCardNumber(cardNumber) {
+    // Use Luhn's Algorithm to validate the card number
+    let sum = 0;
+    let shouldDouble = false;
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber[i]);
+
+        if (shouldDouble) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+        }
+
+        sum += digit;
+        shouldDouble = !shouldDouble;
+    }
+    return sum % 10 === 0; // Valid card number should pass this check
+}
+
+function validateExpiryDate(expiryDate) {
+    const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/; // Checks for MM/YY format
+    const currentYear = new Date().getFullYear() % 100; // Get last two digits of current year
+    const currentMonth = new Date().getMonth() + 1; // Get current month
+
+    if (!regex.test(expiryDate)) {
+        return false;
+    }
+
+    const [expMonth, expYear] = expiryDate.split('/').map(num => parseInt(num));
+    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+        return false; // Expired card
+    }
+
+    return true;
+}
+
+function validateCVV(cvv) {
+    return /^\d{3,4}$/.test(cvv); // CVV must be 3 or 4 digits
+}
+
+function processBooking(isCardPayment) {
+    const area = document.getElementById('area').value;
+    const location = document.getElementById('location').value;
+    const date = document.getElementById('date').value;
+    const session = document.getElementById('session').value;
+    const totalCost = calculateTotalCost(area);
+
+    const farm = generateFarmObject(area, location);
+    sendAddFarmRequest(farm);
+    sendRequestUpdateService(sendService);
+
+    const formData = gatherFormData(area, location, date, session, totalCost);
+    
+    if (isCardPayment) {
+        formData.paymentMethod = "card";
+    } else {
+        formData.paymentMethod = "cash";
+    }
+
+    sendRequestOrder(formData);
+    setTimeout(function () {
+        redirectToServicePage();
+    }, 2000);
 }
 
 function showConfirmationModal(area, date, dateType, location, session) {

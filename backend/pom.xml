@@ -116,6 +116,12 @@
     <artifactId>spring-boot-starter-hateoas</artifactId>
 </dependency>
 
+<dependency>
+    <groupId>com.stripe</groupId>
+    <artifactId>stripe-java</artifactId>
+    <version>26.8.0</version>
+</dependency>
+
 
 	</dependencies>
 
