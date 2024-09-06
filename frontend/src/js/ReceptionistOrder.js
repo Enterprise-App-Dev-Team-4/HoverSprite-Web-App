@@ -143,6 +143,29 @@ function createOrderCard(order) {
     }
 }
 
+function openAssignSprayerModal(orderId) {
+    sendRequestWithToken(sprayerApiEndpoint)
+        .then(data => {
+            console.log(data);
+            for(let i = 0; i < data.length; i++)
+            {
+                listSPrayers.push(data[i]);
+            }
+            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.email}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
+            document.getElementById('assignSprayerModalBody').innerHTML = `
+                <div>
+                    <label for="sprayerSelect">Select Sprayer:</label>
+                    <select id="sprayerSelect" class="form-select">
+                        ${sprayerOptions}
+                    </select>
+                </div>
+            `;
+            document.getElementById('assignSprayerModal').style.display = 'block';
+            document.getElementById('assignSprayerModalOrderId').value = orderId;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 // Function to render orders
 function renderOrders() {
     const orderList = document.getElementById('orderList');
