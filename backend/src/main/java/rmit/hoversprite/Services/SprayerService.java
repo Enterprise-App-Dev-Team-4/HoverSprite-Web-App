@@ -60,9 +60,9 @@ public class SprayerService {
         return sprayerRepository.save(updateSprayer);
     }
 
-    public Page<Order> getAllOrder(Pageable pageable)
+    public Page<Order> getAllOrder(Pageable pageable, String sort)
     {
         Sprayer sprayer = getSprayerData();
-        return orderService.findOrderBySprayer(sprayer, pageable);
+        return orderService.findOrderBySprayer(sprayer, pageable, sort);
     }
 }

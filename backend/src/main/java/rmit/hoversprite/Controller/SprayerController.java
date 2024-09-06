@@ -67,10 +67,11 @@ public class SprayerController {
     @GetMapping("sprayerOrder")
     public ResponseEntity<?> sprayerGetOrder(
         @RequestParam(defaultValue = "0") int page, 
-        @RequestParam(defaultValue = "12") int size
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(defaultValue = "status") String sort
     )
     {
-        Page<Order> returnedOrders = sprayerService.getAllOrder(PageRequest.of(page, size));
+        Page<Order> returnedOrders = sprayerService.getAllOrder(PageRequest.of(page, size), sort);
 
         if (returnedOrders.isEmpty()) {
             return ResponseEntity.noContent().build();

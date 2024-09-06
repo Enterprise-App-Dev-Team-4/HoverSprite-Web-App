@@ -4,16 +4,18 @@ let currentPage = 1; // Current page
 const itemsPerPage = 30;
 const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order API
 const confirmOrderAPI = 'http://localhost:8080/sprayerConfirm';
+const completeOrderAPI = 'http://localhost:8080/sprayerComplete'; // Replace with the correct API to complete orders
 const navBarURL = 'http://localhost:8080/sprayer';
 let role = null;
 let isGridView = true;
+let currentSortOrder = 'status'; // Default sort by status
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
-    console.log(role);
     loadNavBar();
     loadFooter();
     getAllOrders();  // Fetch and display orders after the page loads
+    setupEventListeners(); // Add event listeners for sorting and other UI elements
 });
 
 function getUserRoleFromUrl() {
@@ -36,15 +38,27 @@ function loadFooter() {
     content.innerHTML = returnFooter();
 }
 
-function getAllOrders() {
+function getAllOrders(sortOrder = 'status') {
     const page = currentPage - 1; // Backend is 0-indexed
     const size = itemsPerPage;
 
-    const apiUrl = `${orderAPI}?page=${page}&size=${size}`;
+    // Construct the API URL based on the selected sort order
+    let apiUrl = `${orderAPI}?page=${page}&size=${size}`;
+
+    if (sortOrder === 'newest') {
+        apiUrl += '&sort=date,desc';
+    } else if (sortOrder === 'oldest') {
+        apiUrl += '&sort=date,asc';
+    } else if (sortOrder === 'price_low_high') {
+        apiUrl += '&sort=totalCost,asc';
+    } else if (sortOrder === 'price_high_low') {
+        apiUrl += '&sort=totalCost,desc';
+    } else if (sortOrder === 'status') {
+        apiUrl += '&sort=orderStatus,asc';
+    }
 
     sendRequestWithToken(apiUrl)
         .then(data => {
-            // Assuming data contains pagination metadata
             orders = data.content; // List of orders
             totalPages = data.totalPages; // Total number of pages from the backend
             
@@ -136,28 +150,23 @@ function createOrderCard(order) {
     }
 }
 
-
-
-
 function completeOrder(orderId) {
     console.log(`Order #${orderId} marked as completed.`);
     
     // Update the order on the server to mark as "COMPLETED"
-    const completeOrderURL = `${confirmOrderAPI}?orderID=${encodeURIComponent(orderId)}&status=COMPLETED`;
+    const completeOrderURL = `${completeOrderAPI}?orderID=${encodeURIComponent(orderId)}&status=COMPLETED`;
     sendRequestWithToken(completeOrderURL, 'PUT') // Assuming you have an endpoint to mark it as complete
         .then(data => {
             console.log(data);
             alert(`Order #${orderId} has been marked as completed.`);
-            getAllOrders(); // Refresh the orders list to reflect the updated status
+            getAllOrders(currentSortOrder); // Refresh the orders list to reflect the updated status
         })
         .catch(error => console.error('Error completing the order:', error));
 }
 
-
 function confirmOrder(orderId) {
     console.log(orderId);
     if (orderId) {
-        
         // Update the order on the server
         sendOrderUpdateToServer(orderId);
 
@@ -229,7 +238,18 @@ function renderPagination() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             currentPage = parseInt(e.target.dataset.page);
-            getAllOrders(); // Fetch orders for the selected page
+            getAllOrders(currentSortOrder); // Fetch orders for the selected page with current sorting
         });
     });
 }
+
+function setupEventListeners() {
+    document.getElementById('sortOrder').addEventListener('change', function() {
+        currentSortOrder = this.value; // Set the current sorting order
+        getAllOrders(currentSortOrder); // Fetch orders with the selected sort order
+    });
+}
+
+// Initialize the page
+getAllOrders();
+setupEventListeners();

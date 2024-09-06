@@ -84,8 +84,31 @@ public class OrderService {
     }
     // public Order saveFeedbackToOrder()
 
-    public Page<Order> findOrderBySprayer(Sprayer sprayer, Pageable pageable)
+    public Page<Order> findOrderBySprayer(Sprayer sprayer, Pageable pageable, String sort)
     {
-        return orderRepository.findBySprayers(sprayer, pageable);
+        Sort sortBy;
+            System.out.println(sort);
+            switch (sort) {
+                case "date,desc":
+                    sortBy = Sort.by(Sort.Order.desc("date"));
+                    break;
+                case "date,asc":
+                    sortBy = Sort.by(Sort.Order.asc("date"));
+                    break;
+                case "totalCost,asc":
+                    sortBy = Sort.by(Sort.Order.asc("totalCost"));
+                    break;
+                case "totalCost,desc":
+                    sortBy = Sort.by(Sort.Order.desc("totalCost"));
+                    break;
+                default:  // Default sorting by status
+                    sortBy = Sort.by(
+                        Sort.Order.desc("orderStatus")
+                        .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last
+                    );
+                    break;
+            }
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
+        return orderRepository.findBySprayers(sprayer, sortedPageable);
     }
 }
