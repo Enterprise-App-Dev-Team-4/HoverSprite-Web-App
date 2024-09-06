@@ -1,6 +1,7 @@
 const logoutAPI = 'http://localhost:8080/log-out';
 var user = null;
 var user_role = null;
+
 function returnNavBar(data, role) {
     console.log('hello navbar');
     user = data;
@@ -36,14 +37,32 @@ function returnNavBar(data, role) {
                     ${servicesTab}  <!-- Services tab is conditionally rendered -->
                     <a class="nav-link" href="${orderUrl}?role=${encodeURIComponent(role)}">Orders</a>
                 </div>
-                <div class="dropdown ms-auto">
-                    <button class="btn profile-dropdown" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src=${data.profileImage} alt="Profile" class="rounded-circle" style="width: 40px;"> ${data.fullName}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="/profile?role=${encodeURIComponent(role)}"><i class="bi bi-person-circle me-2"></i>View Profile</a></li>
-                        <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                    </ul>
+
+                <!-- Notification Icon with Dropdown -->
+                <div class="ms-auto d-flex align-items-center">
+                    <div class="dropdown">
+                        <button class="btn notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bell" id="bell-icon-empty"></i> <!-- Empty bell icon initially -->
+                            <i class="bi bi-bell-fill d-none" id="bell-icon-filled"></i> <!-- Filled bell icon, hidden initially -->
+                            <span class="badge bg-danger" id="notification-count">3</span> <!-- Badge for notification count -->
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                            <li><a class="dropdown-item" href="#">Notification 1</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 2</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 3</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown ms-3">
+                        <button class="btn profile-dropdown" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src=${data.profileImage} alt="Profile" class="rounded-circle" style="width: 40px;"> ${data.fullName}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile?role=${encodeURIComponent(role)}"><i class="bi bi-person-circle me-2"></i>View Profile</a></li>
+                            <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,6 +104,44 @@ function returnNavBar(data, role) {
         .dropdown-menu {
             min-width: auto; /* Adjust dropdown width */
         }
+
+        /* Styling for the notification bell */
+        .notification-btn {
+            background-color: transparent;
+            border: none;
+            position: relative;
+        }
+        .notification-btn .bi-bell, .notification-btn .bi-bell-fill {
+            font-size: 1.5rem;
+            color: black;
+            transition: transform 0.3s ease; /* Add smooth animation */
+        }
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%);
+            font-size: 0.75rem;
+        }
+
+        /* Dropdown adjustments */
+        .dropdown-menu {
+            top: 70px !important; /* Adjusted positioning to appear below the bell */
+        }
+
+        /* Bell shake animation when clicked */
+        .bell-animate {
+            animation: shake 0.6s; /* Animation duration */
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
     `;
 }
@@ -102,6 +159,7 @@ function activeClick() {
         });
     });
     console.log("Hello");
+
     // Add an event listener for the logout link
     const logoutLink = document.getElementById('logout-link');
     console.log('Logout link:', logoutLink); // Add this to check if logout-link is correctly selected
@@ -128,6 +186,29 @@ function activeClick() {
         });
     }
 
+    // Add event listener for bell icon animation and icon switch
+    const bellIconEmpty = document.getElementById('bell-icon-empty');
+    const bellIconFilled = document.getElementById('bell-icon-filled');
+    const notificationCount = document.getElementById('notification-count');
+    
+    if (bellIconEmpty) {
+        bellIconEmpty.addEventListener('click', function () {
+            // Swap icons: hide the empty bell, show the filled one
+            bellIconEmpty.classList.add('d-none');
+            bellIconFilled.classList.remove('d-none');
+            
+            // Clear the notification count
+            notificationCount.classList.add('d-none');
+            
+            // Add bell shake animation
+            bellIconFilled.classList.add('bell-animate');
+            
+            // Remove the animation class after it completes
+            setTimeout(function () {
+                bellIconFilled.classList.remove('bell-animate');
+            }, 600);
+        });
+    }
 }
 
 returnNavBar();
