@@ -48,6 +48,10 @@ public class ReceptionistService {
 
     public Page<Order> receptionistHandleAllOrder(Pageable pageable, String sort)
     {
+        if(getReceptionistData() == null)
+        {
+            return null;
+        }
         return receptionistOrderService.getAllOrders(pageable, sort);
     }
 
