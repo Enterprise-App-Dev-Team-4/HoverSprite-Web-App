@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.Order.Order;
@@ -51,9 +53,34 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Page<Order> findOrderByFarmer(Farmer farmer, Pageable pageable)
+    public Page<Order> findOrderByFarmer(Farmer farmer, Pageable pageable, String sort)
     {
-        return orderRepository.findByFarmer(farmer, pageable);
+        Sort sortBy;
+            System.out.println(sort);
+            switch (sort) {
+                case "date,desc":
+                    sortBy = Sort.by(Sort.Order.desc("date"));
+                    break;
+                case "date,asc":
+                    sortBy = Sort.by(Sort.Order.asc("date"));
+                    break;
+                case "totalCost,asc":
+                    sortBy = Sort.by(Sort.Order.asc("totalCost"));
+                    break;
+                case "totalCost,desc":
+                    sortBy = Sort.by(Sort.Order.desc("totalCost"));
+                    break;
+                default:  // Default sorting by status
+                    sortBy = Sort.by(
+                        Sort.Order.desc("orderStatus")
+                        .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last
+                    );
+                    break;
+            }
+    
+        // Combine pageable and sort order
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
+        return orderRepository.findByFarmer(farmer, sortedPageable);
     }
     // public Order saveFeedbackToOrder()
 

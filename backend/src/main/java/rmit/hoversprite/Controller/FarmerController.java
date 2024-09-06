@@ -111,10 +111,12 @@ public class FarmerController {
     @GetMapping("order/all")
     public ResponseEntity<?> farmerGetAllOrder(
         @RequestParam(defaultValue = "0") int page, 
-        @RequestParam(defaultValue = "12") int size) {
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(defaultValue = "status") String sort) {
         System.out.println("get data:");
         try {
-            Page<Order> listOrder = farmerService.farmerGetAllOrder(PageRequest.of(page, size));
+
+            Page<Order> listOrder = farmerService.farmerGetAllOrder(PageRequest.of(page, size), sort);
 
             if (listOrder.isEmpty()) {
                 return ResponseEntity.noContent().build();

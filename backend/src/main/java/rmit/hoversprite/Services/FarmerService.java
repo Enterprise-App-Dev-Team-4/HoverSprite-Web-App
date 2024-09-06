@@ -94,10 +94,10 @@ public class FarmerService {
         return savedOrder;
     }
 
-    public Page<Order> farmerGetAllOrder(Pageable pageable)
+    public Page<Order> farmerGetAllOrder(Pageable pageable, String sort)
     {
         Farmer requestFarmer = farmerRepository.findByEmail(getFarmerData().getEmail());
-        return orderService.findOrderByFarmer(requestFarmer, pageable);
+        return orderService.findOrderByFarmer(requestFarmer, pageable, sort);
     }
 
     public Order farmerGetOrderById(String orderID)
