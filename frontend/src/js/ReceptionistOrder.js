@@ -1,22 +1,22 @@
 let orders = [];
 const itemsPerPage = 12;
 let currentPage = 1;
+let totalPages = 0;
 let isGridView = true;
 let role = null;
-let listSPrayers = [];
+let currentSortOrder = 'status'; // Default sorting by order status
 
 // API Endpoints
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
-const sprayerApiEndpoint = 'http://localhost:8080/allSprayer'; // Assuming this is the correct endpoint for sprayers
 const navBarURL = 'http://localhost:8080/receptionist';
-const receptionistHandleOrderAPI = 'http://localhost:8080/orderStatus';
-const assignSprayerAPI = 'http://localhost:8080/assign';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
     loadNavBar();
     loadFooter();
     getAllOrder();  // Fetch and display orders after the page loads
+    setupSortEventListeners();  // Setup sorting event listeners
+    setupToggleViewListener();  // Setup grid/list view toggle
 });
 
 function getUserRoleFromUrl() {
@@ -26,14 +26,12 @@ function getUserRoleFromUrl() {
 
 function loadNavBar() {
     const content = document.getElementById("navbar-container");
-    console.log(role);
     sendRequestWithToken(navBarURL)
         .then(data => {
             content.innerHTML = returnNavBar(data, role);
             activeClick();  // Initialize event listeners after rendering the navbar
-        })  // Pass role to returnNavBar
+        })
         .catch(error => console.error(error));
-    activeClick();
 }
 
 function loadFooter() {
@@ -41,37 +39,48 @@ function loadFooter() {
     content.innerHTML = returnFooter();
 }
 
-
-function getAllOrder() {
-    const page = currentPage - 1; 
+// Fetch all orders with sorting logic
+function getAllOrder(sortOrder = 'status') {
+    const page = currentPage - 1;
     const size = itemsPerPage;
-    
-    const apiUrl = `${orderApiEndpoint}?page=${page}&size=${size}`;
-    
+
+    // Modify the API request URL based on the current sort order
+    let apiUrl = `${orderApiEndpoint}?page=${page}&size=${size}`;
+
+    if (sortOrder === 'newest') {
+        apiUrl += '&sort=date,desc';
+    } else if (sortOrder === 'oldest') {
+        apiUrl += '&sort=date,asc';
+    } else if (sortOrder === 'price_low_high') {
+        apiUrl += '&sort=totalCost,asc';
+    } else if (sortOrder === 'price_high_low') {
+        apiUrl += '&sort=totalCost,desc';
+    } else if (sortOrder === 'status') {
+        apiUrl += '&sort=status';
+    }
+
+    console.log(apiUrl);
     sendRequestWithToken(apiUrl)
-    .then(data => {
-        // Assuming the response includes both the paginated content and metadata such as total pages, total elements, etc.
-        orders = data.content; // Update orders to reflect the content from the backend
-        totalOrders = data.totalElements; // Total number of orders, used for pagination
-        totalPages = data.totalPages; // Total number of pages for the current dataset
-        
-        renderOrders(); // Render orders after they are fetched
-    })
-    .catch(error => {
-        console.error('Error fetching orders:', error);
-    });
+        .then(data => {
+            orders = data.content; // Update orders with backend content
+            totalOrders = data.totalElements; // Total orders for pagination
+            totalPages = data.totalPages; // Total pages from backend
+            
+            renderOrders(); // Render orders after fetching
+        })
+        .catch(error => {
+            console.error('Error fetching orders:', error);
+        });
 }
 
-
+// Function to create an order card
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
-    // Only show the "Assign Sprayer" button if the order status is "CONFIRMED"
     const assignSprayerButton = order.orderStatus === 'CONFIRMED' 
         ? `<button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal('${order.orderID}')">Assign Sprayer</button>`
         : '';
 
-    // Hide the "Change Status" button if the status is ASSIGNED, IN_PROGRESS, or COMPLETED
     const hideChangeStatusButton = ['ASSIGNED', 'IN_PROGRESS', 'COMPLETED'].includes(order.orderStatus);
     const changeStatusButton = !hideChangeStatusButton 
         ? `<button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>` 
@@ -91,12 +100,10 @@ function createOrderCard(order) {
                             <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>
                     </div>
-                    <div class="card-footer bg-transparent border-0">
-                        <div class="d-flex flex-wrap gap-2">
-                            ${viewDetailsButton}
-                            ${changeStatusButton} <!-- Conditionally rendered Change Status button -->
-                            ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
-                        </div>
+                    <div class="card-footer bg-transparent border-0 d-flex flex-wrap gap-2">
+                        ${viewDetailsButton}
+                        ${changeStatusButton}
+                        ${assignSprayerButton}
                     </div>
                 </div>
             </div>
@@ -115,7 +122,7 @@ function createOrderCard(order) {
                                 <strong>Date:</strong> ${order.date}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
-                                <strong>Crop:</strong> ${order.sprayServices.cropType}
+                                <strong>Crop:</strong> ${order.cropType}
                             </div>
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Location:</strong> ${order.location}
@@ -125,8 +132,8 @@ function createOrderCard(order) {
                             </div>
                             <div class="col-12 d-flex flex-wrap gap-2">
                                 ${viewDetailsButton}
-                                ${changeStatusButton} <!-- Conditionally rendered Change Status button -->
-                                ${assignSprayerButton} <!-- Assign Sprayer button conditionally rendered -->
+                                ${changeStatusButton}
+                                ${assignSprayerButton}
                             </div>
                         </div>
                     </div>
@@ -136,37 +143,14 @@ function createOrderCard(order) {
     }
 }
 
-
-
-
-const toggleViewBtn = document.getElementById('toggleViewBtn');
-toggleViewBtn.addEventListener('click', () => {
-    isGridView = !isGridView;
-    toggleViewBtn.innerHTML = isGridView ? '<i class="bi bi-list"></i> List View' : '<i class="bi bi-grid"></i> Grid View';
-    renderOrders();
-});
-
-function getStatusColor(status) {
-    switch (status) {
-        case 'COMPLETED': return 'success';
-        case 'IN_PROGRESS': return 'primary';
-        case 'CONFIRMED': return 'info';
-        case 'ASSIGNED': return 'warning';
-        case 'CANCELLED': return 'danger';
-        default: return 'secondary';
-    }
-}
-
+// Function to render orders
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    
-    // Render the order cards directly from the `orders` array which already contains paginated data
     orderList.innerHTML = orders.map(createOrderCard).join('');
-    
-    renderPagination(); // Update pagination controls
+    renderPagination(); // Update pagination
 }
 
-
+// Function to render pagination
 function renderPagination() {
     const pagination = document.getElementById('pagination');
     let paginationHTML = '';
@@ -181,219 +165,43 @@ function renderPagination() {
 
     pagination.innerHTML = paginationHTML;
 
-    // Add event listener to pagination links
     pagination.addEventListener('click', (e) => {
         e.preventDefault();
         if (e.target.tagName === 'A') {
             currentPage = parseInt(e.target.dataset.page);
-            getAllOrder(); // Fetch orders for the selected page
+            getAllOrder(currentSortOrder); // Fetch orders for the selected page with current sorting
         }
     });
 }
 
-
-function filterOrders() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const statusFilter = document.getElementById('statusFilter').value;
-    const dateFilter = document.getElementById('dateFilter').value;
-
-    const filteredOrders = orders.filter(order => {
-        const matchesSearch = order.orderID.toString().includes(searchTerm) ||
-            order.sprayServices.cropType.toLowerCase().includes(searchTerm);
-        const matchesStatus = statusFilter === '' || order.orderStatus === statusFilter;
-        const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
-
-        return matchesSearch && matchesStatus && matchesDate;
+// Setup event listeners for sort dropdown
+function setupSortEventListeners() {
+    const sortOrderSelect = document.getElementById('sortOrder');
+    sortOrderSelect.addEventListener('change', function() {
+        currentSortOrder = this.value; // Set the selected sorting order
+        getAllOrder(currentSortOrder); // Fetch orders with the selected sort order
     });
-
-    currentPage = 1;
-    orders = filteredOrders;
-    renderOrders();
 }
 
-function matchesDateFilter(orderDate, filter) {
-    const date = new Date(orderDate);
-    const now = new Date();
-    switch (filter) {
-        case 'today':
-            return date.toDateString() === now.toDateString();
-        case 'this_week':
-            const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
-            return date >= weekStart;
-        case 'this_month':
-            return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-        case 'last_month':
-            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-            return date >= lastMonth && date <= lastMonthEnd;
-        default:
-            return true;
-    }
-}
-
-// Dark mode toggle
-const toggleModeBtn = document.getElementById('toggleModeBtn');
-toggleModeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    toggleModeBtn.innerHTML = isDarkMode ? '<i class="bi bi-sun"></i> Light Mode' : '<i class="bi bi-moon"></i> Dark Mode';
-});
-
-// Back to Top button
-const backToTopBtn = document.getElementById('backToTop');
-window.onscroll = function () {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopBtn.style.display = "block";
-    } else {
-        backToTopBtn.style.display = "none";
-    }
-};
-
-backToTopBtn.addEventListener('click', () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-});
-
-function sendOrderUpdateToServer(order)
-{
-    const body = {
-        order: order
-    }
-    console.log(body.order.orderStatus);
-    sendRequestWithToken(receptionistHandleOrderAPI, 'PUT', body)
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.change-status-button')) {
-            const orderId = event.target.getAttribute('data-order-id');
-            openStatusModal(orderId);
-        }
-    });
-});
-
-function openStatusModal(orderId) {
-    document.getElementById('statusModalOrderId').value = orderId;
-    document.getElementById('statusModal').style.display = 'block';
-    console.log(orderId);
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const changeStatusButton = document.querySelector('.btn.btn-primary');
-
-    if (changeStatusButton) {
-        changeStatusButton.addEventListener('click', changeOrderStatus);
-    }
-});
-
-function changeOrderStatus() {
-    const orderId = document.getElementById('statusModalOrderId').value;
-    const newStatus = document.getElementById('statusSelect').value;
-
-    const order = orders.find(o => o.orderID == orderId);
-    console.log(orderId);
-    if (order) {
-        console.log("ok");
-        order.orderStatus = newStatus.toUpperCase();
+// Toggle between grid and list view
+function setupToggleViewListener() {
+    const toggleViewBtn = document.getElementById('toggleViewBtn');
+    toggleViewBtn.addEventListener('click', () => {
+        isGridView = !isGridView;
+        toggleViewBtn.innerHTML = isGridView ? '<i class="bi bi-list"></i> List View' : '<i class="bi bi-grid"></i> Grid View';
         renderOrders();
-        sendStatusChangeEmail(orderId, newStatus);
-        sendOrderUpdateToServer(order);
-    }
-    document.getElementById('statusModal').style.display = 'none';
+    });
 }
 
-function sendStatusChangeEmail(orderId, status) {
+// Function to return status color for badges
+function getStatusColor(status) {
     switch (status) {
-        case 'pending':
-            console.log(`Email: Order #${orderId} is now pending.`);
-            break;
-        case 'cancelled':
-            console.log(`Email: Order #${orderId} has been cancelled.`);
-            break;
-        case 'confirmed':
-            console.log(`Email: Order #${orderId} has been confirmed.`);
-            break;
-        case 'assigned':
-            console.log(`Email: Order #${orderId} has been assigned to sprayer(s).`);
-            break;
-        default:
-            console.log(`Email: Status of order #${orderId} has been changed to ${status}.`);
-            break;
+        case 'COMPLETED': return 'success';
+        case 'IN_PROGRESS': return 'primary';
+        case 'CONFIRMED': return 'info';
+        case 'ASSIGNED': return 'warning';
+        case 'CANCELLED': return 'danger';
+        default: return 'secondary';
     }
 }
-
-function openAssignSprayerModal(orderId) {
-    sendRequestWithToken(sprayerApiEndpoint)
-        .then(data => {
-            console.log(data);
-            for(let i = 0; i < data.length; i++)
-            {
-                listSPrayers.push(data[i]);
-            }
-            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.email}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
-            document.getElementById('assignSprayerModalBody').innerHTML = `
-                <div>
-                    <label for="sprayerSelect">Select Sprayer:</label>
-                    <select id="sprayerSelect" class="form-select">
-                        ${sprayerOptions}
-                    </select>
-                </div>
-            `;
-            document.getElementById('assignSprayerModal').style.display = 'block';
-            document.getElementById('assignSprayerModalOrderId').value = orderId;
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function assignSprayer() {
-    const orderId = document.getElementById('assignSprayerModalOrderId').value;
-    const sprayerEmail = document.getElementById('sprayerSelect').value;
-
-    // Find the sprayer in the listSprayers array by email
-    const selectedSprayer = listSPrayers.find(sprayer => sprayer.email === sprayerEmail);
-    
-    if (!selectedSprayer) {
-        console.error('Sprayer not found');
-        return;
-    }
-
-    const sprayerName = `${selectedSprayer.fullName}`;
-
-    // Prepare the request body to be sent to the backend
-    const request = {
-        'orderID': orderId,
-        'sprayers': [selectedSprayer] // Assuming your backend expects an array of sprayer objects
-    };
-    console.log(request.sprayers);
-    // Send the assignment request to the backend
-    sendRequestWithToken(assignSprayerAPI, 'POST', request)
-        .then(response => {
-            console.log('Sprayer assigned successfully:', response);
-
-            // Update the local orders array
-            // const order = orders.find(o => o.orderID == orderId);
-            // if (order) {
-            //     if (!order.assignedSprayers) {
-            //         order.assignedSprayers = [];
-            //     }
-            //     order.assignedSprayers.push(sprayerName);
-            //     order.orderStatus = 'ASSIGNED';
-            // }
-
-            renderOrders(); // Re-render orders after assignment
-            document.getElementById('assignSprayerModal').style.display = 'none';
-            console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
-        })
-        .catch(error => {
-            console.error('Error assigning sprayer:', error);
-        });
-}
-
-
-console.log('Orders:', orders);
-console.log('Current Page:', currentPage);
+getAllOrder();

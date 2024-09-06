@@ -42,6 +42,15 @@
         <div class="row mb-4">
             <div class="col-md-6 mx-auto">
                 <div class="d-flex justify-content-between">
+
+                    <select class="form-select me-2" id="sortOrder">
+                        <option value="status">By Order Status</option> <!-- Default to sort by status -->
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price_low_high">Price: Low to High</option>
+                        <option value="price_high_low">Price: High to Low</option>
+                    </select>
+
                     <select class="form-select me-2" id="statusFilter">
                         <option value="">All Statuses</option>
                         <option value="pending">Pending</option>

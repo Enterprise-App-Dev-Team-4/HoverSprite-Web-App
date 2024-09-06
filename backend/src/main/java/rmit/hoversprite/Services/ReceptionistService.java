@@ -46,9 +46,9 @@ public class ReceptionistService {
         return receptionistRepository.save(updateReceptionist);
     }
 
-    public Page<Order> receptionistHandleAllOrder(Pageable pageable)
+    public Page<Order> receptionistHandleAllOrder(Pageable pageable, String sort)
     {
-        return receptionistOrderService.getAllOrders(pageable);
+        return receptionistOrderService.getAllOrders(pageable, sort);
     }
 
     public Order receptionistHandleSpecificOrder(Order order)

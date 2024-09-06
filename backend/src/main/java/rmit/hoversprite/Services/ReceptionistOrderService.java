@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -17,9 +19,32 @@ public class ReceptionistOrderService {
     @Autowired
     DBOrderRepository orderRepository;
 
-    public Page<Order> getAllOrders(Pageable pageable)
+    public Page<Order> getAllOrders(Pageable pageable, String sort)
     {
-        return orderRepository.findAll(pageable);
+        Sort sortBy;
+            System.out.println(sort);
+            switch (sort) {
+                case "date,desc":
+                    sortBy = Sort.by(Sort.Order.desc("date"));
+                    break;
+                case "date,asc":
+                    sortBy = Sort.by(Sort.Order.asc("date"));
+                    break;
+                case "totalCost,asc":
+                    sortBy = Sort.by(Sort.Order.asc("totalCost"));
+                    break;
+                case "totalCost,desc":
+                    sortBy = Sort.by(Sort.Order.desc("totalCost"));
+                    break;
+                default:  // Default sorting by status
+                    sortBy = Sort.by(
+                        Sort.Order.desc("orderStatus")
+                        .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last
+                    );
+                    break;
+            }
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
+        return orderRepository.findAll(sortedPageable);
     }
 
     @Transactional

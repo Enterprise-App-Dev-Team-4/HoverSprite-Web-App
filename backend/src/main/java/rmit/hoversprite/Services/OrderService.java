@@ -56,7 +56,6 @@ public class OrderService {
     public Page<Order> findOrderByFarmer(Farmer farmer, Pageable pageable, String sort)
     {
         Sort sortBy;
-            System.out.println(sort);
             switch (sort) {
                 case "date,desc":
                     sortBy = Sort.by(Sort.Order.desc("date"));
@@ -71,6 +70,8 @@ public class OrderService {
                     sortBy = Sort.by(Sort.Order.desc("totalCost"));
                     break;
                 default:  // Default sorting by status
+                    System.out.println("Status");
+
                     sortBy = Sort.by(
                         Sort.Order.desc("orderStatus")
                         .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last

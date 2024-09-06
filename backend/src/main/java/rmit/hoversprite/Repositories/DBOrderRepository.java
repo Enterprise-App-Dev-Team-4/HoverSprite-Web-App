@@ -17,4 +17,5 @@ public interface DBOrderRepository extends JpaRepository<Order, String>{
     Page<Order> findByFarmer(Farmer farmer, Pageable pageable);
 
     Page<Order> findBySprayers(Sprayer sprayer, Pageable pageable);
+    
 }

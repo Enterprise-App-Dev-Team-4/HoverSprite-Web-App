@@ -78,10 +78,11 @@ public class ReceptionistController {
    @GetMapping("receptionistOrder")
 public ResponseEntity<?> receptionistGetAllOrder(
         @RequestParam(defaultValue = "0") int page, 
-        @RequestParam(defaultValue = "12") int size) { // Default page size is now 12
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(defaultValue = "status") String sort) { // Default page size is now 12
     
     try {
-        Page<Order> orderPage = receptionistService.receptionistHandleAllOrder(PageRequest.of(page, size));
+        Page<Order> orderPage = receptionistService.receptionistHandleAllOrder(PageRequest.of(page, size), sort);
 
         if (orderPage.isEmpty()) {
             return ResponseEntity.noContent().build();
