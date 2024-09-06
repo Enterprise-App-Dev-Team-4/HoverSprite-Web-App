@@ -6,11 +6,13 @@ let isGridView = true;
 let role = null;
 let currentSortOrder = 'status'; // Default sorting by order status
 let listSPrayers = [];
+
 // API Endpoints
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
 const navBarURL = 'http://localhost:8080/receptionist';
-const sprayerApiEndpoint = 'http://localhost:8080/allSprayer'
-
+const sprayerApiEndpoint = 'http://localhost:8080/allSprayer';
+const receptionistHandleOrderAPI = 'http://localhost:8080/orderStatus';
+const assignSprayerAPI = 'http://localhost:8080/assign';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
@@ -46,7 +48,6 @@ function getAllOrder(sortOrder = 'status') {
     const page = currentPage - 1;
     const size = itemsPerPage;
 
-    // Modify the API request URL based on the current sort order
     let apiUrl = `${orderApiEndpoint}?page=${page}&size=${size}`;
 
     if (sortOrder === 'newest') {
@@ -61,12 +62,11 @@ function getAllOrder(sortOrder = 'status') {
         apiUrl += '&sort=status';
     }
 
-    console.log(apiUrl);
     sendRequestWithToken(apiUrl)
         .then(data => {
-            orders = data.content; // Update orders with backend content
-            totalOrders = data.totalElements; // Total orders for pagination
-            totalPages = data.totalPages; // Total pages from backend
+            orders = data.content;
+            totalOrders = data.totalElements;
+            totalPages = data.totalPages;
             
             renderOrders(); // Render orders after fetching
         })
@@ -145,6 +145,50 @@ function createOrderCard(order) {
     }
 }
 
+function assignSprayer() {
+    const orderId = document.getElementById('assignSprayerModalOrderId').value;
+    const sprayerEmail = document.getElementById('sprayerSelect').value;
+
+    // Find the sprayer in the listSprayers array by email
+    const selectedSprayer = listSPrayers.find(sprayer => sprayer.email === sprayerEmail);
+    
+    if (!selectedSprayer) {
+        console.error('Sprayer not found');
+        return;
+    }
+
+    const sprayerName = `${selectedSprayer.fullName}`;
+
+    // Prepare the request body to be sent to the backend
+    const request = {
+        'orderID': orderId,
+        'sprayers': [selectedSprayer] // Assuming your backend expects an array of sprayer objects
+    };
+    console.log(request.sprayers);
+    // Send the assignment request to the backend
+    sendRequestWithToken(assignSprayerAPI, 'POST', request)
+        .then(response => {
+            console.log('Sprayer assigned successfully:', response);
+
+            // Update the local orders array
+            // const order = orders.find(o => o.orderID == orderId);
+            // if (order) {
+            //     if (!order.assignedSprayers) {
+            //         order.assignedSprayers = [];
+            //     }
+            //     order.assignedSprayers.push(sprayerName);
+            //     order.orderStatus = 'ASSIGNED';
+            // }
+
+            renderOrders(); // Re-render orders after assignment
+            document.getElementById('assignSprayerModal').style.display = 'none';
+            console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
+        })
+        .catch(error => {
+            console.error('Error assigning sprayer:', error);
+        });
+}
+
 function openAssignSprayerModal(orderId) {
     sendRequestWithToken(sprayerApiEndpoint)
         .then(data => {
@@ -168,14 +212,52 @@ function openAssignSprayerModal(orderId) {
         .catch(error => console.error('Error:', error));
 }
 
-// Function to render orders
+// Open the status change modal
+function openStatusModal(orderId) {
+    document.getElementById('statusModalOrderId').value = orderId;
+    document.getElementById('statusModal').style.display = 'block';
+}
+
+// Change the order status
+function changeOrderStatus() {
+    const orderId = document.getElementById('statusModalOrderId').value;
+    const newStatus = document.getElementById('statusSelect').value;
+    console.log(newStatus);
+    const order = orders.find(o => o.orderID == orderId);
+    if (order) {
+        order.orderStatus = newStatus.toUpperCase();
+        renderOrders();
+        sendOrderUpdateToServer(order);
+    }
+    document.getElementById('statusModal').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const changeStatusButton = document.querySelector('.btn.btn-primary');
+
+    if (changeStatusButton) {
+        changeStatusButton.addEventListener('click', changeOrderStatus);
+    }
+});
+
+// Send order update to the server
+function sendOrderUpdateToServer(order) {
+    const body = { order: order };
+    sendRequestWithToken(receptionistHandleOrderAPI, 'PUT', body)
+        .then(data => {
+            console.log('Order status updated:', data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Render the orders
 function renderOrders() {
     const orderList = document.getElementById('orderList');
     orderList.innerHTML = orders.map(createOrderCard).join('');
     renderPagination(); // Update pagination
 }
 
-// Function to render pagination
+// Render pagination
 function renderPagination() {
     const pagination = document.getElementById('pagination');
     let paginationHTML = '';
@@ -203,8 +285,8 @@ function renderPagination() {
 function setupSortEventListeners() {
     const sortOrderSelect = document.getElementById('sortOrder');
     sortOrderSelect.addEventListener('change', function() {
-        currentSortOrder = this.value; // Set the selected sorting order
-        getAllOrder(currentSortOrder); // Fetch orders with the selected sort order
+        currentSortOrder = this.value;
+        getAllOrder(currentSortOrder);
     });
 }
 
@@ -218,6 +300,14 @@ function setupToggleViewListener() {
     });
 }
 
+// Setup event listener for status change button clicks
+document.addEventListener('click', function (event) {
+    if (event.target.matches('.change-status-button')) {
+        const orderId = event.target.getAttribute('data-order-id');
+        openStatusModal(orderId);
+    }
+});
+
 // Function to return status color for badges
 function getStatusColor(status) {
     switch (status) {
@@ -229,4 +319,3 @@ function getStatusColor(status) {
         default: return 'secondary';
     }
 }
-getAllOrder();
