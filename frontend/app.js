@@ -95,7 +95,7 @@ app.get('/sprayer-order-detail/:id', (req, res) => {
     res.sendFile(sprayerOrderDetailPath);
 });
 
-app.get('/feed-back', (req, res) => { // add real id to feedback
+app.get('/feed-back/:id', (req, res) => { // add real id to feedback
     res.sendFile(orderFeedBackPath);
 })
 
