@@ -5,10 +5,12 @@ let totalPages = 0;
 let isGridView = true;
 let role = null;
 let currentSortOrder = 'status'; // Default sorting by order status
-
+let listSPrayers = [];
 // API Endpoints
 const orderApiEndpoint = 'http://localhost:8080/receptionistOrder';
 const navBarURL = 'http://localhost:8080/receptionist';
+const sprayerApiEndpoint = 'http://localhost:8080/allSprayer'
+
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
