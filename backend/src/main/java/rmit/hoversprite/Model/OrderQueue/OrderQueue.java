@@ -9,7 +9,7 @@ import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Sprayer;
 
-@Entity(name = "orderQueue")
+@Entity(name = "order_queue")
 @Table(schema = "farmer_detail")
 public class OrderQueue {
 
@@ -24,14 +24,19 @@ public class OrderQueue {
     @JoinColumn(name = "farmer_id")
     private Farmer farmer;
 
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     // Default Constructor
     public OrderQueue() {}
 
     // Parameterized Constructor
-    public OrderQueue(String queueID, Sprayer sprayer, Farmer farmer) {
+    public OrderQueue(String queueID, Sprayer sprayer, Farmer farmer, Order order) {
         this.queueID = queueID;
         this.sprayer = sprayer;
         this.farmer = farmer;
+        this.order = order;
     }
 
     // Getter and Setter for queueID
@@ -41,6 +46,16 @@ public class OrderQueue {
 
     public void setQueueID(String queueID) {
         this.queueID = queueID;
+    }
+
+    public void setOrder(Order order)
+    {
+        this.order = order;
+    }
+
+    public Order getOrder()
+    {
+        return this.order;
     }
 
     // Getter and Setter for sprayer

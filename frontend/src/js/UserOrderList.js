@@ -6,6 +6,7 @@ let totalPages = 0;
 let role = null;
 let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
+const orderQueueCheckAPI = 'http://localhost:8080/checkOrderQueue';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
@@ -19,6 +20,23 @@ function getUserRoleFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get('role');
 }
+
+// Modify checkOrderQueue to enable Complete buttons when data is received
+function checkOrderQueue(orderID) {
+    return sendRequestWithToken(`${orderQueueCheckAPI}?orderID=${encodeURIComponent(orderID)}`)
+    .then(data => {
+        if (data != null) {
+            console.log(data);
+            return true; // Can complete order
+        }
+        return false; // Cannot complete order
+    })
+    .catch(error => {
+        console.error(error);
+        return false; // Fail-safe in case of error
+    });
+}
+
 
 function loadNavBar() {
     const content = document.getElementById("navbar-container");
@@ -66,8 +84,20 @@ function getAllOrder(sortOrder = 'status') {
         });
 }
 
+// Add the "Complete" button and initialize it as disabled
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
+    
+    // Initially no complete button rendered here
+    let completeButton = ''; 
+    
+    // Check the order queue and render the "Complete" button only if needed
+    checkOrderQueue(order.orderID).then((canComplete) => {
+        if (canComplete) {
+            const completeBtnHtml = `<button id="complete-btn-${order.orderID}" class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>`;
+            document.getElementById(`order-footer-${order.orderID}`).innerHTML += completeBtnHtml;
+        }
+    });
 
     if (isGridView) {
         return `
@@ -83,7 +113,7 @@ function createOrderCard(order) {
                             <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                         </p>
                     </div>
-                    <div class="card-footer bg-transparent border-0">
+                    <div id="order-footer-${order.orderID}" class="card-footer bg-transparent border-0">
                         ${viewDetailsButton}
                     </div>
                 </div>
@@ -111,7 +141,7 @@ function createOrderCard(order) {
                             <div class="col-md-2 mb-2 mb-md-0">
                                 <strong>Cost:</strong> ${order.totalCost.toLocaleString()} VND
                             </div>
-                            <div class="col-md-3 col-lg-2">
+                            <div id="order-footer-${order.orderID}" class="col-md-3 col-lg-2">
                                 ${viewDetailsButton}
                             </div>
                         </div>
@@ -121,6 +151,7 @@ function createOrderCard(order) {
         `;
     }
 }
+
 
 function getStatusColor(status) {
     const colors = {
@@ -132,6 +163,13 @@ function getStatusColor(status) {
         'PENDING': 'secondary'
     };
     return colors[status] || 'secondary';
+}
+
+// Complete order logic
+function completeOrder(orderID) {
+    console.log(`Completing order: ${orderID}`);
+    // Add logic to complete the order and update the backend
+    // Example: send a PUT request to the server to mark the order as completed
 }
 
 function renderOrders() {

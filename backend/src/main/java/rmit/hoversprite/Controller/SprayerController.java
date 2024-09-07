@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.OrderQueueDTO.OrderQueueDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Middleware.SprayerHandleOrderMiddleware;
 import rmit.hoversprite.Middleware.SprayerProfileUpdateRequest;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
@@ -90,5 +93,13 @@ public class SprayerController {
     {
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(sprayerHandleOrderMiddleware.sprayerConfirmAssignedOrder(orderID));
         return ResponseEntity.ok(orderDTO);
+    }
+
+    @PostMapping("sprayerComplete")
+    public ResponseEntity<?> sprayerCompleteOrder(@RequestParam String orderID) throws Exception
+    {
+        OrderQueue queue = sprayerHandleOrderMiddleware.sprayerCompleteOrder(orderID);
+        OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
+        return ResponseEntity.ok(queueDTO);
     }
 }

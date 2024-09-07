@@ -25,13 +25,16 @@ import org.springframework.web.multipart.MultipartFile;
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.OrderQueueDTO.OrderQueueDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.FarmerHandleOrderMiddleware;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Middleware.FeedbackRequestHandler;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
@@ -65,6 +68,9 @@ public class FarmerController {
 
     @Autowired
     private FeedbackRequestHandler feedbackRequestHandler;
+
+    @Autowired
+    private FarmerHandleOrderMiddleware farmerHandleOrderMiddleware;
 
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
@@ -149,5 +155,17 @@ public class FarmerController {
         // add feedback dto
         FeedbackDTO feedbackDTO = new DTOConverter().convertFeedbackDataToObject(feedbackRequestHandler.farmerFeedback(request));
         return ResponseEntity.ok(feedbackDTO);
+    }
+
+    @GetMapping("checkOrderQueue")
+    public ResponseEntity<?> checkOrderQueueFarmer(@RequestParam String orderID) throws Exception
+    {
+        
+        // check order queue
+        OrderQueue queue = farmerHandleOrderMiddleware.checkOrderQueueFarmer(orderID);
+        if((queue == null)) return null;
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(queue.getOrder());
+        OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
+        return ResponseEntity.ok(queueDTO);
     }
 }

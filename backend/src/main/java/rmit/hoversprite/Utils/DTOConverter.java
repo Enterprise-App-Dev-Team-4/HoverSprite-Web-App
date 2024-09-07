@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.OrderQueueDTO.OrderQueueDTO;
 import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
 import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
@@ -13,6 +14,7 @@ import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Feedback.Feedback;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Sprayer;
@@ -140,4 +142,18 @@ public class DTOConverter {
         }
         return null;
     }
+
+    public OrderQueueDTO convertQueueDataToObject(OrderQueue queue) throws Exception
+    {
+        if (queue != null) {
+            return new OrderQueueDTO(
+                queue.getQueueID(),
+                (queue.getOrder() != null) ? queue.getOrder().getOrderID() : null,
+                (queue.getFarmer() != null) ? queue.getFarmer().getEmail() : null,
+                (queue.getSprayer() != null) ? queue.getSprayer().getEmail() : null
+            );
+        }
+        return null;
+    }
+    
 }

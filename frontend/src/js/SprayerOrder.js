@@ -80,10 +80,11 @@ function createOrderCard(order) {
         `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder('${order.orderID}')">Confirm</button>` 
         : '';
 
-    // Only show the "Complete Order" button if the order status is "IN_PROGRESS", and make it orange
-    const completeButton = order.orderStatus === 'IN_PROGRESS' ? 
-        `<button class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>` 
-        : '';
+    // Only show the "Complete Order" button if the order status is "IN_PROGRESS", and hide it for "COMPLETED" status
+    const completeButton = (order.orderStatus === 'IN_PROGRESS') ? 
+    `<button class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>` 
+    : '';
+
 
     if (isGridView) {
         return `
@@ -154,8 +155,8 @@ function completeOrder(orderId) {
     console.log(`Order #${orderId} marked as completed.`);
     
     // Update the order on the server to mark as "COMPLETED"
-    const completeOrderURL = `${completeOrderAPI}?orderID=${encodeURIComponent(orderId)}&status=COMPLETED`;
-    sendRequestWithToken(completeOrderURL, 'PUT') // Assuming you have an endpoint to mark it as complete
+    const completeOrderURL = `${completeOrderAPI}?orderID=${encodeURIComponent(orderId)}`;
+    sendRequestWithToken(completeOrderURL, 'POST') // Assuming you have an endpoint to mark it as complete
         .then(data => {
             console.log(data);
             alert(`Order #${orderId} has been marked as completed.`);

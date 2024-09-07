@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Feedback.Feedback;
 import rmit.hoversprite.Model.Order.Order;
+import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
@@ -133,5 +134,19 @@ public class Utils {
     
         // Return the new ID formatted with a prefix "FA" and a three-digit number
         return String.format("FB%03d", numericPart);
+    }
+
+    public String generateOrderQueueId(List<OrderQueue> queues) {
+        String lastId = queues.stream()
+            .map(OrderQueue::getQueueID)
+            .filter(id -> id.startsWith("Q")) // Ensure valid IDs
+            .max(Comparator.comparingInt(id -> Integer.parseInt(id.substring(2))))
+            .orElse("Q000"); // Default to "FA000" if no valid ID is found
+    
+        // Extract the numeric part of the ID and increment it
+        int numericPart = Integer.parseInt(lastId.substring(2)) + 1;
+    
+        // Return the new ID formatted with a prefix "FA" and a three-digit number
+        return String.format("Q%03d", numericPart);
     }
 }
