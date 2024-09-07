@@ -7,6 +7,7 @@ let role = null;
 let isGridView = true;
 const navBarURL = 'http://localhost:8080/userName';
 const orderQueueCheckAPI = 'http://localhost:8080/checkOrderQueue';
+const orderCompleteAPI = 'http://localhost:8080/farmerComplete';
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
@@ -167,9 +168,18 @@ function getStatusColor(status) {
 
 // Complete order logic
 function completeOrder(orderID) {
-    console.log(`Completing order: ${orderID}`);
-    // Add logic to complete the order and update the backend
-    // Example: send a PUT request to the server to mark the order as completed
+    console.log(`Order #${orderID} marked as completed.`);
+    
+    // Update the order on the server to mark as "COMPLETED"
+    const completeOrderURL = `${orderCompleteAPI}?orderID=${encodeURIComponent(orderID)}`;
+    console.log(orderID);
+    sendRequestWithToken(completeOrderURL, 'POST') // Assuming you have an endpoint to mark it as complete
+        .then(data => {
+            console.log(data);
+            alert(`Order #${orderID} has been marked as completed.`);
+            // getAllOrders(currentSortOrder); // Refresh the orders list to reflect the updated status
+        })
+        .catch(error => console.error('Error completing the order:', error));
 }
 
 function renderOrders() {

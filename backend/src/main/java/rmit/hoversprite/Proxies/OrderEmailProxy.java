@@ -188,5 +188,42 @@ public class OrderEmailProxy {
                 emailContent.toString()
         );
     }
+
+    public void sendEmailOrderCompletionAnnouncement(Order order) {
+        // Construct the email subject and content
+        String emailSubject = "Order Successfully Completed - Order ID: " + order.getOrderID();
+        StringBuilder emailContent = new StringBuilder();
+    
+        emailContent.append("Dear ")
+                    .append(order.getFarmer().getFullName())
+                    .append(",\n\n")
+                    .append("We are excited to announce that your order has been successfully completed! Here are the details of your completed order:\n\n")
+                    .append("Order ID: ").append(order.getOrderID()).append("\n")
+                    .append("Order Date: ").append(order.getDate()).append("\n")
+                    .append("Service Time Slot: ").append(order.getServiceTimeSlot()).append("\n")
+                    .append("Order Status: ").append(order.getOrderStatus().name()).append("\n")
+                    .append("Order Location: ").append(order.getLocation()).append("\n\n");
+    
+        // Add sprayers involved in the completed order
+        emailContent.append("Sprayer(s) Involved:\n");
+        for (Sprayer sprayer : order.getSprayers()) {
+            emailContent.append(" - Name: ").append(sprayer.getFullName()).append("\n")
+                        .append("   Phone: ").append(sprayer.getPhoneNumber()).append("\n")
+                        .append("   Email: ").append(sprayer.getEmail()).append("\n\n");
+        }
+    
+        emailContent.append("Total Cost: $").append(String.format("%.2f", order.getTotalCost())).append("\n\n")
+                    .append("We hope the service met your expectations! If you have any feedback, please feel free to share it with us.\n\n")
+                    .append("Thank you for choosing our service!\n\n")
+                    .append("Best regards,\n")
+                    .append("Hover Sprite");
+    
+        // Send the email
+        emailSenderService.sendSimpleEmail(
+                order.getFarmer().getEmail(),
+                emailSubject,
+                emailContent.toString()
+        );
+    }    
     
 }

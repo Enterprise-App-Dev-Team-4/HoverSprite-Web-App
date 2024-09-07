@@ -31,8 +31,8 @@ public class OrderQueueService {
         return orderQueueRepository.findByOrder(order);
     }
 
-    public OrderQueue deleteQueueByOrder(Order order)
+    public void deleteQueueByOrder(Order order)
     {
-        return orderQueueRepository.deleteByOrder(order);
+        orderQueueRepository.deleteById(findQueueByOrder(order).getQueueID());
     }
 }

@@ -168,4 +168,15 @@ public class FarmerController {
         OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
         return ResponseEntity.ok(queueDTO);
     }
+
+    @PostMapping("farmerComplete")
+    public ResponseEntity<?> farmerCompleteOrder(@RequestParam String orderID) throws Exception
+    {
+        
+        // check order queue
+        Order order = farmerHandleOrderMiddleware.farmerCompleteOrder(orderID);
+        OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(order);
+
+        return ResponseEntity.ok(orderDTO);
+    }
 }

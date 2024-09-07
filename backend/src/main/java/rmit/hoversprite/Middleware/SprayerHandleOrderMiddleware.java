@@ -50,7 +50,8 @@ public class SprayerHandleOrderMiddleware {
                 order.setOrderStatus(OrderStatus.COMPLETED);
                 
                 // Delete the order from the queue and return the result
-                return orderQueueService.deleteQueueByOrder(order);
+                orderQueueService.deleteQueueByOrder(order);
+                return null;
             }
             
             // If order queue is not found, create a new queue for the order
