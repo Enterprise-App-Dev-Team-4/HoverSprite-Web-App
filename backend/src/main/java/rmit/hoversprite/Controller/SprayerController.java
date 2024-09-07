@@ -100,6 +100,19 @@ public class SprayerController {
     {
         OrderQueue queue = sprayerHandleOrderMiddleware.sprayerCompleteOrder(orderID);
         OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
+        return
+        
+        ResponseEntity.ok(queueDTO);
+    }
+
+    @GetMapping("sprayercheckQueue")
+    public ResponseEntity<?> checkOrderQueueSprayer(@RequestParam String orderID) throws Exception
+    {
+        
+        // check order queue
+        OrderQueue queue = sprayerHandleOrderMiddleware.checkOrderQueueSprayer(orderID);
+        if((queue == null)) return null;
+        OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
         return ResponseEntity.ok(queueDTO);
     }
 }

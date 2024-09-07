@@ -71,5 +71,11 @@ public class SprayerHandleOrderMiddleware {
             throw e;
         }
     }
+
+    public OrderQueue checkOrderQueueSprayer(String orderID)
+    {
+        Order order = orderService.getOrderById(orderID);
+        return orderQueueService.findQueueByOrder(order);
+    }
     
 }

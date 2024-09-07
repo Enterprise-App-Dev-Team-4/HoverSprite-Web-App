@@ -5,6 +5,7 @@ const itemsPerPage = 30;
 const orderAPI = 'http://localhost:8080/sprayerOrder'; // Replace with sprayer order API
 const confirmOrderAPI = 'http://localhost:8080/sprayerConfirm';
 const completeOrderAPI = 'http://localhost:8080/sprayerComplete'; // Replace with the correct API to complete orders
+const checkOrderQueueAPI = 'http://localhost:8080/sprayercheckQueue';
 const navBarURL = 'http://localhost:8080/sprayer';
 let role = null;
 let isGridView = true;
@@ -17,6 +18,30 @@ document.addEventListener("DOMContentLoaded", function () {
     getAllOrders();  // Fetch and display orders after the page loads
     setupEventListeners(); // Add event listeners for sorting and other UI elements
 });
+
+// Modify checkOrderQueue to enable Complete buttons when data is received
+function checkOrderQueue(orderID) {
+    return sendRequestWithToken(`${checkOrderQueueAPI}?orderID=${encodeURIComponent(orderID)}`)
+        .then(data => {
+            // Assuming `data.someCondition` determines if the complete button should be hidden
+            console.log(data);
+            const completeButtonContainer = document.getElementById(`completeButtonContainer-${orderID}`);
+            if (data) {
+                completeButtonContainer.innerHTML = ''; // Hide the button if some condition is met
+            } else {
+                // Show the complete button if the condition is not met
+                completeButtonContainer.innerHTML = `<button class="btn btn-warning btn-sm w-100" onclick="completeOrder('${orderID}')">Complete Order</button>`;
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            const completeButtonContainer = document.getElementById(`completeButtonContainer-${orderID}`);
+            completeButtonContainer.innerHTML = ''; // Default to hiding the button on error
+        });
+}
+
+
+
 
 function getUserRoleFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -80,11 +105,14 @@ function createOrderCard(order) {
         `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder('${order.orderID}')">Confirm</button>` 
         : '';
 
-    // Only show the "Complete Order" button if the order status is "IN_PROGRESS", and hide it for "COMPLETED" status
-    const completeButton = (order.orderStatus === 'IN_PROGRESS') ? 
-    `<button class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>` 
-    : '';
+    // Create an empty completeButtonContainer div to populate later if needed
+    let completeButton = '';
+    const completeButtonContainerId = `completeButtonContainer-${order.orderID}`;
 
+    // Only call checkOrderQueue if the order status is "IN_PROGRESS"
+    if (order.orderStatus === 'IN_PROGRESS') {
+        checkOrderQueue(order.orderID);  // Call the function to check if the button should be shown or hidden
+    }
 
     if (isGridView) {
         return `
@@ -106,7 +134,9 @@ function createOrderCard(order) {
                         </div>
                         <div class="flex-fill">
                             ${confirmButton}
-                            ${completeButton} <!-- Complete button will only show if status is "IN_PROGRESS" -->
+                            <div id="${completeButtonContainerId}">
+                                ${completeButton} <!-- Complete button will be managed by checkOrderQueue -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,7 +170,9 @@ function createOrderCard(order) {
                                 </div>
                                 <div class="flex-fill">
                                     ${confirmButton}
-                                    ${completeButton} <!-- Complete button will only show if status is "IN_PROGRESS" -->
+                                    <div id="${completeButtonContainerId}">
+                                        ${completeButton} <!-- Complete button will be managed by checkOrderQueue -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -150,6 +182,8 @@ function createOrderCard(order) {
         `;
     }
 }
+
+
 
 function completeOrder(orderId) {
     console.log(`Order #${orderId} marked as completed.`);
@@ -164,6 +198,8 @@ function completeOrder(orderId) {
         })
         .catch(error => console.error('Error completing the order:', error));
 }
+
+
 
 function confirmOrder(orderId) {
     console.log(orderId);
