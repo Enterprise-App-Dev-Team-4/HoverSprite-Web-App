@@ -92,6 +92,15 @@ public class DTOConverter {
         return null;
     }
 
+    public List<OrderDTO> convertOrderDataToObject(List<Order> orders) {
+        if (orders != null && !orders.isEmpty()) {
+            return orders.stream()
+                .map(this::convertOrderDataToObject)
+                .collect(Collectors.toList());
+        }
+        return null;
+    }
+
     public OrderDTO convertOrderDataToObject(Order order)
     {
         if(order != null)
@@ -109,7 +118,8 @@ public class DTOConverter {
                 order.getSprayerServices().getCropType(),
                 order.getSprayerServices().getServiceName(),
                 order.getSprayerServices().getServiceType(),
-                convertSprayerDataToObject(order.getSprayers())
+                convertSprayerDataToObject(order.getSprayers()),
+                convertFeedbackDataToObject(order.getFeedback())
             );
         }
         return null;
@@ -124,7 +134,8 @@ public class DTOConverter {
                 services.getServiceType(),    // serviceType
                 services.getCropType(),       // cropType
                 services.getDescription(),    // description
-                services.getTimeSlots()       // timeSlots
+                services.getTimeSlots(),       // timeSlots
+                convertOrderDataToObject(services.getOrders())
             );
         }
         return null;

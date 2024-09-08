@@ -129,6 +129,7 @@ function fetchAndDisplayServices() {
         .then(data => {
             console.log(data);
             allServices = data; // Store the fetched services for later filtering
+            console.log(allServices);
             displayServices(allServices); // Initially display all services
         })
         .catch(error => {

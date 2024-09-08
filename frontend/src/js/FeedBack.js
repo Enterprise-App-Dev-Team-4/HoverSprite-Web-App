@@ -1,4 +1,5 @@
 let currentRating = 0;
+let orderIdFromData;
 const starRating = document.getElementById('overallRating');
 const stars = starRating.getElementsByClassName('star');
 const UpdateFeedBackUrl = 'http://localhost:8080/feedback';
@@ -43,13 +44,14 @@ function submitFeedback() {
         return;
     }
 
-    const orderId = window.location.pathname.split('/').pop();
+    const orderIdFromLink = window.location.pathname.split('/').pop().split('?')[0];
 
-    // Prepare the data to be sent
     const feedbackData = {
-        orderId: orderId,
-        rating: currentRating,
-        comment: feedbackText
+        orderID: orderIdFromLink,
+        feedback: {
+            ratingScore: currentRating,
+            content: feedbackText
+        }
     };
 
     // Send the data to the server using sendRequestWithToken
@@ -118,6 +120,7 @@ function disableFeedbackForm() {
 }
 
 function populateOrderDetails(data) {
+    orderIdFromData = data.orderID;
     document.getElementById('orderId').textContent = data.orderID;
     document.getElementById('serviceDate').textContent = new Date(data.date).toLocaleDateString();
     document.getElementById('timeSlot').textContent = data.serviceTimeSlot;
