@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
@@ -35,6 +36,8 @@ public class OrderDTO {
 
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
+
+    private FeedbackDTO feedBacks;
     
     private List<SprayerDTO> sprayer;
 
@@ -45,7 +48,7 @@ public class OrderDTO {
     public OrderDTO(String orderID, String date, String serviceTimeSlot, OrderStatus orderStatus, 
                     double totalCost, String farmerEmail, String farmerFullName, 
                     String location, String sprayServicesId, CropType cropType,
-                    ServiceName serviceName, ServiceType serviceType, List<SprayerDTO> sprayer) {
+                    ServiceName serviceName, ServiceType serviceType, List<SprayerDTO> sprayer, FeedbackDTO feedBacks) {
         this.orderID = orderID;
         this.date = date;
         this.serviceTimeSlot = serviceTimeSlot;
@@ -59,6 +62,7 @@ public class OrderDTO {
         this.serviceName = serviceName;
         this.serviceType = serviceType;
         this.sprayer = sprayer;
+        this.feedBacks = feedBacks;
     }
 
     // Getter and Setter for orderID
@@ -68,6 +72,16 @@ public class OrderDTO {
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public void setFeedBacks(FeedbackDTO feedBacks)
+    {
+        this.feedBacks = feedBacks;
+    }
+
+    public FeedbackDTO getFeedBacks()
+    {
+        return this.feedBacks;
     }
 
     public List<SprayerDTO> getSprayer()

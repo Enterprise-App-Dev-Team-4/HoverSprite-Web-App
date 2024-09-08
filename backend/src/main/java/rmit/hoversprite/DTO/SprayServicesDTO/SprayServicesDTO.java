@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.CropType;
 import rmit.hoversprite.Utils.Enum.ServiceName;
@@ -34,12 +35,15 @@ public class SprayServicesDTO {
     @ElementCollection
     private List<Integer> timeSlots = new ArrayList<>();
 
+    private List<OrderDTO> orders;
+
     // Default constructor
     public SprayServicesDTO() {
     }
 
     // Parameterized constructor
-    public SprayServicesDTO(String id, double price, ServiceName serviceName, ServiceType serviceType, CropType cropType, String description, List<Integer> timeSlots) {
+    public SprayServicesDTO(String id, double price, ServiceName serviceName, ServiceType serviceType, CropType cropType, String description, List<Integer> timeSlots,
+                            List<OrderDTO> orders) {
         this.id = id;
         this.price = price;
         this.serviceName = serviceName;
@@ -47,6 +51,7 @@ public class SprayServicesDTO {
         this.cropType = cropType;
         this.description = description;
         this.timeSlots = timeSlots;
+        this.orders = orders;
     }
 
     // Getters and Setters
@@ -57,6 +62,16 @@ public class SprayServicesDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setOrder(List<OrderDTO> orders)
+    {
+        this.orders = orders;
+    }
+
+    public List<OrderDTO> getOrder()
+    {
+        return this.orders;
     }
 
     public double getPrice() {
