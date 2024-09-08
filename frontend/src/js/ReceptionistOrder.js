@@ -151,19 +151,27 @@ function assignSprayer() {
     // Get all selected sprayers
     const selectedSprayers = Array.from(document.querySelectorAll('input[name="sprayerSelect"]:checked'))
         .map(checkbox => {
-            return listSPrayers.find(sprayer => sprayer.email === checkbox.value);
-        });
+            const sprayer = listSPrayers.find(sprayer => sprayer.email === checkbox.value);
+            if (!sprayer) {
+                console.error(`Sprayer not found for email: ${checkbox.value}`);  // Log the error if sprayer not found
+            } else {
+                console.log(`Selected sprayer: ${sprayer.fullName} with email ${sprayer.email}`);  // Log the selected sprayer
+            }
+            return sprayer;
+        }).filter(sprayer => sprayer !== undefined);  // Filter out any undefined values
 
     if (selectedSprayers.length === 0) {
         console.error('No sprayer selected');
         return;
     }
 
+    console.log('Selected sprayers to assign:', selectedSprayers);  // Log the selected sprayers
+
     // Prepare the request body to be sent to the backend
     const request = {
         'orderID': orderId,
-        'sprayers': selectedSprayers, // Send the selected sprayers as an array
-        'orderStatus': 'ASSIGNED' // Set the new status to "ASSIGNED"
+        'sprayers': selectedSprayers,  // Send the selected sprayers as an array
+        'orderStatus': 'ASSIGNED'      // Set the new status to "ASSIGNED"
     };
 
     // Send the assignment request to the backend
@@ -171,13 +179,13 @@ function assignSprayer() {
         .then(response => {
             console.log('Sprayer assigned successfully:', response);
 
-             // Find the order in the current list and update its status
-             const order = orders.find(o => o.orderID == orderId);
-             if (order) {
-                 order.orderStatus = 'ASSIGNED'; // Update the order status locally
-             }
-             
-            renderOrders(); // Re-render orders after assignment
+            // Find the order in the current list and update its status
+            const order = orders.find(o => o.orderID == orderId);
+            if (order) {
+                order.orderStatus = 'ASSIGNED';  // Update the order status locally
+            }
+
+            renderOrders();  // Re-render orders after assignment
             document.getElementById('assignSprayerModal').style.display = 'none';
         })
         .catch(error => {
@@ -185,10 +193,13 @@ function assignSprayer() {
         });
 }
 
+
+
 function openAssignSprayerModal(orderId) {
     sendRequestWithToken(sprayerApiEndpoint)
         .then(data => {
-            console.log(data);
+            console.log('List of sprayers:', data);
+            listSPrayers = data;
 
             const sprayerTableRows = data.map(sprayer => `
                 <tr>
