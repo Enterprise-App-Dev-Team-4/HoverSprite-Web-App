@@ -147,42 +147,38 @@ function createOrderCard(order) {
 
 function assignSprayer() {
     const orderId = document.getElementById('assignSprayerModalOrderId').value;
-    const sprayerEmail = document.getElementById('sprayerSelect').value;
 
-    // Find the sprayer in the listSprayers array by email
-    const selectedSprayer = listSPrayers.find(sprayer => sprayer.email === sprayerEmail);
-    
-    if (!selectedSprayer) {
-        console.error('Sprayer not found');
+    // Get all selected sprayers
+    const selectedSprayers = Array.from(document.querySelectorAll('input[name="sprayerSelect"]:checked'))
+        .map(checkbox => {
+            return listSPrayers.find(sprayer => sprayer.email === checkbox.value);
+        });
+
+    if (selectedSprayers.length === 0) {
+        console.error('No sprayer selected');
         return;
     }
-
-    const sprayerName = `${selectedSprayer.fullName}`;
 
     // Prepare the request body to be sent to the backend
     const request = {
         'orderID': orderId,
-        'sprayers': [selectedSprayer] // Assuming your backend expects an array of sprayer objects
+        'sprayers': selectedSprayers, // Send the selected sprayers as an array
+        'orderStatus': 'ASSIGNED' // Set the new status to "ASSIGNED"
     };
-    console.log(request.sprayers);
+
     // Send the assignment request to the backend
     sendRequestWithToken(assignSprayerAPI, 'POST', request)
         .then(response => {
             console.log('Sprayer assigned successfully:', response);
 
-            // Update the local orders array
-            // const order = orders.find(o => o.orderID == orderId);
-            // if (order) {
-            //     if (!order.assignedSprayers) {
-            //         order.assignedSprayers = [];
-            //     }
-            //     order.assignedSprayers.push(sprayerName);
-            //     order.orderStatus = 'ASSIGNED';
-            // }
-
+             // Find the order in the current list and update its status
+             const order = orders.find(o => o.orderID == orderId);
+             if (order) {
+                 order.orderStatus = 'ASSIGNED'; // Update the order status locally
+             }
+             
             renderOrders(); // Re-render orders after assignment
             document.getElementById('assignSprayerModal').style.display = 'none';
-            console.log(`Assigned sprayer ${sprayerName} to order ${orderId}`);
         })
         .catch(error => {
             console.error('Error assigning sprayer:', error);
@@ -193,24 +189,38 @@ function openAssignSprayerModal(orderId) {
     sendRequestWithToken(sprayerApiEndpoint)
         .then(data => {
             console.log(data);
-            for(let i = 0; i < data.length; i++)
-            {
-                listSPrayers.push(data[i]);
-            }
-            const sprayerOptions = data.map(sprayer => `<option value="${sprayer.email}">${sprayer.fullName} (${sprayer.sprayerExpertise})</option>`).join('');
+
+            const sprayerTableRows = data.map(sprayer => `
+                <tr>
+                    <td class="center-align">${sprayer.fullName}</td>
+                    <td class="center-align">${sprayer.sprayerExpertise}</td>
+                    <td class="center-align">
+                        <input type="checkbox" name="sprayerSelect" value="${sprayer.email}">
+                    </td>
+                </tr>
+            `).join('');
+
             document.getElementById('assignSprayerModalBody').innerHTML = `
-                <div>
-                    <label for="sprayerSelect">Select Sprayer:</label>
-                    <select id="sprayerSelect" class="form-select">
-                        ${sprayerOptions}
-                    </select>
-                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="center-align">
+                            <th class="center-align">Name</th>
+                            <th class="center-align">Expertise</th>
+                            <th class="center-align">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sprayerTableRows}
+                    </tbody>
+                </table>
             `;
             document.getElementById('assignSprayerModal').style.display = 'block';
             document.getElementById('assignSprayerModalOrderId').value = orderId;
         })
         .catch(error => console.error('Error:', error));
 }
+
+
 
 // Open the status change modal
 function openStatusModal(orderId) {
