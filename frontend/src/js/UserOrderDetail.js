@@ -48,7 +48,7 @@ function returnToOrderList() {
 
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
-    
+
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
@@ -62,17 +62,17 @@ function displayOrderDetails(order) {
     if (order.sprayer && order.sprayer.length > 0) {
         order.sprayer.forEach(sprayer => {
             const row = document.createElement('tr');
-            
+
             // Create table data for sprayer name
             const nameCell = document.createElement('td');
             nameCell.textContent = sprayer.fullName || 'N/A';
             row.appendChild(nameCell);
-            
+
             // Create table data for sprayer expertise
             const expertiseCell = document.createElement('td');
             expertiseCell.textContent = sprayer.sprayerExpertise || 'N/A';
             row.appendChild(expertiseCell);
-            
+
             // Append the row to the table body
             sprayerTableBody.appendChild(row);
         });
@@ -101,7 +101,8 @@ function displayOrderDetails(order) {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';
     }
-
+    //the feedback button
+    handleFeedbackButton(order);
     // Trigger number animations (if applicable)
     animateNumbers();
 }
@@ -148,6 +149,22 @@ function animateNumbers() {
         }
         costElement.textContent = `${Math.round(currentCost).toLocaleString()} VND`;
     }, duration / steps);
+}
+
+function handleFeedbackButton(order) {
+    const feedbackBtn = document.getElementById('provideFeedbackBtn');
+    if (order.orderStatus === 'COMPLETED' && !order.feedback) {
+        feedbackBtn.classList.remove('d-none');
+        feedbackBtn.addEventListener('click', () => {
+            // window.location.href = `/feed-back/${order.orderID}?role=farmer`;
+            window.open(
+                `/feed-back/${order.orderID}?role=farmer`,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        });
+    } else {
+        feedbackBtn.classList.add('d-none');
+    }
 }
 
 loadNavBar();

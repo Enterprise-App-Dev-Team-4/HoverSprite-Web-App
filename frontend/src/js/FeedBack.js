@@ -1,7 +1,8 @@
 let currentRating = 0;
 const starRating = document.getElementById('overallRating');
 const stars = starRating.getElementsByClassName('star');
-const UpdateFeedBackUrl = 'http://localhost:8080/FeedBack'; //add reall feedback api
+const UpdateFeedBackUrl = 'http://localhost:8080/feedback';
+const orderDetailUrl = 'http://localhost:8080/order';
 
 function setRating(rating) {
     currentRating = rating;
@@ -42,25 +43,24 @@ function submitFeedback() {
         return;
     }
 
+    const orderId = window.location.pathname.split('/').pop();
+
     // Prepare the data to be sent
     const feedbackData = {
+        orderId: orderId,
         rating: currentRating,
-        comment: feedbackText,
-        orderId: document.getElementById('orderId').textContent
+        comment: feedbackText
     };
 
-    // Send the data to the server 
-    fetch(UpdateFeedBackUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(feedbackData)
-    })
-        .then(response => response.json())
+    // Send the data to the server using sendRequestWithToken
+    sendRequestWithToken(UpdateFeedBackUrl, 'POST', feedbackData)
         .then(data => {
             console.log('Success:', data);
             showPopup();
+            // Redirect to order list after a short delay
+            setTimeout(() => {
+                window.location.href = '/order-list?role=farmer';
+            }, 2000);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -80,12 +80,53 @@ function closePopup() {
     document.getElementById('feedbackText').value = '';
 }
 
-//Order details (replace with actual data)
-document.getElementById('orderId').textContent = '12345';
-document.getElementById('serviceDate').textContent = '02/09/2024';
-document.getElementById('timeSlot').textContent = '06:00 - 07:00';
-document.getElementById('farmLocation').textContent = 'Hello Hello';
-document.getElementById('area').textContent = '5';
-document.getElementById('service').textContent = 'Hello';
-document.getElementById('cost').textContent = '150,000';
-document.getElementById('sprayerTeam').textContent = 'Hello';
+function getOrderDetails() {
+    const orderId = window.location.pathname.split('/').pop();
+
+    sendRequestWithToken(`${orderDetailUrl}?orderId=${orderId}`)
+        .then(data => {
+            if (data.feedback) {
+                // Feedback already exists, show message and disable form
+                showExistingFeedback(data.feedback);
+                disableFeedbackForm();
+            } else {
+                // No feedback exists, populate order details
+                populateOrderDetails(data);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching order details:', error);
+            alert('Failed to load order details. Please try again.');
+        });
+}
+
+function showExistingFeedback(feedback) {
+    document.querySelector('.container').innerHTML = `
+        <h1>Feedback Already Submitted</h1>
+        <p>You have already provided feedback for this order:</p>
+        <p><strong>Rating:</strong> ${feedback.rating} / 5</p>
+        <p><strong>Comment:</strong> ${feedback.comment}</p>
+        <button onclick="window.close()">Close</button>
+    `;
+}
+
+function disableFeedbackForm() {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(star => star.style.pointerEvents = 'none');
+    document.getElementById('feedbackText').disabled = true;
+    document.querySelector('.submit-btn').disabled = true;
+}
+
+function populateOrderDetails(data) {
+    document.getElementById('orderId').textContent = data.orderID;
+    document.getElementById('serviceDate').textContent = new Date(data.date).toLocaleDateString();
+    document.getElementById('timeSlot').textContent = data.serviceTimeSlot;
+    document.getElementById('farmLocation').textContent = data.location;
+    document.getElementById('service').textContent = data.serviceName;
+    document.getElementById('cost').textContent = `${data.totalCost.toLocaleString()} VND`;
+    document.getElementById('sprayerTeam').textContent = data.sprayer.map(s => s.fullName).join(', ');
+}
+
+
+// Call getOrderDetails when the page loads
+document.addEventListener('DOMContentLoaded', getOrderDetails);

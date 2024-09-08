@@ -54,6 +54,74 @@ body {
     transform: translateY(-2px);
 }
 
+#provideFeedbackBtn {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+    transition: all 0.3s ease;
+}
+
+#provideFeedbackBtn:hover {
+    background-color: #ffca2c;
+    border-color: #ffc720;
+    transform: translateY(-2px);
+}
+
+#provideFeedbackBtn .bi-star-fill {
+    color: #000;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 767.98px) {
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Add a subtle glow effect on hover */
+.btn-lg:hover {
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+
+/* Add a press effect on active state */
+.btn-lg:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
 @media (max-width: 767.98px) {
     .card-body .row>div {
         margin-bottom: 1.5rem;
