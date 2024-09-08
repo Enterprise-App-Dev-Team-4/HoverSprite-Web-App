@@ -127,6 +127,7 @@ function fetchAndDisplayServices() {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             allServices = data; // Store the fetched services for later filtering
             displayServices(allServices); // Initially display all services
         })
