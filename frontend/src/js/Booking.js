@@ -10,6 +10,7 @@ let role = null;  // To allow reassignment later
 let sentUser = null;
 let sendService = null;
 
+
 // Session times for the form
 const availableSessions = [
     "04:00 - 05:00",
@@ -31,6 +32,8 @@ function initializeApp() {
     loadNavBar();
     loadFooter();
     initMap();
+    const locationInput = document.getElementById("location");
+    setupLocationInputHandler(locationInput);
     extractAndStoreUrlParams();
     setupFormHandlers(); // Sets up form, including payment handling
     setInitialDate();
@@ -115,14 +118,27 @@ function updateLocationInput(lat, lon) {
         .then(data => {
             const locationInput = document.getElementById("location");
             if (data && data.address) {
-                const { suburb: ward = "", city_district: district = "", city = "", country = "" } = data.address;
-                locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
+                const { road, house_number, suburb, city_district, city, state, country } = data.address;
+                const addressParts = [
+                    house_number,
+                    road,
+                    suburb,
+                    city_district,
+                    city,
+                    state,
+                    country
+                ].filter(Boolean);
+                locationInput.value = addressParts.join(', ');
             } else {
                 locationInput.value = "Address not found";
             }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("location").value = "Error retrieving address";
+        });
 }
+
 
 // Updates the map with a new address
 function updateMap(address) {
@@ -231,6 +247,10 @@ function setupDateTypeChangeHandler(dateTypeSelect, dateInput) {
 function setupLocationInputHandler(locationInput) {
     locationInput.addEventListener('change', function () {
         updateMap(this.value);
+    });
+
+    locationInput.addEventListener('focus', function () {
+        this.select(); // Select all text when focused
     });
 }
 
