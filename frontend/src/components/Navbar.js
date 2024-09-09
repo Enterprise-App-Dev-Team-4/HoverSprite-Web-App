@@ -1,6 +1,7 @@
 const logoutAPI = 'http://localhost:8080/log-out';
 var user = null;
 var user_role = null;
+var stompClient = null; // Declare a global stompClient for WebSocket connection
 
 function returnNavBar(data, role) {
     console.log('hello navbar');
@@ -150,6 +151,26 @@ function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + ';';
 }
 
+// Function to connect to WebSocket server and subscribe to topics
+function connectToWebSocket() {
+    var socket = new SockJS('http://localhost:8080/ws');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected to WebSocket: ' + frame);
+
+        // Subscribe to the public broadcast topic
+        stompClient.subscribe('/all/messages', function (message) {
+            console.log('Received public message: ' + message.body);
+        });
+
+        stompClient.subscribe(`/user/${user.email}/specific/messages`, function (message) {
+            console.log('Received specific user message: ' + message.body);
+        });
+    });
+}
+
+
 function activeClick() {
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function () {
@@ -160,7 +181,9 @@ function activeClick() {
     });
     console.log("Hello");
 
-    // Add an event listener for the logout link
+    // Connect to WebSocket on page load
+    connectToWebSocket();
+
     const logoutLink = document.getElementById('logout-link');
     console.log('Logout link:', logoutLink); // Add this to check if logout-link is correctly selected
 
