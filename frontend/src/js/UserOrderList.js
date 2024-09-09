@@ -25,17 +25,17 @@ function getUserRoleFromUrl() {
 // Modify checkOrderQueue to enable Complete buttons when data is received
 function checkOrderQueue(orderID) {
     return sendRequestWithToken(`${orderQueueCheckAPI}?orderID=${encodeURIComponent(orderID)}`)
-    .then(data => {
-        if (data != null) {
-            console.log(data);
-            return true; // Can complete order
-        }
-        return false; // Cannot complete order
-    })
-    .catch(error => {
-        console.error(error);
-        return false; // Fail-safe in case of error
-    });
+        .then(data => {
+            if (data != null) {
+                console.log(data);
+                return true; // Can complete order
+            }
+            return false; // Cannot complete order
+        })
+        .catch(error => {
+            console.error(error);
+            return false; // Fail-safe in case of error
+        });
 }
 
 
@@ -88,26 +88,29 @@ function getAllOrder(sortOrder = 'status') {
 // Add the "Complete" button and initialize it as disabled
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
-    
-    // Initially no complete button rendered here
-    let completeButton = ''; 
-    
+
+    let completeButton = '';
+
     // Check the order queue and render the "Complete" button only if needed
     checkOrderQueue(order.orderID).then((canComplete) => {
         if (canComplete) {
-            const completeBtnHtml = `<button id="complete-btn-${order.orderID}" class="btn btn-warning btn-sm w-100" onclick="completeOrder('${order.orderID}')">Complete Order</button>`;
+            const completeBtnHtml = `<button id="complete-btn-${order.orderID}" class="btn btn-warning btn-sm w-100 mt-2" onclick="completeOrder('${order.orderID}')">Complete Order</button>`;
             document.getElementById(`order-footer-${order.orderID}`).innerHTML += completeBtnHtml;
         }
     });
+
+    const statusBadge = `<span class="badge bg-${getStatusColor(order.orderStatus)} w-50">${order.orderStatus}</span>`;
 
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Order #${order.orderID}</h5>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                            ${statusBadge}
+                        </div>
                         <p class="card-text">
-                            <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
                             <strong>Crop Type:</strong> ${order.cropType}<br>
@@ -127,8 +130,10 @@ function createOrderCard(order) {
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
-                                <h5 class="card-title mb-0">Order #${order.orderID}</h5>
-                                <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                                    ${statusBadge}
+                                </div>
                             </div>
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
                                 <strong>Date:</strong> ${order.date}
@@ -169,7 +174,7 @@ function getStatusColor(status) {
 // Complete order logic
 function completeOrder(orderID) {
     console.log(`Order #${orderID} marked as completed.`);
-    
+
     // Update the order on the server to mark as "COMPLETED"
     const completeOrderURL = `${orderCompleteAPI}?orderID=${encodeURIComponent(orderID)}`;
     console.log(orderID);

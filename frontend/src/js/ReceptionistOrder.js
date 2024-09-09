@@ -67,7 +67,7 @@ function getAllOrder(sortOrder = 'status') {
             orders = data.content;
             totalOrders = data.totalElements;
             totalPages = data.totalPages;
-            
+
             renderOrders(); // Render orders after fetching
         })
         .catch(error => {
@@ -79,23 +79,25 @@ function getAllOrder(sortOrder = 'status') {
 function createOrderCard(order) {
     const viewDetailsButton = `<a href="/receptionist-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
-    const assignSprayerButton = order.orderStatus === 'CONFIRMED' 
+    const assignSprayerButton = order.orderStatus === 'CONFIRMED'
         ? `<button class="btn btn-primary btn-sm flex-fill" data-order-id="${order.orderID}" onclick="openAssignSprayerModal('${order.orderID}')">Assign Sprayer</button>`
         : '';
 
     const hideChangeStatusButton = ['ASSIGNED', 'IN_PROGRESS', 'COMPLETED'].includes(order.orderStatus);
-    const changeStatusButton = !hideChangeStatusButton 
-        ? `<button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>` 
+    const changeStatusButton = !hideChangeStatusButton
+        ? `<button class="btn btn-warning btn-sm flex-fill change-status-button" data-order-id="${order.orderID}">Change Status</button>`
         : '';
-
+    const statusBadge = `<span class="badge bg-${getStatusColor(order.orderStatus)} w-50">${order.orderStatus}</span>`;
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Order #${order.orderID}</h5>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                            ${statusBadge}
+                        </div>
                         <p class="card-text">
-                            <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
                             <strong>Crop Type:</strong> ${order.cropType}<br>
@@ -116,9 +118,9 @@ function createOrderCard(order) {
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
-                                <h5 class="card-title mb-0">Order #${order.orderID}</h5>
-                                <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                                    ${statusBadge}
                             </div>
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
                                 <strong>Date:</strong> ${order.date}
@@ -263,7 +265,7 @@ function selectDefaultSprayers() {
 function handleSprayerSelection() {
     // Get all checkboxes
     const checkboxes = document.querySelectorAll('input[name="sprayerSelect"]');
-    
+
     // Get the number of checked checkboxes
     const checkedCheckboxes = document.querySelectorAll('input[name="sprayerSelect"]:checked');
 
@@ -388,7 +390,7 @@ function renderPagination() {
 // Setup event listeners for sort dropdown
 function setupSortEventListeners() {
     const sortOrderSelect = document.getElementById('sortOrder');
-    sortOrderSelect.addEventListener('change', function() {
+    sortOrderSelect.addEventListener('change', function () {
         currentSortOrder = this.value;
         getAllOrder(currentSortOrder);
     });
