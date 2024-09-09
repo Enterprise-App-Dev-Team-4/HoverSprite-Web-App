@@ -156,11 +156,11 @@ function handleFeedbackButton(order) {
     if (order.orderStatus === 'COMPLETED' && !order.feedBacks) {
         feedbackBtn.classList.remove('d-none');
         feedbackBtn.addEventListener('click', () => {
-            // window.location.href = `/feed-back/${order.orderID}?role=farmer`;
-            window.open(
-                `/feed-back/${order.orderID}?role=farmer`,
-                '_blank' // <- This is what makes it open in a new window.
-            );
+            window.location.href = `/feed-back/${order.orderID}?role=farmer`;
+            // window.open(
+            //     `/feed-back/${order.orderID}?role=farmer`,
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
         });
     } else {
         feedbackBtn.classList.add('d-none');
