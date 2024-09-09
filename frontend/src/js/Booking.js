@@ -10,6 +10,7 @@ let role = null;  // To allow reassignment later
 let sentUser = null;
 let sendService = null;
 
+
 // Session times for the form
 const availableSessions = [
     "04:00 - 05:00",
@@ -31,10 +32,13 @@ function initializeApp() {
     loadNavBar();
     loadFooter();
     initMap();
+    const locationInput = document.getElementById("location");
+    setupLocationInputHandler(locationInput);
     extractAndStoreUrlParams();
     setupFormHandlers(); // Sets up form, including payment handling
     setInitialDate();
     populateSessionOptions();
+    updatePrice();
 }
 
 // Extract user role from the URL
@@ -114,14 +118,27 @@ function updateLocationInput(lat, lon) {
         .then(data => {
             const locationInput = document.getElementById("location");
             if (data && data.address) {
-                const { suburb: ward = "", city_district: district = "", city = "", country = "" } = data.address;
-                locationInput.value = `${ward}, ${district}, ${city}, ${country}`;
+                const { road, house_number, suburb, city_district, city, state, country } = data.address;
+                const addressParts = [
+                    house_number,
+                    road,
+                    suburb,
+                    city_district,
+                    city,
+                    state,
+                    country
+                ].filter(Boolean);
+                locationInput.value = addressParts.join(', ');
             } else {
                 locationInput.value = "Address not found";
             }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("location").value = "Error retrieving address";
+        });
 }
+
 
 // Updates the map with a new address
 function updateMap(address) {
@@ -212,8 +229,10 @@ function setupFormHandlers() {
 function setupAreaInputHandler(areaInput) {
     areaInput.addEventListener("input", function () {
         if (this.value < 0) this.value = 0;
+        updatePrice();
     });
 }
+
 
 // Handle switching between lunar and solar calendars
 function setupDateTypeChangeHandler(dateTypeSelect, dateInput) {
@@ -228,6 +247,10 @@ function setupDateTypeChangeHandler(dateTypeSelect, dateInput) {
 function setupLocationInputHandler(locationInput) {
     locationInput.addEventListener('change', function () {
         updateMap(this.value);
+    });
+
+    locationInput.addEventListener('focus', function () {
+        this.select(); // Select all text when focused
     });
 }
 
@@ -337,19 +360,19 @@ function handleVisaPayment(event) {
         },
         body: JSON.stringify(paymentData)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Payment successful:', data);
-            processBooking(true); // Trigger booking after successful payment
-        } else {
-            document.getElementById('visa-errors').textContent = "Payment failed: " + data.message;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('visa-errors').textContent = "Payment failed.";
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Payment successful:', data);
+                processBooking(true); // Trigger booking after successful payment
+            } else {
+                document.getElementById('visa-errors').textContent = "Payment failed: " + data.message;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('visa-errors').textContent = "Payment failed.";
+        });
 }
 
 // Function to setup input formatting for card number and expiry date
@@ -447,15 +470,18 @@ function processBooking(isCardPayment) {
 
 // Show confirmation modal
 function showConfirmationModal(area, date, dateType, location, session) {
+    const price = calculateTotalCost(area);
     document.getElementById('confirmLocation').textContent = location;
     document.getElementById('confirmArea').textContent = area;
     document.getElementById('confirmDateType').textContent = dateType === 'solar' ? 'Solar Calendar' : 'Lunar Calendar';
     document.getElementById('confirmDate').textContent = date;
     document.getElementById('confirmSession').textContent = session;
+    document.getElementById('confirmPrice').textContent = `${price.toLocaleString()} VND`;
 
     const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     confirmationModal.show();
 }
+
 
 // Helper functions for date conversion, cost calculation, and redirection
 function handleDateConversionIfNeeded(dateTypeSelect, dateInput) {
@@ -488,4 +514,11 @@ function setInitialDate() {
     const dateInput = document.getElementById("date");
     const now = new Date();
     dateInput.value = now.toISOString().slice(0, 16);
+}
+
+//update price
+function updatePrice() {
+    const area = document.getElementById('area').value;
+    const price = area * 30000;
+    document.getElementById('priceDisplay').textContent = `Price: ${price.toLocaleString()} VND`;
 }

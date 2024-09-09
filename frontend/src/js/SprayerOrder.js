@@ -52,7 +52,7 @@ function loadNavBar() {
     const content = document.getElementById("navbar-container");
     sendRequestWithToken(navBarURL)
         .then(data => {
-            content.innerHTML = returnNavBar(data, role);  
+            content.innerHTML = returnNavBar(data, role);
             activeClick();  // Initialize event listeners after rendering the navbar
         })
         .catch(error => console.error(error));
@@ -86,10 +86,10 @@ function getAllOrders(sortOrder = 'status') {
         .then(data => {
             orders = data.content; // List of orders
             totalPages = data.totalPages; // Total number of pages from the backend
-            
+
             console.log("Orders:", orders);
             console.log("Total Pages:", totalPages);
-            
+
             renderOrders(); // Render the orders after they are fetched
         })
         .catch(error => {
@@ -101,8 +101,8 @@ function createOrderCard(order) {
     const viewDetailsButton = `<a href="/sprayer-order-detail/${order.orderID}?role=${encodeURIComponent(role)}" class="btn btn-success btn-sm w-100">View Details</a>`;
 
     // Only show the "Confirm" button if the order status is "ASSIGNED"
-    const confirmButton = order.orderStatus === 'ASSIGNED' ? 
-        `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder('${order.orderID}')">Confirm</button>` 
+    const confirmButton = order.orderStatus === 'ASSIGNED' ?
+        `<button class="btn btn-primary btn-sm w-100" onclick="confirmOrder('${order.orderID}')">Confirm</button>`
         : '';
 
     // Create an empty completeButtonContainer div to populate later if needed
@@ -113,15 +113,17 @@ function createOrderCard(order) {
     if (order.orderStatus === 'IN_PROGRESS') {
         checkOrderQueue(order.orderID);  // Call the function to check if the button should be shown or hidden
     }
-
+    const statusBadge = `<span class="badge bg-${getStatusColor(order.orderStatus)} w-50">${order.orderStatus}</span>`;
     if (isGridView) {
         return `
             <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Order #${order.orderID}</h5>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                            ${statusBadge}
+                        </div>
                         <p class="card-text">
-                            <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span><br>
                             <strong>Date:</strong> ${order.date}<br>
                             <strong>Location:</strong> ${order.location}<br>
                             <strong>Crop Type:</strong> ${order.cropType}<br>
@@ -148,9 +150,9 @@ function createOrderCard(order) {
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
-                                <h5 class="card-title mb-0">Order #${order.orderID}</h5>
-                                <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                                    ${statusBadge}
                             </div>
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
                                 <strong>Date:</strong> ${order.date}
@@ -187,7 +189,7 @@ function createOrderCard(order) {
 
 function completeOrder(orderId) {
     console.log(`Order #${orderId} marked as completed.`);
-    
+
     // Update the order on the server to mark as "COMPLETED"
     const completeOrderURL = `${completeOrderAPI}?orderID=${encodeURIComponent(orderId)}`;
     sendRequestWithToken(completeOrderURL, 'POST') // Assuming you have an endpoint to mark it as complete
@@ -264,10 +266,10 @@ function getStatusColor(status) {
 
 function renderOrders() {
     const orderList = document.getElementById('orderList');
-    
+
     // Render the order cards directly from the `orders` array which already contains paginated data
     orderList.innerHTML = orders.map(createOrderCard).join('');
-    
+
     renderPagination(); // Update pagination controls
 }
 
@@ -299,7 +301,7 @@ function renderPagination() {
 }
 
 function setupEventListeners() {
-    document.getElementById('sortOrder').addEventListener('change', function() {
+    document.getElementById('sortOrder').addEventListener('change', function () {
         currentSortOrder = this.value; // Set the current sorting order
         getAllOrders(currentSortOrder); // Fetch orders with the selected sort order
     });

@@ -32,7 +32,7 @@ function fetchOrderDetails(orderId) {
 
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
-    
+
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
@@ -46,17 +46,17 @@ function displayOrderDetails(order) {
     if (order.sprayer && order.sprayer.length > 0) {
         order.sprayer.forEach(sprayer => {
             const row = document.createElement('tr');
-            
+
             // Create table data for sprayer name
             const nameCell = document.createElement('td');
             nameCell.textContent = sprayer.fullName || 'N/A';
             row.appendChild(nameCell);
-            
+
             // Create table data for sprayer expertise
             const expertiseCell = document.createElement('td');
             expertiseCell.textContent = sprayer.sprayerExpertise || 'N/A';
             row.appendChild(expertiseCell);
-            
+
             // Append the row to the table body
             sprayerTableBody.appendChild(row);
         });
@@ -79,8 +79,8 @@ function displayOrderDetails(order) {
 
     // Handle feedback
     if (order.feedback) {
-        document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
-        document.getElementById('feedbackComment').textContent = order.feedback.comment || 'N/A';
+        document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
+        document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';

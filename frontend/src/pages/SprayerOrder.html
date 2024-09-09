@@ -40,9 +40,8 @@
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-8 mx-auto">
                 <div class="d-flex justify-content-between">
-                    
                     <select class="form-select me-2" id="sortOrder">
                         <option value="status">By Order Status</option> <!-- Default to sort by status -->
                         <option value="newest">Newest First</option>
@@ -50,35 +49,22 @@
                         <option value="price_low_high">Price: Low to High</option>
                         <option value="price_high_low">Price: High to Low</option>
                     </select>
-                    
                     <select class="form-select me-2" id="statusFilter">
                         <option value="">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="cancelled">Cancelled</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="assigned">Assigned</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="completed">Completed</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="ASSIGNED">Assigned</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="COMPLETED">Completed</option>
                     </select>
-                    <select class="form-select" id="dateFilter">
+                    <select class="form-select me-2" id="dateFilter">
                         <option value="">All Dates</option>
                         <option value="today">Today</option>
                         <option value="this_week">This Week</option>
                         <option value="this_month">This Month</option>
                         <option value="last_month">Last Month</option>
                     </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-6 mx-auto">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <button class="btn btn-outline-secondary" id="toggleModeBtn">
-                            <i class="bi bi-moon"></i> Dark Mode
-                        </button>
-                    </div>
                     <div>
                         <button class="btn btn-outline-secondary" id="toggleViewBtn">
                             <i class="bi bi-grid"></i> Grid View
@@ -86,7 +72,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="orderList" class="row">
@@ -141,6 +126,8 @@
     <script src="../components/Navbar.js"></script>
     <script src="../components/Footer.js"></script>
     <script src="../components/sendToken.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </body>
 
 </html>

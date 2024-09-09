@@ -33,6 +33,8 @@ import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
 import rmit.hoversprite.Request.SprayerUpdateProfileRequest;
 import rmit.hoversprite.Services.SprayerService;
 import rmit.hoversprite.Utils.DTOConverter;
+import rmit.hoversprite.Utils.Enum.Role;
+import rmit.hoversprite.Utils.Enum.SprayerExpertise;
 
 @RestController
 @RequestMapping("/")
@@ -115,4 +117,6 @@ public class SprayerController {
         OrderQueueDTO queueDTO = new DTOConverter().convertQueueDataToObject(queue);
         return ResponseEntity.ok(queueDTO);
     }
+
+
 }

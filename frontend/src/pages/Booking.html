@@ -42,7 +42,9 @@
                         <label for="area">Farmland Area (in hectares)</label>
                         <input type="number" class="form-control" id="area" placeholder="Farmland area" min="0"
                             step="0.01" required>
+                        <small id="priceDisplay" class="form-text text-muted"></small>
                     </div>
+
                     <div class="form-group">
                         <label for="dateType">Date Type</label>
                         <select class="form-control" id="dateType" required>
@@ -83,7 +85,8 @@
     </div>
 
     <!-- Confirmation Modal -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -96,7 +99,9 @@
                     <p><strong>Date Type:</strong> <span id="confirmDateType"></span></p>
                     <p><strong>Date and Time:</strong> <span id="confirmDate"></span></p>
                     <p><strong>Available Session:</strong> <span id="confirmSession"></span></p>
+                    <p><strong>Price:</strong> <span id="confirmPrice"></span></p>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>
                     <button type="button" class="btn btn-primary" id="confirmSubmitButton">Continue</button>
@@ -123,7 +128,8 @@
     </div>
 
     <!-- Visa Payment Modal -->
-    <div class="modal fade" id="visaPaymentModal" tabindex="-1" aria-labelledby="visaPaymentModalLabel" aria-hidden="true">
+    <div class="modal fade" id="visaPaymentModal" tabindex="-1" aria-labelledby="visaPaymentModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,18 +140,21 @@
                     <form id="visaPaymentForm">
                         <div class="mb-3">
                             <label for="cardNumber" class="form-label">Card Number</label>
-                            <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX"
+                                maxlength="19" required>
                         </div>
                         <div class="mb-3">
                             <label for="expiryDate" class="form-label">Expiry Date</label>
-                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label for="cvv" class="form-label">CVV</label>
                             <input type="text" class="form-control" id="cvv" maxlength="4" placeholder="123" required>
                         </div>
                         <div id="visa-errors" class="text-danger mb-3"></div>
-                        <button type="submit" class="btn btn-primary" id="submitVisaPaymentButton">Submit Payment</button>
+                        <button type="submit" class="btn btn-primary" id="submitVisaPaymentButton">Submit
+                            Payment</button>
                     </form>
                 </div>
             </div>
@@ -173,6 +182,8 @@
     <script src="../../components/Footer.js"></script>
     <script src="../../components/sendToken.js"></script>
     <script src="../js/Booking.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </body>
+
 </html>

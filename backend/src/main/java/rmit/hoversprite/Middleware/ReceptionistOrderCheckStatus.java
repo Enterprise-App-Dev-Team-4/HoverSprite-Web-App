@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Proxies.EmailSenderService;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
+import rmit.hoversprite.Proxies.WebSocketController;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Services.ReceptionistService;
 import rmit.hoversprite.Utils.Enum.OrderStatus;
@@ -19,6 +20,9 @@ public class ReceptionistOrderCheckStatus {
 
     @Autowired
 	private OrderEmailProxy orderEmailProxy;
+
+    @Autowired
+    private WebSocketController webSocketController;
 
     private Order transferToOrderData(ReceptionistHandleOrderRequest request)
     {
@@ -41,12 +45,14 @@ public class ReceptionistOrderCheckStatus {
         {
             // send proxy
             orderEmailProxy.sendEmailOrderConfirmed(order);
+            webSocketController.sendOrderConfirmNotification(order);
         }
 
         if(order.getOrderStatus() == OrderStatus.CANCELLED)
         {
             // send proxy
             orderEmailProxy.sendEmailOrderCancelled(order);
+            webSocketController.sendOrderCanceledNotification(order);
         }
 
         if(order.getOrderStatus() == OrderStatus.ASSIGNED)
