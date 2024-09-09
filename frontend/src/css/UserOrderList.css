@@ -49,36 +49,6 @@ body {
     }
 }
 
-.dark-mode {
-    background-color: #333;
-    color: #fff;
-}
-
-.dark-mode .navbar {
-    background-color: #222 !important;
-}
-
-.dark-mode .card {
-    background-color: #444;
-    color: #fff;
-}
-
-.dark-mode .search-box {
-    background-color: #444;
-    color: #fff;
-}
-
-.dark-mode .form-control,
-.dark-mode .form-select {
-    background-color: #555;
-    color: #fff;
-    border-color: #666;
-}
-
-.dark-mode .form-control::placeholder {
-    color: #aaa;
-}
-
 #backToTop {
     position: fixed;
     bottom: 20px;

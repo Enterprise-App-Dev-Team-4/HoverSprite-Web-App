@@ -1,14 +1,32 @@
 const navBarURL = 'http://localhost:8080/userName';
+const ReceptionistURL = 'http://localhost:8080/receptionist';
+const SprayerURL = 'http://localhost:8080/sprayer';
+let role = null;
 
 
-function loadNavBar() {
-  const content = document.getElementById("navbar-container");
-  sendRequestWithToken(navBarURL)
-    .then(data => {
-      content.innerHTML = returnNavBar(data, role);
-      activeClick();  // Initialize event listeners after rendering the navbar
-    })
-    .catch(error => console.error(error));
+function loadNavBar(userRole) {
+  const navbarContainer = document.getElementById("navbar-container");
+  let userAPI = null;
+
+  if (userRole === 'receptionist') {
+    userAPI = ReceptionistURL;
+  } else if (userRole === 'farmer') {
+    userAPI = navBarURL;
+  } else if (userRole == 'sprayer') {
+    userAPI = SprayerURL;
+  }
+
+  if (userAPI) {
+    sendRequestWithToken(userAPI)
+      .then(data => {
+        user = data;
+        navbarContainer.innerHTML = returnNavBar(data, role);
+        activeClick();
+      })
+      .catch(error => console.error('Error loading navbar:', error));
+  } else {
+    console.error('Invalid user role or user role not provided.');
+  }
 }
 
 function loadFooter() {
@@ -28,6 +46,6 @@ function getUserRoleFromUrl() {
 
 document.addEventListener("DOMContentLoaded", function () {
   role = getUserRoleFromUrl();  // Get the role from the URL
-  loadNavBar();
+  loadNavBar(role);
   loadFooter();
 });

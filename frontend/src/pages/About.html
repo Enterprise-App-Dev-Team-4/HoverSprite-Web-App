@@ -9,64 +9,148 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background-image: url('../../public/about_hero_section.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-title {
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #28a745;
+        }
+
+        .testimonial {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-img {
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Placeholder for Navbar inclusion here -->
-    <!-- Include your existing Navbar HTML -->
-    <!-- Placeholder where the Navbar will be inserted -->
     <div id="navbar-container"></div>
 
+    <header class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4">Revolutionizing Agriculture</h1>
+            <p class="lead">Precision Spraying with Advanced Drone Technology</p>
+        </div>
+    </header>
+
     <main class="container mt-5">
-        <h1 class="mb-3">About us</h1>
-        <img src="../../public/about_hero_section.jpg" class="img-fluid" alt="Drones flying over fields">
-
         <section class="my-5">
-            <h2>Who We Are</h2>
-            <p>HoverSprite is a Vietnamese start-up dedicated to revolutionizing agriculture with advanced drone
-                technology. Based in the Southwest Provinces, we specialize in organic fertilizer and pesticide
-                spraying, serving orchards, cereal fields, and vegetable farms.</p>
-            <p>Our team comprises agricultural experts, technologists, and sustainability advocates committed to
-                enhancing farming efficiency.</p>
+            <h2 class="section-title">Who We Are</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>HoverSprite is a pioneering Vietnamese start-up dedicated to revolutionizing agriculture through
+                        advanced drone technology. Based in the Southwest Provinces, we specialize in organic fertilizer
+                        and pesticide spraying services for orchards, cereal fields, and vegetable farms.</p>
+                </div>
+                <div class="col-md-6">
+                    <p>Our team comprises agricultural experts, technologists, and sustainability advocates committed to
+                        enhancing farming efficiency and promoting eco-friendly practices in Vietnam's agricultural
+                        sector.</p>
+                </div>
+            </div>
         </section>
 
         <section class="my-5">
-            <h2>Vision</h2>
-            <p>Our vision at HoverSprite is to lead the agricultural sector towards a more sustainable and efficient
-                future. By integrating cutting-edge drone technology with traditional farming practices, we aim to
-                enhance productivity, reduce environmental impact, and support farmers in achieving optimal crop yields.
-                We aspire to be the most reliable partner for farmers and agricultural businesses, setting new standards
-                in agricultural innovation.</p>
+            <h2 class="section-title">Our Mission</h2>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <i class="bi bi-flower1 feature-icon"></i>
+                    <h3>Sustainable Farming</h3>
+                    <p>Promoting eco-friendly agricultural practices through precision spraying.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-graph-up-arrow feature-icon"></i>
+                    <h3>Increased Efficiency</h3>
+                    <p>Enhancing crop yields and reducing resource waste with targeted applications.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-people feature-icon"></i>
+                    <h3>Farmer Support</h3>
+                    <p>Providing accessible, high-tech solutions to farmers of all backgrounds.</p>
+                </div>
+            </div>
         </section>
 
         <section class="my-5">
-            <h2>Mission</h2>
-            <p>HoverSprite's mission is to provide top-notch spraying services that are accessible to all farmers. We
-                aim to digitize and streamline the spray order process through our user-friendly web application.</p>
-            <p>Our fleet of advanced drones and expert team ensure precise and timely application of organic fertilizers
-                and pesticides, contributing to healthier crops and better yields. We strive for excellence, continually
-                enhancing our services to stay at the forefront of agricultural technology.</p>
+            <h2 class="section-title">Our Technology</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="../../public/drone-surveying.jpg" class="img-fluid rounded"
+                        alt="HoverSprite Drone Technology">
+                </div>
+                <div class="col-md-6">
+                    <h3>Advanced Drone Fleet</h3>
+                    <p>Our fleet of 15 state-of-the-art spraying drones ensures precise and efficient application of
+                        organic fertilizers and pesticides. Equipped with GPS technology and advanced sensors, our
+                        drones can cover large areas quickly while minimizing overspray and environmental impact.</p>
+                    <h3>User-Friendly Booking System</h3>
+                    <p>We've developed an intuitive web application that allows farmers to easily book spraying
+                        services, track order status, and provide feedback. Our system supports both Gregorian and Lunar
+                        calendar dates, respecting local agricultural traditions.</p>
+                </div>
+            </div>
         </section>
 
-        <!-- Optional: Gallery Section -->
         <section class="my-5">
-            <h2>Gallery</h2>
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial">
+                <p>"HoverSprite has transformed the way I manage my orchard. Their drone spraying service is efficient,
+                    precise, and has significantly improved my crop yield."</p>
+                <footer class="blockquote-footer">Nguyen Van A, Orchard Owner</footer>
+            </div>
+            <div class="testimonial">
+                <p>"As a vegetable farmer, I appreciate HoverSprite's commitment to organic solutions. Their service has
+                    helped me maintain the quality of my produce while reducing labor costs."</p>
+                <footer class="blockquote-footer">Tran Thi B, Vegetable Farmer</footer>
+            </div>
+        </section>
+
+        <section class="my-5">
+            <h2 class="section-title">Gallery</h2>
             <div class="row g-3">
                 <div class="col-md-4">
-                    <img src="path_to_gallery_image1.jpg" class="img-fluid" alt="Image description">
+                    <img src="../../public/operator-drone.jpg" class="img-fluid rounded gallery-img"
+                        alt="Drone spraying crops">
                 </div>
                 <div class="col-md-4">
-                    <img src="path_to_gallery_image2.jpg" class="img-fluid" alt="Image description">
+                    <img src="../../public/drone-spray-5.png" class="img-fluid rounded gallery-img"
+                        alt="Farmer using HoverSprite app">
                 </div>
                 <div class="col-md-4">
-                    <img src="path_to_gallery_image3.jpg" class="img-fluid" alt="Image description">
+                    <img src="../../public/operator-drone.jpg" class="img-fluid rounded gallery-img"
+                        alt="Healthy crops after HoverSprite treatment">
                 </div>
             </div>
         </section>
     </main>
-
-    <!-- Footer -->
 
     <div id="footer-container"></div>
 
