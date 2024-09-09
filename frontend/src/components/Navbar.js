@@ -45,12 +45,10 @@ function returnNavBar(data, role) {
                         <button class="btn notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-bell" id="bell-icon-empty"></i> <!-- Empty bell icon initially -->
                             <i class="bi bi-bell-fill d-none" id="bell-icon-filled"></i> <!-- Filled bell icon, hidden initially -->
-                            <span class="badge bg-danger" id="notification-count">3</span> <!-- Badge for notification count -->
+                            <span class="badge bg-danger d-none" id="notification-count">0</span> <!-- Badge for notification count -->
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                            <li><a class="dropdown-item" href="#">Notification 1</a></li>
-                            <li><a class="dropdown-item" href="#">Notification 2</a></li>
-                            <li><a class="dropdown-item" href="#">Notification 3</a></li>
+                            <!-- New notifications will be appended here dynamically -->
                         </ul>
                     </div>
 
@@ -103,45 +101,61 @@ function returnNavBar(data, role) {
             width: 40px;
         }
         .dropdown-menu {
-            min-width: auto; /* Adjust dropdown width */
+            max-width: 300px; /* Limit the width for a better layout */
+            max-height: 400px; /* Limit the height, so it doesn't overflow */
+            overflow-y: auto; /* Add scroll behavior when there are many notifications */
+            padding: 0; /* Remove extra padding */
         }
 
-        /* Styling for the notification bell */
-        .notification-btn {
-            background-color: transparent;
-            border: none;
-            position: relative;
+        .dropdown-menu::-webkit-scrollbar {
+            width: 8px; /* Custom scrollbar width */
         }
-        .notification-btn .bi-bell, .notification-btn .bi-bell-fill {
-            font-size: 1.5rem;
-            color: black;
-            transition: transform 0.3s ease; /* Add smooth animation */
+
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background-color: #888; /* Scrollbar color */
+            border-radius: 10px; /* Rounded scrollbar */
         }
+
+        .dropdown-menu::-webkit-scrollbar-thumb:hover {
+            background-color: #555; /* Scrollbar color on hover */
+        }
+
+        .dropdown-item {
+            padding: 10px; /* Add padding for better spacing */
+            font-size: 0.9rem; /* Slightly smaller font for notifications */
+            border-bottom: 1px solid #f0f0f0; /* Add separator between notifications */
+            word-wrap: break-word; /* Ensure long text wraps */
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa; /* Slight background color on hover */
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none; /* Remove the last item border */
+        }
+
+        /* Badge Styling */
         .badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            transform: translate(50%, -50%);
-            font-size: 0.75rem;
+            font-size: 0.8rem; /* Make the badge smaller */
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Dropdown adjustments */
-        .dropdown-menu {
-            top: 70px !important; /* Adjusted positioning to appear below the bell */
-        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dropdown-menu {
+                max-width: 90vw; /* Ensure dropdown fits smaller screens */
+                max-height: 300px; /* Reduce height for smaller screens */
+            }
 
-        /* Bell shake animation when clicked */
-        .bell-animate {
-            animation: shake 0.6s; /* Animation duration */
-        }
-
-        @keyframes shake {
-            0% { transform: rotate(0deg); }
-            20% { transform: rotate(-15deg); }
-            40% { transform: rotate(15deg); }
-            60% { transform: rotate(-10deg); }
-            80% { transform: rotate(10deg); }
-            100% { transform: rotate(0deg); }
+            .dropdown-item {
+                padding: 8px; /* Slightly less padding on small screens */
+                font-size: 0.85rem; /* Adjust font size on small screens */
+            }
         }
     </style>
     `;
@@ -151,10 +165,37 @@ function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + ';';
 }
 
+// Function to add a new notification
+function addNotification(messageContent) {
+    // Get the notification dropdown list
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const notificationList = notificationDropdown.nextElementSibling; // Get the ul inside dropdown
+
+    // Create a new list item for the notification
+    const newNotification = document.createElement('li');
+    newNotification.innerHTML = `<a class="dropdown-item" href="#">${messageContent}</a>`;
+
+    // Append the new notification to the list
+    notificationList.appendChild(newNotification);
+
+    // Update notification count
+    const notificationCount = document.getElementById('notification-count');
+    let count = parseInt(notificationCount.innerText);
+    count += 1;
+    notificationCount.innerText = count;
+    notificationCount.classList.remove('d-none');  // Make sure badge is visible
+
+    // Show the filled bell icon and hide the empty bell icon
+    const bellIconEmpty = document.getElementById('bell-icon-empty');
+    const bellIconFilled = document.getElementById('bell-icon-filled');
+    bellIconEmpty.classList.add('d-none');
+    bellIconFilled.classList.remove('d-none');
+}
+
 // Function to connect to WebSocket server and subscribe to topics
 function connectToWebSocket() {
     var socket = new SockJS('http://localhost:8080/ws');
-    var stompClient = Stomp.over(socket);
+    stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
         console.log('Connected to WebSocket: ' + frame);
@@ -162,14 +203,18 @@ function connectToWebSocket() {
         // Subscribe to the public broadcast topic
         stompClient.subscribe('/all/messages', function (message) {
             console.log('Received public message: ' + message.body);
+            // Add the public message to the notification dropdown
+            addNotification(`Public Message: ${message.body}`);
         });
 
+        // Subscribe to specific user messages
         stompClient.subscribe(`/user/${user.email}/specific/messages`, function (message) {
             console.log('Received specific user message: ' + message.body);
+            // Add the specific message to the notification dropdown
+            addNotification(`User Message: ${message.body}`);
         });
     });
 }
-
 
 function activeClick() {
     document.querySelectorAll('.nav-link').forEach(link => {
@@ -232,6 +277,15 @@ function activeClick() {
             }, 600);
         });
     }
+
+    // Reset the notification count when the bell icon is clicked
+    document.getElementById('notificationDropdown').addEventListener('click', function () {
+        // Reset notification count and switch icons back
+        notificationCount.innerText = '0';
+        notificationCount.classList.add('d-none');
+        bellIconFilled.classList.add('d-none');
+        bellIconEmpty.classList.remove('d-none');
+    });
 }
 
 returnNavBar();
