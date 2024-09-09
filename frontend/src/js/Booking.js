@@ -231,6 +231,21 @@ function setupLocationInputHandler(locationInput) {
     });
 }
 
+// Function to show booking success modal with a green checkmark
+function showBookingSuccessModal() {
+    const bookingSuccessModal = new bootstrap.Modal(document.getElementById('bookingSuccessModal'));
+    bookingSuccessModal.show();
+}
+
+// Function to hide the success modal after backend has finished processing
+function hideBookingSuccessModal() {
+    const bookingSuccessModalElement = document.getElementById('bookingSuccessModal');
+    const bookingSuccessModal = bootstrap.Modal.getInstance(bookingSuccessModalElement);
+    if (bookingSuccessModal) {
+        bookingSuccessModal.hide();
+    }
+}
+
 // Setup form submit handler for booking
 function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect) {
     form.addEventListener("submit", function (event) {
@@ -263,7 +278,11 @@ function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, loca
         const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionSelect.value, totalCost);
         formData.paymentMethod = "cash";
 
+        // Show booking success modal
+        showBookingSuccessModal();
+
         sendRequestOrder(formData);
+        hideBookingSuccessModal();
         setTimeout(redirectToServicePage, 2000);
     });
 
@@ -418,7 +437,11 @@ function processBooking(isCardPayment) {
     const formData = gatherFormData(area, location, date, session, totalCost);
     formData.paymentMethod = isCardPayment ? "card" : "cash";
 
+    // Show booking success modal
+    showBookingSuccessModal();
+
     sendRequestOrder(formData);
+    hideBookingSuccessModal();
     setTimeout(redirectToServicePage, 2000);
 }
 

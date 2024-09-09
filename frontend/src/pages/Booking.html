@@ -122,36 +122,47 @@
         </div>
     </div>
 
-<!-- Visa Payment Modal -->
-<div class="modal fade" id="visaPaymentModal" tabindex="-1" aria-labelledby="visaPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="visaPaymentModalLabel">Card Payment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="visaPaymentForm">
-                    <div class="mb-3">
-                        <label for="cardNumber" class="form-label">Card Number</label>
-                        <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="expiryDate" class="form-label">Expiry Date</label>
-                        <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="cvv" class="form-label">CVV</label>
-                        <input type="text" class="form-control" id="cvv" maxlength="4" placeholder="123" required>
-                    </div>
-                    <div id="visa-errors" class="text-danger mb-3"></div>
-                    <button type="submit" class="btn btn-primary" id="submitVisaPaymentButton">Submit Payment</button>
-                </form>
+    <!-- Visa Payment Modal -->
+    <div class="modal fade" id="visaPaymentModal" tabindex="-1" aria-labelledby="visaPaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="visaPaymentModalLabel">Card Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="visaPaymentForm">
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expiryDate" class="form-label">Expiry Date</label>
+                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cvv" class="form-label">CVV</label>
+                            <input type="text" class="form-control" id="cvv" maxlength="4" placeholder="123" required>
+                        </div>
+                        <div id="visa-errors" class="text-danger mb-3"></div>
+                        <button type="submit" class="btn btn-primary" id="submitVisaPaymentButton">Submit Payment</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Booking Successful Modal -->
+    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-labelledby="bookingSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <i class="fa fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    <h4 class="mt-3">Booking Successful</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Footer -->
