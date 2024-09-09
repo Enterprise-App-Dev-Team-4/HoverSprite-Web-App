@@ -186,6 +186,16 @@ function assignSprayer() {
             }
 
             renderOrders();  // Re-render orders after assignment
+
+            // Show success modal
+            const assignSprayerModal = new bootstrap.Modal(document.getElementById('assignSprayerSuccessModal'));
+            assignSprayerModal.show();
+
+            // Hide modal after 2 seconds
+            setTimeout(() => {
+                assignSprayerModal.hide();
+            }, 2000);
+            
             document.getElementById('assignSprayerModal').style.display = 'none';
         })
         .catch(error => {
@@ -249,6 +259,17 @@ function changeOrderStatus() {
         order.orderStatus = newStatus.toUpperCase();
         renderOrders();
         sendOrderUpdateToServer(order);
+
+         // Show success modal
+         const statusChangeMessage = `Order status set to ${newStatus.toUpperCase()}`;
+         document.getElementById('statusChangeMessage').textContent = statusChangeMessage;
+         const statusChangeModal = new bootstrap.Modal(document.getElementById('statusChangeSuccessModal'));
+         statusChangeModal.show();
+ 
+         // Hide modal after 2 seconds
+         setTimeout(() => {
+             statusChangeModal.hide();
+         }, 2000);
     }
     document.getElementById('statusModal').style.display = 'none';
 }
