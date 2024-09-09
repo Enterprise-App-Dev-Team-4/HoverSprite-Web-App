@@ -150,9 +150,9 @@ function createOrderCard(order) {
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
-                                <h5 class="card-title mb-0">Order #${order.orderID}</h5>
-                                <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Order #${order.orderID}</h5>
+                                    ${statusBadge}
                             </div>
                             <div class="col-md-3 col-lg-2 mb-2 mb-md-0">
                                 <strong>Date:</strong> ${order.date}
