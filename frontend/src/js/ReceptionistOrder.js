@@ -206,7 +206,7 @@ function openAssignSprayerModal(orderId) {
                     <td class="center-align">${sprayer.fullName}</td>
                     <td class="center-align">${sprayer.sprayerExpertise}</td>
                     <td class="center-align">
-                        <input type="checkbox" name="sprayerSelect" value="${sprayer.email}">
+                        <input type="checkbox" name="sprayerSelect" value="${sprayer.email}" onchange="handleSprayerSelection()" />
                     </td>
                 </tr>
             `).join('');
@@ -227,9 +227,36 @@ function openAssignSprayerModal(orderId) {
             `;
             document.getElementById('assignSprayerModal').style.display = 'block';
             document.getElementById('assignSprayerModalOrderId').value = orderId;
+
+            // Call the function to handle disabling/enabling checkboxes based on the selected count
+            handleSprayerSelection();
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Function to handle the checkbox selection and disable/enable logic
+function handleSprayerSelection() {
+    // Get all checkboxes
+    const checkboxes = document.querySelectorAll('input[name="sprayerSelect"]');
+    
+    // Get the number of checked checkboxes
+    const checkedCheckboxes = document.querySelectorAll('input[name="sprayerSelect"]:checked');
+
+    if (checkedCheckboxes.length >= 2) {
+        // If 2 or more checkboxes are checked, disable the rest
+        checkboxes.forEach(checkbox => {
+            if (!checkbox.checked) {
+                checkbox.disabled = true;
+            }
+        });
+    } else {
+        // If less than 2 are checked, enable all checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.disabled = false;
+        });
+    }
+}
+
 
 
 

@@ -161,15 +161,20 @@ public class UserController {
             receptionist.setRole(Role.Receptionist);
             UserDTO receptionistDTO = new DTOConverter().convertUserDataToObject(userService.register(receptionist));
             return ResponseEntity.ok(receptionistDTO);
-        } else if(type.equals("sprayer")) {
-            Sprayer sprayer = new Sprayer();
-            sprayer.setUser(user);
-            sprayer.setRole(Role.Sprayer);
-            sprayer.setSprayerExpertise(SprayerExpertise.AdeptSprayer);
-            UserDTO sprayerDTO = new DTOConverter().convertUserDataToObject(userService.register(sprayer));
-            return ResponseEntity.ok(sprayerDTO);
         }
         return ResponseEntity.badRequest().body("This user has been registered before");
+    }
+
+    @PostMapping("register/sprayer")
+    public ResponseEntity<?> createSprayer(@RequestBody Sprayer user) throws Exception
+    {
+        
+        Sprayer sprayer = new Sprayer();
+        sprayer.setUser(user);
+        sprayer.setRole(Role.Sprayer);
+        sprayer.setSprayerExpertise(user.getSprayerExpertise());
+        UserDTO sprayerDTO = new DTOConverter().convertUserDataToObject(userService.register(sprayer));
+        return ResponseEntity.ok(sprayerDTO);
     }
 
     @PostMapping("log-out")
