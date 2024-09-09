@@ -228,10 +228,35 @@ function openAssignSprayerModal(orderId) {
             document.getElementById('assignSprayerModal').style.display = 'block';
             document.getElementById('assignSprayerModalOrderId').value = orderId;
 
-            // Call the function to handle disabling/enabling checkboxes based on the selected count
-            handleSprayerSelection();
+            // Call function to handle automatic default selection of sprayers
+            selectDefaultSprayers();
+            handleSprayerSelection(); // Call this to disable/enable checkboxes based on the selection
         })
         .catch(error => console.error('Error:', error));
+}
+
+// Function to automatically select default sprayers
+function selectDefaultSprayers() {
+    const checkboxes = document.querySelectorAll('input[name="sprayerSelect"]');
+    let selectedCount = 0;
+
+    // First, automatically select one 'AppretienceSprayer'
+    checkboxes.forEach(checkbox => {
+        const sprayer = listSPrayers.find(s => s.email === checkbox.value);
+        if (sprayer && sprayer.sprayerExpertise === 'AppretienceSprayer' && selectedCount < 1) {
+            checkbox.checked = true;
+            selectedCount++;
+        }
+    });
+
+    // Then, select one 'AdeptSprayer' or 'ExpertSprayer'
+    checkboxes.forEach(checkbox => {
+        const sprayer = listSPrayers.find(s => s.email === checkbox.value);
+        if (sprayer && (sprayer.sprayerExpertise === 'AdeptSprayer' || sprayer.sprayerExpertise === 'ExpertSprayer') && selectedCount < 2) {
+            checkbox.checked = true;
+            selectedCount++;
+        }
+    });
 }
 
 // Function to handle the checkbox selection and disable/enable logic
@@ -242,8 +267,8 @@ function handleSprayerSelection() {
     // Get the number of checked checkboxes
     const checkedCheckboxes = document.querySelectorAll('input[name="sprayerSelect"]:checked');
 
+    // If 2 or more checkboxes are checked, disable the rest
     if (checkedCheckboxes.length >= 2) {
-        // If 2 or more checkboxes are checked, disable the rest
         checkboxes.forEach(checkbox => {
             if (!checkbox.checked) {
                 checkbox.disabled = true;
@@ -255,7 +280,38 @@ function handleSprayerSelection() {
             checkbox.disabled = false;
         });
     }
+
+    // Update the state of the "Assign" button based on selected sprayers
+    updateAssignButtonState();
 }
+
+// Function to update the state of the Assign button
+function updateAssignButtonState() {
+    const assignButton = document.getElementById('assign'); // Assuming you have an Assign button with this ID
+    const checkedCheckboxes = Array.from(document.querySelectorAll('input[name="sprayerSelect"]:checked'));
+
+    // Check for expertise in selected sprayers
+    const hasAdeptOrExpertSprayer = checkedCheckboxes.some(checkbox => {
+        const sprayer = listSPrayers.find(s => s.email === checkbox.value);
+        return sprayer && (sprayer.sprayerExpertise === 'AdeptSprayer' || sprayer.sprayerExpertise === 'ExpertSprayer');
+    });
+
+    const hasTwoAppretienceSprayers = checkedCheckboxes.every(checkbox => {
+        const sprayer = listSPrayers.find(s => s.email === checkbox.value);
+        return sprayer && sprayer.sprayerExpertise === 'AppretienceSprayer';
+    });
+
+    // Disable the Assign button if:
+    // 1. There are no selected sprayers.
+    // 2. All selected sprayers are 'AppretienceSprayer' (i.e., no 'AdeptSprayer' or 'ExpertSprayer').
+    if (checkedCheckboxes.length === 0 || (checkedCheckboxes.length === 2 && hasTwoAppretienceSprayers) || !hasAdeptOrExpertSprayer) {
+        assignButton.disabled = true;
+    } else {
+        assignButton.disabled = false;
+    }
+}
+
+
 
 
 
