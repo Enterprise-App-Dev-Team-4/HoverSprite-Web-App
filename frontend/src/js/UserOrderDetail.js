@@ -94,9 +94,9 @@ function displayOrderDetails(order) {
     document.getElementById('orderCost').textContent = `${order.totalCost.toLocaleString()} VND`;
 
     // Handle feedback
-    if (order.feedback) {
-        document.getElementById('feedbackRating').textContent = `${order.feedback.rating} / 5 ⭐`;
-        document.getElementById('feedbackComment').textContent = order.feedback.comment || 'N/A';
+    if (order.feedBacks) {
+        document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
+        document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';
@@ -153,7 +153,7 @@ function animateNumbers() {
 
 function handleFeedbackButton(order) {
     const feedbackBtn = document.getElementById('provideFeedbackBtn');
-    if (order.orderStatus === 'COMPLETED' && !order.feedback) {
+    if (order.orderStatus === 'COMPLETED' && !order.feedBacks) {
         feedbackBtn.classList.remove('d-none');
         feedbackBtn.addEventListener('click', () => {
             // window.location.href = `/feed-back/${order.orderID}?role=farmer`;
