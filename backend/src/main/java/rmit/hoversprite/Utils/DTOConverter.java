@@ -62,7 +62,8 @@ public class DTOConverter {
                 sprayer.getRole(),
                 sprayer.getToken(),
                 sprayer.getProfileImage(),
-                sprayer.getSprayerExpertise()
+                sprayer.getSprayerExpertise(),
+                convertFeedbackDataToObject(sprayer.getFeedback())
             );
         }
         return null;
@@ -96,6 +97,15 @@ public class DTOConverter {
         if (orders != null && !orders.isEmpty()) {
             return orders.stream()
                 .map(this::convertOrderDataToObject)
+                .collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public List<FeedbackDTO> convertFeedbackDataToObject(List<Feedback> feedbacks) {
+        if (feedbacks != null && !feedbacks.isEmpty()) {
+            return feedbacks.stream()
+                .map(this::convertFeedbackDataToObject)
                 .collect(Collectors.toList());
         }
         return null;

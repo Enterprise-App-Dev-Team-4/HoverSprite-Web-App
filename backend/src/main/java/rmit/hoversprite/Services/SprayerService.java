@@ -65,4 +65,9 @@ public class SprayerService {
         Sprayer sprayer = getSprayerData();
         return orderService.findOrderBySprayer(sprayer, pageable, sort);
     }
+
+    public Sprayer getSprayerByEmail(String email)
+    {
+        return sprayerRepository.findByEmail(email);
+    }
 }
