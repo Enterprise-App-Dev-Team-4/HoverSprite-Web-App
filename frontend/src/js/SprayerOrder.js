@@ -195,7 +195,16 @@ function completeOrder(orderId) {
     sendRequestWithToken(completeOrderURL, 'POST') // Assuming you have an endpoint to mark it as complete
         .then(data => {
             console.log(data);
-            alert(`Order #${orderId} has been marked as completed.`);
+
+            // Show the Order Completed modal
+            const orderCompletedModal = new bootstrap.Modal(document.getElementById('orderCompletedModal'));
+            orderCompletedModal.show();
+
+            // Hide Modal after 2s
+            setTimeout(() => {
+                orderCompletedModal.hide();
+            }, 2000);
+
             getAllOrders(currentSortOrder); // Refresh the orders list to reflect the updated status
         })
         .catch(error => console.error('Error completing the order:', error));
@@ -208,6 +217,15 @@ function confirmOrder(orderId) {
     if (orderId) {
         // Update the order on the server
         sendOrderUpdateToServer(orderId);
+
+        // Show the Order Confirmed modal
+        const orderConfirmedModal = new bootstrap.Modal(document.getElementById('orderConfirmedModal'));
+        orderConfirmedModal.show();
+
+        // Hide Modal after 2s
+        setTimeout(() => {
+            orderConfirmedModal.hide();
+        }, 2000);
 
         renderOrders();
         console.log(`Order #${orderId} status updated to 'In Progress'`);
