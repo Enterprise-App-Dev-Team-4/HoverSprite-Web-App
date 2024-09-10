@@ -17,13 +17,39 @@ function submitForm() {
             return; // Stop form submission
         }
 
+        // Get the email value
+        var email = form.email.value;
+
+        // Regex to validate that the email ends with .com or .vn
+        var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|vn)$/;
+
+        // Validate the email
+        if (!emailRegex.test(email)) {
+            // Show an error message if validation fails
+            displayAlert('danger', 'Email must end with .com or .vn.');
+            return; // Stop form submission
+        }
+
+        // Get the password value
+        var password = form.password.value;
+
+        // Regex to validate that the password is at least 8 characters long and contains at least one special character
+        var passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+
+        // Validate the password
+        if (!passwordRegex.test(password)) {
+            // Show an error message if validation fails
+            displayAlert('danger', 'Password must be at least 8 characters long and contain at least one special character.');
+            return; // Stop form submission
+        }
+
         // Create a JSON object with the user input
         var user = {
             firstName: form.firstName.value,
             lastName: form.lastName.value,
             fullName: full_name,
-            password: form.password.value,
-            email: form.email.value,
+            password: password,
+            email: email,
             phoneNumber: phoneNumber,
             homeAddress: form.homeAddress.value,
             profileImage: 'https://firebasestorage.googleapis.com/v0/b/hoversprite-3d6b3.appspot.com/o/user-avatar.png?alt=media&token=ebc0c97d-28c7-4316-9ce2-a68215fe9c22'
