@@ -22,9 +22,6 @@ public class OrderService {
     private DBOrderRepository orderRepository;
 
     @Autowired
-    private SprayerFeatureServices sprayServices;
-
-    @Autowired
     private Utils utilsClass;
 
     public Order createOrder(Order order)
@@ -111,5 +108,9 @@ public class OrderService {
             }
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
         return orderRepository.findBySprayers(sprayer, sortedPageable);
+    }
+
+    public List<Order> getOrderByDate(String date) {
+        return orderRepository.findByDate(date);
     }
 }

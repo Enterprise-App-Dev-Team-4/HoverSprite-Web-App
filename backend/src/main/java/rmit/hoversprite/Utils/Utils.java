@@ -14,6 +14,7 @@ import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Model.User.User;
+import rmit.hoversprite.Response.ExtractedDateAndTime;
 
 @Component
 public class Utils {
@@ -149,4 +150,21 @@ public class Utils {
         // Return the new ID formatted with a prefix "FA" and a three-digit number
         return String.format("Q%03d", numericPart);
     }
+
+    public ExtractedDateAndTime dateAndTimeValueExtracted(String dateTime) {
+        // Create a new instance of ExtractedDateAndTime
+        ExtractedDateAndTime extractedDateAndTime = new ExtractedDateAndTime();
+        
+        // Split the input string based on the "T" character
+        String[] parts = dateTime.split("T");
+        
+        // Set the date (before "T")
+        extractedDateAndTime.setDate(parts[0]);
+        
+        // Set the time (after "T")
+        extractedDateAndTime.setTime(parts[1]);
+        
+        return extractedDateAndTime;
+    }
+    
 }

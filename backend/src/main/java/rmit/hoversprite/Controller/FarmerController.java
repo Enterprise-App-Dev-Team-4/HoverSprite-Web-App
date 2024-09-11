@@ -46,10 +46,12 @@ import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Request.FeedbackSprayerRequest;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Response.AuthenticationResponse;
+import rmit.hoversprite.Response.CheckTimeSlotService;
 import rmit.hoversprite.Services.FarmService;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.SprayerFeatureServices;
 import rmit.hoversprite.Utils.DTOConverter;
+import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
@@ -73,6 +75,12 @@ public class FarmerController {
 
     @Autowired
     private FarmerHandleOrderMiddleware farmerHandleOrderMiddleware;
+
+    @Autowired
+    CheckTimeSlotService checkTimeSlotService;
+
+    @Autowired
+    private Utils utilsClass;
 
     @PostMapping("farm/add-farm")
     public ResponseEntity<?> addFarm(@RequestBody FarmerAddFarmRequest request)
@@ -106,6 +114,7 @@ public class FarmerController {
     {
         
         Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
+        order.setDate(utilsClass.dateAndTimeValueExtracted(order.getDate()).getDate());
         Order savedOrder = farmerService.farmerCreateOrder(order);
 
         // send email proxy
@@ -180,5 +189,13 @@ public class FarmerController {
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(order);
 
         return ResponseEntity.ok(orderDTO);
+    }
+
+    @GetMapping("booking/checkTimeSlot")
+    public List<Integer> farmerCheckTimeSlot(@RequestParam String date, @RequestParam String serviceID)
+    {
+        // Get the spray service by service ID
+        SprayServices services = sprayServices.getServiceByID(serviceID);
+        return checkTimeSlotService.checkTimeSlot(date, services);
     }
 }

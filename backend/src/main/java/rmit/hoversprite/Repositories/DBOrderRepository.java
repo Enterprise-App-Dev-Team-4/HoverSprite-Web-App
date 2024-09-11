@@ -1,5 +1,7 @@
 package rmit.hoversprite.Repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +20,5 @@ public interface DBOrderRepository extends JpaRepository<Order, String>{
 
     Page<Order> findBySprayers(Sprayer sprayer, Pageable pageable);
     
+    List<Order> findByDate(String date);
 }

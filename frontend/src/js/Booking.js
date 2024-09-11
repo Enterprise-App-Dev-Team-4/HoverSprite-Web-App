@@ -452,6 +452,7 @@ function processBooking(isCardPayment) {
     const date = document.getElementById('date').value;
     const session = document.getElementById('session').value;
     const totalCost = calculateTotalCost(area);
+    console.log(date);
 
     const farm = generateFarmObject(area, location);
     sendAddFarmRequest(farm);
