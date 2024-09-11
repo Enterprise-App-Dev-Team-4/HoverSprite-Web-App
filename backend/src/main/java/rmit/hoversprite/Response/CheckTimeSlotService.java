@@ -65,7 +65,13 @@ public class CheckTimeSlotService {
         ExtractedDateAndTime requestedDate = utilsClass.dateAndTimeValueExtracted(date);
         // Fetch all orders for the specified date
         List<Order> ordersOnRequestedDate = orderService.getOrderByDate(requestedDate.getDate());
-
+        // filter base on order
+        System.out.println("The filtered service: ");
+        System.out.println(ordersOnRequestedDate.get(0).getSprayerServices().getId());
+        ordersOnRequestedDate.stream()
+            .filter(order -> order.getSprayerServices().getId() == services.getId())
+            .forEach(System.out::println);
+        System.out.println(ordersOnRequestedDate.get(0).getSprayerServices().getId());
         // Get the list of time slots for the service
         List<Integer> listTimeSlot = services.getTimeSlots();
         System.out.println("service timeslot: ");
@@ -83,7 +89,7 @@ public class CheckTimeSlotService {
             // Find the index of the order's time slot in the available time slots
             int sessionIndex = availableTimeSlots.indexOf(orderTimeSlot);
 
-            if (sessionIndex != -1 && sessionIndex < listTimeSlot.size()) {
+            if (sessionIndex != -1 && sessionIndex < listTimeSlot.size() && services.getId() == order.getSprayerServices().getId()) {
                 // Decrease the number of available slots by one
                 int time_slot = listTimeSlot.get(sessionIndex);
                 if (time_slot > 0) {
