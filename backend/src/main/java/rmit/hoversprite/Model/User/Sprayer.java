@@ -16,7 +16,8 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.FeedbackSprayer;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.Role;
 import rmit.hoversprite.Utils.Enum.SprayerExpertise;
@@ -32,7 +33,7 @@ public class Sprayer extends User{
     private List<Order> orders;
 
     @ManyToMany(mappedBy = "sprayer")
-    private List<Feedback> feedback;
+    private List<FeedbackSprayer> feedback;
 
     // Default constructor
     public Sprayer() {
@@ -41,7 +42,7 @@ public class Sprayer extends User{
 
     // Parameterized constructor
     public Sprayer(String id, String password, String email, String fullName, String phoneNumber, String homeAddress,
-     String firstName, String lastName, List<Order> receivedOrders, Role role, String token, String profileImage, SprayerExpertise sprayerExpertise, List<Order> orders, List<Feedback> feedback) {
+     String firstName, String lastName, List<Order> receivedOrders, Role role, String token, String profileImage, SprayerExpertise sprayerExpertise, List<Order> orders, List<FeedbackSprayer> feedback) {
         super(id, password, email, fullName, phoneNumber, homeAddress, firstName, lastName, role, token, profileImage);
         this.sprayerExpertise = sprayerExpertise;
         this.orders = orders;
@@ -56,12 +57,12 @@ public class Sprayer extends User{
         this.sprayerExpertise = sprayerExpertise;
     }
 
-    public void setFeedback(List<Feedback> feedback)
+    public void setFeedback(List<FeedbackSprayer> feedback)
     {
         this.feedback = feedback;
     }
 
-    public List<Feedback> getFeedback()
+    public List<FeedbackSprayer> getFeedback()
     {
         return this.feedback;
     }

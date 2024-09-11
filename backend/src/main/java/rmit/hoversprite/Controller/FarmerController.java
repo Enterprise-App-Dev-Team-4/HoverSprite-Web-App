@@ -164,8 +164,8 @@ public class FarmerController {
     public ResponseEntity<?> farmerFeedbackOrder(@RequestBody FarmerFeedbackRequest request)
     {
         // add feedback dto
-        FeedbackDTO feedbackDTO = new DTOConverter().convertFeedbackDataToObject(feedbackRequestHandler.farmerFeedback(request));
-        return ResponseEntity.ok(feedbackDTO);
+        // FeedbackDTO feedbackDTO = new DTOConverter().convertOrderFeedbackDataToObject(feedbackRequestHandler.farmerFeedback(request));
+        return ResponseEntity.ok(feedbackRequestHandler.farmerFeedback(request, new DTOConverter()));
     }
 
     @GetMapping("checkOrderQueue")

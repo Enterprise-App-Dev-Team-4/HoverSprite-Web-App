@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Model.Farm.Farm;
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;

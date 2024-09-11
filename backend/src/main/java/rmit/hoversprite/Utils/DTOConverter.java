@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.FeedbackSprayerDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.OrderFeedbackDTO;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.OrderQueueDTO.OrderQueueDTO;
 import rmit.hoversprite.DTO.SprayServicesDTO.SprayServicesDTO;
@@ -12,7 +14,8 @@ import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
 import rmit.hoversprite.Model.Farm.Farm;
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.FeedbackSprayer;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
@@ -63,7 +66,7 @@ public class DTOConverter {
                 sprayer.getToken(),
                 sprayer.getProfileImage(),
                 sprayer.getSprayerExpertise(),
-                convertFeedbackDataToObject(sprayer.getFeedback())
+                convertFeedbackSprayerDataToObject(sprayer.getFeedback())
             );
         }
         return null;
@@ -102,14 +105,24 @@ public class DTOConverter {
         return null;
     }
 
-    public List<FeedbackDTO> convertFeedbackDataToObject(List<Feedback> feedbacks) {
+    public List<FeedbackDTO> convertOrderFeedbackDataToObject(List<OrderFeedback> feedbacks) {
         if (feedbacks != null && !feedbacks.isEmpty()) {
             return feedbacks.stream()
-                .map(this::convertFeedbackDataToObject)
+                .map(this::convertOrderFeedbackDataToObject)
                 .collect(Collectors.toList());
         }
         return null;
     }
+
+    public List<FeedbackSprayerDTO> convertFeedbackSprayerDataToObject(List<FeedbackSprayer> feedbacks) {
+        if (feedbacks != null && !feedbacks.isEmpty()) {
+            return feedbacks.stream()
+                .map(this::convertFeedbackSprayerDataToObject)
+                .collect(Collectors.toList());
+        }
+        return null;
+    }
+    
 
     public OrderDTO convertOrderDataToObject(Order order)
     {
@@ -129,7 +142,7 @@ public class DTOConverter {
                 order.getSprayerServices().getServiceName(),
                 order.getSprayerServices().getServiceType(),
                 convertSprayerDataToObject(order.getSprayers()),
-                convertFeedbackDataToObject(order.getFeedback())
+                convertOrderFeedbackDataToObject(order.getFeedback())
             );
         }
         return null;
@@ -151,14 +164,30 @@ public class DTOConverter {
         return null;
     }
     
-    public FeedbackDTO convertFeedbackDataToObject(Feedback feedback)
+    public OrderFeedbackDTO convertOrderFeedbackDataToObject(OrderFeedback feedback)
     {
         if (feedback != null) {
-            return new FeedbackDTO(
+            return new OrderFeedbackDTO(
                 feedback.getFeedbackID(),
                 feedback.getContent(),
                 feedback.getRatingScore(),
                 feedback.getFarmer()
+            );
+        }
+        return null;
+    }
+
+    public FeedbackSprayerDTO convertFeedbackSprayerDataToObject(FeedbackSprayer feedback)
+    {
+        if (feedback != null) {
+            return new FeedbackSprayerDTO(
+                feedback.getFeedbackID(),
+                feedback.getContent(),
+                feedback.getRatingScore(),
+                feedback.getFarmer(),
+                feedback.getAttentivenessRating(),
+                feedback.getFriendlinessRating(),
+                feedback.getProfessionalismRating()
             );
         }
         return null;

@@ -1,16 +1,16 @@
 package rmit.hoversprite.Request;
 
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 
 public class FeedbackSprayerRequest {
     private String sprayerEmail;
-    private Feedback feedback;
+    private OrderFeedback feedback;
 
     // Default constructor
     public FeedbackSprayerRequest() {}
 
     // Parameterized constructor
-    public FeedbackSprayerRequest(String sprayerEmail, Feedback feedback) {
+    public FeedbackSprayerRequest(String sprayerEmail, OrderFeedback feedback) {
         this.sprayerEmail = sprayerEmail;
         this.feedback = feedback;
     }
@@ -26,12 +26,12 @@ public class FeedbackSprayerRequest {
     }
 
     // Getter for feedback
-    public Feedback getFeedback() {
+    public OrderFeedback getFeedback() {
         return feedback;
     }
 
     // Setter for feedback
-    public void setFeedback(Feedback feedback) {
+    public void setFeedback(OrderFeedback feedback) {
         this.feedback = feedback;
     }
 }

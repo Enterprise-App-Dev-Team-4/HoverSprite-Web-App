@@ -7,45 +7,49 @@ public class FeedbackDTO {
 
     private double ratingScore;
 
-    private String farmerFullName;
+    private String farmer;
 
     public FeedbackDTO() {}
 
-    public FeedbackDTO(String feedbackID, String content, double ratingScore, String farmerFullName)
-    {
+    public FeedbackDTO(String feedbackID, String content, double ratingScore, String farmer) {
         this.feedbackID = feedbackID;
         this.content = content;
         this.ratingScore = ratingScore;
-        this.farmerFullName = farmerFullName;
+        this.farmer = farmer;
     }
 
-    public void setFeedbackID(String feedbackID)
-    {
+    public String getFeedbackID() {
+        return feedbackID;
+    }
+
+    public void setFeedbackID(String feedbackID) {
         this.feedbackID = feedbackID;
     }
-    
-    public String getFeedbackID()
-    {
-        return this.feedbackID;
+
+    // Getter and Setter for content
+    public String getContent() {
+        return content;
     }
 
-    public void setContent(String content)
-    {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public String getContent()
-    {
-        return this.content;
+    // Getter and Setter for ratingScore
+    public double getRatingScore() {
+        return ratingScore;
     }
 
-    public void setRatingScore(double ratingScore)
-    {
+    public void setRatingScore(double ratingScore) {
         this.ratingScore = ratingScore;
     }
 
-    public double getRatingScore()
-    {
-        return this.ratingScore;
+    // Getter and Setter for farmer
+    public String getFarmer() {
+        return farmer;
+    }
+
+    public void setFarmer(String farmer) {
+        this.farmer = farmer;
     }
 }

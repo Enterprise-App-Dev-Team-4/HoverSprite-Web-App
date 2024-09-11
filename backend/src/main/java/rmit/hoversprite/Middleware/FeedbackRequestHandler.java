@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.DTO.FeedbackDTO.ReturnedFeedbacks;
+import rmit.hoversprite.Model.Feedback.FeedbackSprayer;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Request.FarmerFeedbackRequest;
@@ -14,6 +17,7 @@ import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.FeedbackService;
 import rmit.hoversprite.Services.OrderService;
 import rmit.hoversprite.Services.SprayerService;
+import rmit.hoversprite.Utils.DTOConverter;
 
 @Service
 public class FeedbackRequestHandler {
@@ -28,35 +32,53 @@ public class FeedbackRequestHandler {
 
     @Autowired
     FeedbackService feedbackService;
-    public Feedback farmerFeedback(FarmerFeedbackRequest request)
+    public ReturnedFeedbacks farmerFeedback(FarmerFeedbackRequest request, DTOConverter converter)
     {
-        Feedback feedback = new Feedback();
+        OrderFeedback feedback = new OrderFeedback();
+        FeedbackSprayer feedbackSprayer = new FeedbackSprayer();
         Order order = orderService.getOrderById(request.getOrderID());
         List<Sprayer> sprayer = order.getSprayers();
 
-        feedback.setContent(request.getFeedback().getContent());
-        feedback.setRatingScore(request.getFeedback().getRatingScore());
-        feedback.setSprayerContent(request.getFeedback().getSprayerContent());
-        feedback.setSprayerRatingScore(request.getFeedback().getSprayerRatingScore());
+        // set feedback for order overall:
+        if(request != null)
+        {
+            System.out.println("Feedback:");
+            System.out.println(request.getOrderFeedback());
+        }
+        
+        feedback.setContent(request.getOrderFeedback().getContent());
+        feedback.setRatingScore(request.getOrderFeedback().getRatingScore());
         feedback.setFarmer(farmerService.getFarmerData().getFullName());
         feedback.setOrder(order);
-        feedback.setSprayer(sprayer);
+
+        // set feedback for sprayer overall
+        feedbackSprayer.setContent(request.getSprayerFeedback().getContent());
+        feedbackSprayer.setRatingScore(request.getSprayerFeedback().getRatingScore());
+        feedbackSprayer.setFarmer(farmerService.getFarmerData().getFullName());
+        feedbackSprayer.setAttentivenessRating(request.getSprayerFeedback().getAttentivenessRating());
+        feedbackSprayer.setFriendlinessRating(request.getSprayerFeedback().getFriendlinessRating());
+        feedbackSprayer.setProfessionalismRating(request.getSprayerFeedback().getProfessionalismRating());
+        feedbackSprayer.setSprayer(sprayer);
+        
+        
 
         //save to service
-        feedback = feedbackService.createFeedback(feedback);
-
+        feedback = feedbackService.createOrderFeedback(feedback);
+        feedbackSprayer = feedbackService.createFeedbackSprayer(feedbackSprayer);
         order.setFeedback(feedback);
         orderService.updateOrder(order);
 
         for(int i = 0; i < sprayer.size(); i++)
         {
-            List<Feedback> listOfFeedbacks = sprayer.get(i).getFeedback();
-            listOfFeedbacks.add(feedback);
+            List<FeedbackSprayer> listOfFeedbacks = sprayer.get(i).getFeedback();
+            listOfFeedbacks.add(feedbackSprayer);
             sprayer.get(i).setFeedback(listOfFeedbacks);
             sprayerService.updateSprayer(sprayer.get(i));
         }
-        
-        return feedback;
+        ReturnedFeedbacks returnedFeedbacks = new ReturnedFeedbacks();
+        returnedFeedbacks.setFeedbackSprayerDTO(converter.convertFeedbackSprayerDataToObject(feedbackSprayer));
+        returnedFeedbacks.setOrderFeedbackDTO(converter.convertOrderFeedbackDataToObject(feedback));
+        return returnedFeedbacks;
     }
 
 }

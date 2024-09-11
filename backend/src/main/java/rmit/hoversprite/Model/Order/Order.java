@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
@@ -61,7 +61,7 @@ public class Order {
     private List<Sprayer> sprayers;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Feedback feedback;
+    private OrderFeedback feedback;
 
     private String location;
 
@@ -70,7 +70,7 @@ public class Order {
 
     // Parameterized constructor
     public Order(String orderID, String date, OrderStatus orderStatus, double totalCost, Farmer farmer,
-                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot, String location, Feedback feedback) {
+                 Receptionist receptionist, SprayServices sprayerServices, List<Sprayer> sprayers, String serviceTimeSlot, String location, OrderFeedback feedback) {
         this.orderID = orderID;
         this.date = date;
         this.orderStatus = orderStatus;
@@ -93,12 +93,12 @@ public class Order {
         this.orderID = orderID;
     }
 
-    public void setFeedback(Feedback feedback)
+    public void setFeedback(OrderFeedback feedback)
     {
         this.feedback = feedback;
     }
 
-    public Feedback getFeedback()
+    public OrderFeedback getFeedback()
     {
         return this.feedback;
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Repositories.DBOrderQueueRepository;
