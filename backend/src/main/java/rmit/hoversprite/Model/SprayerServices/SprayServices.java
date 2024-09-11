@@ -43,7 +43,7 @@ public class SprayServices {
     @JsonManagedReference(value = "service")
     private List<Order> orders;
 
-    @ElementCollection
+    
     private List<Integer> timeSlots = new ArrayList<>();
 
     public SprayServices() {}

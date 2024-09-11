@@ -51,6 +51,7 @@ function getAllServices(append = false) {
     fetch(`${serviceAPI}?${queryString}`)
         .then(handleResponse)
         .then(data => {
+            console.log(data);
             allServices = append ? [...allServices, ...data] : data;
             displayServices(allServices, append);
         })

@@ -27,6 +27,12 @@ public class AdminController {
     @Autowired
     private SprayerFeatureServices sprayerService;
 
+    @GetMapping("service")
+    public ResponseEntity<?> findService(@RequestParam String serviceID)
+    {
+        return ResponseEntity.ok(sprayerService.getServiceByID(serviceID));
+    }
+
     @GetMapping("service/all")
     public ResponseEntity<List<SprayServicesDTO>> getAllServices(
         @RequestParam(required = false) String searchTerm,
@@ -37,7 +43,11 @@ public class AdminController {
     ) {
         // Fetch all services initially
         List<SprayServices> services = sprayerService.listAllSprayServices();
-
+        for(int i = 0; i < services.size(); i++)
+        {
+            System.out.println("Service are:");
+            System.out.println(services.get(i).getTimeSlots());
+        }
         if (searchTerm != null && !searchTerm.isEmpty()) {
             services = sprayerService.filterBySearch(searchTerm);
         }
@@ -51,30 +61,33 @@ public class AdminController {
         }
 
 
-        // Filter full service out of page
-        services = sprayerService.allBookableServices(services);
+        // // Filter full service out of page
+        // services = sprayerService.allBookableServices(services);
 
         // Convert list of SprayServices to list of SprayServicesDTO
         List<SprayServicesDTO> serviceDTOs = services.stream()
             .map(new DTOConverter()::convertServiceDataToObject)
             .collect(Collectors.toList());
-
+        
         // Return the list of SprayServicesDTO
         return ResponseEntity.ok(serviceDTOs);
     }
 
 
     @PostMapping("services/add")
-    public SprayServices addSprayServices(@RequestBody SprayServices sprayServices)
+    public ResponseEntity<?> addSprayServices(@RequestBody SprayServices sprayServices)
     {
-        return sprayerService.createSprayServices(sprayServices);
+        SprayServicesDTO services = new DTOConverter().convertServiceDataToObject(sprayerService.createSprayServices(sprayServices));
+        
+        System.out.println(services.getTimeSlots());
+        return ResponseEntity.ok(services);
     }
 
-    @PutMapping("services/update")
-    public ResponseEntity<?> updateSprayServices(@RequestBody SprayServices sprayServices)
-    {
-        SprayServicesDTO servicesDTO = new DTOConverter().convertServiceDataToObject(sprayerService.updateSprayServices(sprayServices));
-        System.out.println("TIme slot: " + servicesDTO.getTimeSlots());
-        return ResponseEntity.ok(servicesDTO);
-    }
+    // @PutMapping("services/update")
+    // public ResponseEntity<?> updateSprayServices(@RequestBody SprayServices sprayServices)
+    // {
+    //     SprayServicesDTO servicesDTO = new DTOConverter().convertServiceDataToObject(sprayerService.updateSprayServices(sprayServices));
+    //     System.out.println("TIme slot: " + servicesDTO.getTimeSlots());
+    //     return ResponseEntity.ok(servicesDTO);
+    // }
 }

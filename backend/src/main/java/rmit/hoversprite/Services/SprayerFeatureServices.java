@@ -1,5 +1,6 @@
 package rmit.hoversprite.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,10 @@ public class SprayerFeatureServices {
         String generatedServiceId = utilsClass.generateSprayServiceId(serviceRepository.findAll());
         sprayServices.setId(generatedServiceId);
 
+        // clear spray service timeslot first
         // auto fulfill the timeslot at the beginning
+        sprayServices.setTimeSlots(new ArrayList<Integer>());
+
         SprayServices savedSprayServices = checkTimeSlotService.fullFillTimeSlot(sprayServices);
 
         return serviceRepository.save(savedSprayServices);
@@ -94,16 +98,16 @@ public class SprayerFeatureServices {
         return services;
     }
 
+    public SprayServices getServiceByID(String id)
+    {
+        return serviceRepository.findServiceById(id);
+    }
+
     public SprayServices updateSprayServices(SprayServices services)
     {
         SprayServices foundServices = serviceRepository.findServiceById(services.getId());
         // update the timeslot to database
         foundServices.setTimeSlots(services.getTimeSlots());
         return serviceRepository.save(foundServices);
-    }
-
-    public List<SprayServices> allBookableServices(List<SprayServices> services)
-    {
-        return checkTimeSlotService.filterServicesWithAllZeroTimeSlots(services);
     }
 }
