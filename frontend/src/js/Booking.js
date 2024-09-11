@@ -5,6 +5,7 @@ const addFarmAPI = 'http://localhost:8080/farm/add-farm';
 const updateServicesAPI = 'http://localhost:8080/services/update';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const stripeAPI = 'http://localhost:8080/simulate-visa-payment';
+const checkTimeSlotAPI = 'http://localhost:8080/booking/checkTimeSlot';
 
 let role = null;  // To allow reassignment later
 let sentUser = null;
@@ -25,6 +26,16 @@ const availableSessions = [
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
     initializeApp();
+
+    // Add event listener for date picker to verify time slots upon selection
+    // Add event listener for date picker to verify time slots upon selection
+    const dateInput = document.getElementById("date");
+    dateInput.addEventListener("change", function () {
+        const selectedDate = dateInput.value;
+        if (selectedDate) {
+            verifyTimeSlots(selectedDate, sendService.id);
+        }
+    });
 });
 
 // Initialization function
@@ -48,7 +59,7 @@ function getUserRoleFromUrl() {
 }
 
 // Populate session times in the select box
-function populateSessionOptions() {
+function populateSessionOptions(availableSlots = []) {
     const sessionSelect = document.getElementById("session");
     sessionSelect.innerHTML = ""; // Clear existing options
 
@@ -56,12 +67,38 @@ function populateSessionOptions() {
         const option = document.createElement("option");
         option.textContent = session;
 
-        if (sendService && sendService.timeSlots[index] === 0) {
+        // If the backend provides time slot availability, disable the option if it's 0
+        if (availableSlots.length > 0 && availableSlots[index] === 0) {
             option.disabled = true;
         }
 
         sessionSelect.appendChild(option);
     });
+}
+
+function disableUnavailableSessions(availableSlots) {
+    const sessionSelect = document.getElementById("session");
+    const options = sessionSelect.options;
+
+    availableSlots.forEach((slot, index) => {
+        if (slot === 0 && options[index]) {
+            options[index].disabled = true; // Disable unavailable session
+        } else if (slot > 0 && options[index]) {
+            options[index].disabled = false; // Ensure available session is enabled
+        }
+    });
+}
+
+function verifyTimeSlots(selectedDate, serviceID) {
+    fetch(`${checkTimeSlotAPI}?date=${selectedDate}&serviceID=${serviceID}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received time slots from backend:', data);
+            disableUnavailableSessions(data);
+        })
+        .catch(error => {
+            console.error("Error fetching time slots:", error);
+        });
 }
 
 // Load navbar based on role
