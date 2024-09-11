@@ -104,3 +104,9 @@
     display: flex;
     justify-content: center;
 }
+
+.disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+}

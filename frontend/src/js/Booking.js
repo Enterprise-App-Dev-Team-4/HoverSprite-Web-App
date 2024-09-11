@@ -31,9 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add event listener for date picker to verify time slots upon selection
     const dateInput = document.getElementById("date");
     dateInput.addEventListener("change", function () {
+        console.log("Date is picked");
         const selectedDate = dateInput.value;
+        console.log(selectedDate);
         if (selectedDate) {
-            verifyTimeSlots(selectedDate, sendService.id);
+            verifyTimeSlots(selectedDate, sendService.id); // Assuming sendService.id is the service being booked
         }
     });
 });
@@ -48,7 +50,6 @@ function initializeApp() {
     extractAndStoreUrlParams();
     setupFormHandlers(); // Sets up form, including payment handling
     setInitialDate();
-    populateSessionOptions();
     updatePrice();
 }
 
@@ -58,47 +59,98 @@ function getUserRoleFromUrl() {
     return params.get('role');
 }
 
-// Populate session times in the select box
-function populateSessionOptions(availableSlots = []) {
-    const sessionSelect = document.getElementById("session");
-    sessionSelect.innerHTML = ""; // Clear existing options
 
-    availableSessions.forEach((session, index) => {
-        const option = document.createElement("option");
-        option.textContent = session;
-
-        // If the backend provides time slot availability, disable the option if it's 0
-        if (availableSlots.length > 0 && availableSlots[index] === 0) {
-            option.disabled = true;
+// Populate session times in the table and disable unavailable sessions
+function disableUnavailableSessions(availableSlots) {
+    availableSlots.forEach((slot, index) => {
+        const sessionCell = document.getElementById(`session-${index}`);
+        if (sessionCell) {
+            if (slot === 0) {
+                sessionCell.classList.add('disabled');  // Add disabled class
+                sessionCell.style.pointerEvents = 'none';  // Disable click events
+                sessionCell.style.backgroundColor = '#e0e0e0';  // Optional: change color to show disabled state
+                sessionCell.style.color = '#999';  // Change text color to indicate disabled state
+            } else {
+                sessionCell.classList.remove('disabled');
+                sessionCell.style.pointerEvents = 'auto';  // Enable click events
+                sessionCell.style.backgroundColor = '';  // Reset color
+                sessionCell.style.color = '';  // Reset text color
+            }
         }
-
-        sessionSelect.appendChild(option);
     });
 }
 
-function disableUnavailableSessions(availableSlots) {
-    const sessionSelect = document.getElementById("session");
-    const options = sessionSelect.options;
 
-    availableSlots.forEach((slot, index) => {
-        if (slot === 0 && options[index]) {
-            options[index].disabled = true; // Disable unavailable session
-        } else if (slot > 0 && options[index]) {
-            options[index].disabled = false; // Ensure available session is enabled
-        }
-    });
+// Helper function to map index to corresponding time range
+function getHourRange(index) {
+    const ranges = [
+        { start: 4, end: 5 },  // "04:00 - 05:00"
+        { start: 5, end: 6 },  // "05:00 - 06:00"
+        { start: 6, end: 7 },  // "06:00 - 07:00"
+        { start: 7, end: 8 },  // "07:00 - 08:00"
+        { start: 16, end: 17 }, // "16:00 - 17:00"
+        { start: 17, end: 18 }  // "17:00 - 18:00"
+    ];
+    return ranges[index];
+}
+
+// Convert time to 24-hour format before sending to server
+function convertTo24HourFormat(time) {
+    const [hour, minute] = time.split(":");
+    let formattedTime = '';
+
+    // Convert PM times
+    if (hour < 12 && time.includes('PM')) {
+        formattedTime = `${parseInt(hour) + 12}:${minute}`;
+    } else if (hour == 12 && time.includes('AM')) {
+        // Handle midnight case (12:00 AM should be 00:00)
+        formattedTime = `00:${minute}`;
+    } else {
+        formattedTime = `${hour}:${minute}`;
+    }
+
+    return formattedTime;
 }
 
 function verifyTimeSlots(selectedDate, serviceID) {
     fetch(`${checkTimeSlotAPI}?date=${selectedDate}&serviceID=${serviceID}`)
         .then(response => response.json())
         .then(data => {
-            console.log('Received time slots from backend:', data);
-            disableUnavailableSessions(data);
+            console.log('Received time slots from backend:', data);  // Debugging output
+            disableUnavailableSessions(data);  // Disable cells in the session table
+            restrictTimePicker(data);  // Disable invalid time in date picker
         })
         .catch(error => {
             console.error("Error fetching time slots:", error);
         });
+}
+
+// Function to restrict time selection in date picker based on unavailable sessions
+function restrictTimePicker(availableSlots) {
+    const dateInput = document.getElementById("date");
+    
+    // Extract available time slots (AM/PM sessions) from availableSlots array
+    let unavailableTimeRanges = [];
+    
+    // Map time slots to actual hour ranges (for example, "04:00 - 05:00" becomes 04:00 to 05:00)
+    availableSlots.forEach((slot, index) => {
+        if (slot === 0) {
+            let range = getHourRange(index);
+            unavailableTimeRanges.push(range);
+        }
+    });
+
+    // Disable unavailable times in the time picker
+    dateInput.addEventListener("input", function () {
+        let selectedTime = new Date(dateInput.value).getHours(); // Get the hour of the selected time
+        
+        unavailableTimeRanges.forEach((range) => {
+            if (selectedTime >= range.start && selectedTime < range.end) {
+                alert(`The selected time is unavailable: ${range.start}:00 - ${range.end}:00`);
+                dateInput.value = ''; // Clear invalid time selection
+            }
+        });
+    });
 }
 
 // Load navbar based on role
@@ -207,6 +259,7 @@ function extractAndStoreUrlParams() {
     const { user, service } = getUrlParams();
     sentUser = user;
     sendService = service;
+    console.log(sendService);
 }
 
 // Parse URL parameters
@@ -310,7 +363,20 @@ function hideBookingSuccessModal() {
 function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, locationInput, sessionSelect) {
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        showConfirmationModal(areaInput.value, dateInput.value, dateTypeSelect.value, locationInput.value, sessionSelect.value);
+
+        // Extract the hour from the datepicker
+        const dateValue = new Date(dateInput.value);
+        const selectedHour = dateValue.getHours();
+
+        // Convert the selected time from the datepicker to the session in the table
+        const sessionTimeSlot = mapTimeToSession(selectedHour);
+
+        if (!sessionTimeSlot) {
+            alert("The selected time does not match any available session times.");
+            return;
+        }
+
+        showConfirmationModal(areaInput.value, dateInput.value, dateTypeSelect.value, locationInput.value, sessionTimeSlot);
     });
 
     // Handle confirmation and payment selection
@@ -328,14 +394,19 @@ function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, loca
         paymentModal.hide();
 
         handleDateConversionIfNeeded(dateTypeSelect, dateInput);
-        updateServiceTimeSlots(sessionSelect);
+        // updateServiceTimeSlots(sessionSelect);
 
         const totalCost = calculateTotalCost(areaInput.value);
         const farm = generateFarmObject(areaInput.value, locationInput.value);
         sendAddFarmRequest(farm);
         sendRequestUpdateService(sendService);
 
-        const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionSelect.value, totalCost);
+        // Get the session time slot
+        const dateValue = new Date(dateInput.value);
+        const selectedHour = dateValue.getHours();
+        const sessionTimeSlot = mapTimeToSession(selectedHour);
+
+        const formData = gatherFormData(areaInput.value, locationInput.value, dateInput.value, sessionTimeSlot, totalCost);
         formData.paymentMethod = "cash";
 
         // Show booking success modal
@@ -356,6 +427,27 @@ function setupFormSubmitHandler(form, areaInput, dateInput, dateTypeSelect, loca
     });
 
     document.getElementById("submitVisaPaymentButton").addEventListener("click", handleVisaPayment);
+}
+
+// Map the hour from the datepicker to the session timeslot in the table
+function mapTimeToSession(hour) {
+    const sessionTimes = [
+        { session: "04:00 - 05:00", startHour: 4, endHour: 5 },
+        { session: "05:00 - 06:00", startHour: 5, endHour: 6 },
+        { session: "06:00 - 07:00", startHour: 6, endHour: 7 },
+        { session: "07:00 - 08:00", startHour: 7, endHour: 8 },
+        { session: "16:00 - 17:00", startHour: 16, endHour: 17 },
+        { session: "17:00 - 18:00", startHour: 17, endHour: 18 },
+    ];
+
+    for (let i = 0; i < sessionTimes.length; i++) {
+        const { session, startHour, endHour } = sessionTimes[i];
+        if (hour >= startHour && hour < endHour) {
+            return session;
+        }
+    }
+
+    return null; // Return null if no session matches the selected time
 }
 
 function handleVisaPayment(event) {
@@ -487,15 +579,27 @@ function processBooking(isCardPayment) {
     const area = document.getElementById('area').value;
     const location = document.getElementById('location').value;
     const date = document.getElementById('date').value;
-    const session = document.getElementById('session').value;
     const totalCost = calculateTotalCost(area);
+
     console.log(date);
+
+    // Extract the hour from the datepicker
+    const dateValue = new Date(date);
+    const selectedHour = dateValue.getHours();
+
+    // Convert the selected time from the datepicker to the session in the table
+    const sessionTimeSlot = mapTimeToSession(selectedHour);
+
+    if (!sessionTimeSlot) {
+        alert("The selected time does not match any available session times.");
+        return;
+    }
 
     const farm = generateFarmObject(area, location);
     sendAddFarmRequest(farm);
     sendRequestUpdateService(sendService);
 
-    const formData = gatherFormData(area, location, date, session, totalCost);
+    const formData = gatherFormData(area, location, date, sessionTimeSlot, totalCost);
     formData.paymentMethod = isCardPayment ? "card" : "cash";
 
     // Show booking success modal
@@ -526,10 +630,10 @@ function handleDateConversionIfNeeded(dateTypeSelect, dateInput) {
     if (dateTypeSelect.value === 'lunar') dateInput.value = convertDate(dateInput.value, 'lunar', 'solar');
 }
 
-function updateServiceTimeSlots(sessionSelect) {
-    const selectedSessionIndex = sessionSelect.selectedIndex;
-    if (sendService.timeSlots[selectedSessionIndex] > 0) sendService.timeSlots[selectedSessionIndex]--;
-}
+// function updateServiceTimeSlots(sessionSelect) {
+//     const selectedSessionIndex = sessionSelect.selectedIndex;
+//     if (sendService.timeSlots[selectedSessionIndex] > 0) sendService.timeSlots[selectedSessionIndex]--;
+// }
 
 function calculateTotalCost(farmArea) {
     const costPerDecare = 30000;
@@ -541,7 +645,18 @@ function generateFarmObject(farmArea, farmLocation) {
 }
 
 function gatherFormData(farmArea, location, date, session, totalCost) {
-    return { farmer: sentUser, sprayServices: sendService, date, location, serviceTimeSlot: session, totalCost };
+    let formattedDate = date;
+    if (session.includes('PM')) {
+        formattedDate = convertTo24HourFormat(date);
+    }
+    return {
+        farmer: sentUser,
+        sprayServices: sendService,
+        date: formattedDate,
+        location,
+        serviceTimeSlot: session,
+        totalCost
+    };
 }
 
 function redirectToServicePage() {
