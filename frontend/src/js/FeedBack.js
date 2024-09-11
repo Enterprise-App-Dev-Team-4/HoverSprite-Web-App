@@ -1,42 +1,53 @@
-let currentRating = 0;
+let ratings = {
+    overall: 0,
+    attentiveness: 0,
+    friendliness: 0,
+    professionalism: 0
+};
 let orderIdFromData;
-const starRating = document.getElementById('overallRating');
-const stars = starRating.getElementsByClassName('star');
 const UpdateFeedBackUrl = 'http://localhost:8080/feedback';
 const orderDetailUrl = 'http://localhost:8080/order';
 
-function setRating(rating) {
-    currentRating = rating;
+function setRating(category, rating) {
+    ratings[category] = rating;
+    const stars = document.querySelectorAll(`#${category}Rating .star`);
     for (let i = 0; i < stars.length; i++) {
         stars[i].classList.toggle('active', i < rating);
     }
 }
 
-for (let i = 0; i < stars.length; i++) {
-    stars[i].addEventListener('click', function () {
-        setRating(parseInt(this.getAttribute('data-value')));
-    });
+function initializeRatings() {
+    const ratingCategories = ['overall', 'attentiveness', 'friendliness', 'professionalism'];
+    ratingCategories.forEach(category => {
+        const stars = document.querySelectorAll(`#${category}Rating .star`);
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                setRating(category, parseInt(this.getAttribute('data-value')));
+            });
 
-    stars[i].addEventListener('mouseover', function () {
-        const value = parseInt(this.getAttribute('data-value'));
-        highlightStars(value);
-    });
+            star.addEventListener('mouseover', function () {
+                const value = parseInt(this.getAttribute('data-value'));
+                highlightStars(category, value);
+            });
 
-    stars[i].addEventListener('mouseout', function () {
-        highlightStars(currentRating);
+            star.addEventListener('mouseout', function () {
+                highlightStars(category, ratings[category]);
+            });
+        });
     });
 }
 
-function highlightStars(rating) {
-    for (let i = 0; i < stars.length; i++) {
-        stars[i].classList.toggle('active', i < rating);
-    }
+function highlightStars(category, rating) {
+    const stars = document.querySelectorAll(`#${category}Rating .star`);
+    stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+    });
 }
 
 function submitFeedback() {
     let feedbackText = document.getElementById('feedbackText').value;
-    if (currentRating === 0) {
-        alert("Please provide a star rating before submitting.");
+    if (Object.values(ratings).some(rating => rating === 0)) {
+        alert("Please provide ratings for all categories before submitting.");
         return;
     }
     if (feedbackText.trim() === '') {
@@ -49,7 +60,10 @@ function submitFeedback() {
     const feedbackData = {
         orderID: orderIdFromLink,
         feedback: {
-            ratingScore: currentRating,
+            overallRating: ratings.overall,
+            attentivenessRating: ratings.attentiveness,
+            friendlinessRating: ratings.friendliness,
+            professionalismRating: ratings.professionalism,
             content: feedbackText
         }
     };
@@ -77,8 +91,10 @@ function showPopup() {
 function closePopup() {
     document.getElementById('thankYouPopup').style.display = 'none';
     // Reset the form
-    currentRating = 0;
-    highlightStars(currentRating);
+    Object.keys(ratings).forEach(category => {
+        ratings[category] = 0;
+        highlightStars(category, 0);
+    });
     document.getElementById('feedbackText').value = '';
 }
 
@@ -106,8 +122,11 @@ function showExistingFeedback(feedback) {
     document.querySelector('.container').innerHTML = `
         <h1>Feedback Already Submitted</h1>
         <p>You have already provided feedback for this order:</p>
-        <p><strong>Rating:</strong> ${feedback.rating} / 5</p>
-        <p><strong>Comment:</strong> ${feedback.comment}</p>
+        <p><strong>Overall Rating:</strong> ${feedback.overallRating} / 5</p>
+        <p><strong>Attentiveness Rating:</strong> ${feedback.attentivenessRating} / 5</p>
+        <p><strong>Friendliness Rating:</strong> ${feedback.friendlinessRating} / 5</p>
+        <p><strong>Professionalism Rating:</strong> ${feedback.professionalismRating} / 5</p>
+        <p><strong>Comment:</strong> ${feedback.content}</p>
         <button onclick="window.close()">Close</button>
     `;
 }
@@ -130,6 +149,8 @@ function populateOrderDetails(data) {
     document.getElementById('sprayerTeam').textContent = data.sprayer.map(s => s.fullName).join(', ');
 }
 
-
-// Call getOrderDetails when the page loads
-document.addEventListener('DOMContentLoaded', getOrderDetails);
+// Call initializeRatings and getOrderDetails when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeRatings();
+    getOrderDetails();
+});
