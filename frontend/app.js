@@ -99,6 +99,11 @@ app.get('/feed-back/:id', (req, res) => { // add real id to feedback
     res.sendFile(orderFeedBackPath);
 })
 
+app.get('/home', (req, res) => {
+    res.sendFile(__dirname + '/src/pages/UserHome.html');
+});
+
+
 app.listen(3000, () => {
     console.log("listen on port");
 
