@@ -64,6 +64,7 @@ function submitFeedback() {
             content: feedbackText
         },
         sprayerFeedback: {
+            content: feedbackText,
             attentivenessRating: ratings.attentiveness,
             friendlinessRating: ratings.friendliness,
             professionalismRating: ratings.professionalism

@@ -96,7 +96,7 @@ function displayOrderDetails(order) {
     // Handle feedback
     if (order.feedBacks) {
         document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
-        document.getElementById('attentivenessRating').textContent = `${order.feedback_sprayer.attentivenessRating} / 5 ⭐`;
+        document.getElementById('attentivenessRating').textContent = `${order.sprayer[0].feedback.attentivenessRating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';

@@ -74,11 +74,13 @@ function getAllOrder(sortOrder = 'status') {
     }
 
     console.log(apiUrl);
+
     sendRequestWithToken(apiUrl)
         .then(data => {
             orders = data.content;
             totalPages = data.totalPages;
             renderOrders();
+            console.log(orders);
         })
         .catch(error => {
             console.error('Error fetching orders:', error);
@@ -295,3 +297,4 @@ function matchesDateFilter(orderDate, filter) {
 // Initialize the page
 getAllOrder();
 setupEventListeners();
+console.log(orders);
