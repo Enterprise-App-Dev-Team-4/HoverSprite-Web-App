@@ -59,12 +59,14 @@ function submitFeedback() {
 
     const feedbackData = {
         orderID: orderIdFromLink,
-        feedback: {
-            overallRating: ratings.overall,
+        orderFeedback: {
+            ratingScore: ratings.overall,
+            content: feedbackText
+        },
+        sprayerFeedback: {
             attentivenessRating: ratings.attentiveness,
             friendlinessRating: ratings.friendliness,
-            professionalismRating: ratings.professionalism,
-            content: feedbackText
+            professionalismRating: ratings.professionalism
         }
     };
 
