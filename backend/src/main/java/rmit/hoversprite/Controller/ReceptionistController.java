@@ -28,16 +28,20 @@ import rmit.hoversprite.Middleware.ReceptionistBooking;
 import rmit.hoversprite.Middleware.ReceptionistHandleSprayer;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Middleware.ReceptionistProfileUpdateRequest;
+import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
+import rmit.hoversprite.Model.User.User;
 import rmit.hoversprite.Request.AssignSprayerRequest;
 import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
 import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
 import rmit.hoversprite.Services.ReceptionistService;
+import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
+import rmit.hoversprite.Utils.Enum.Role;
 
 @RestController
 @RequestMapping("/")
@@ -58,6 +62,9 @@ public class ReceptionistController {
 
     @Autowired
     ReceptionistBooking receptionistBooking;
+
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping("receptionist")
@@ -156,5 +163,15 @@ public ResponseEntity<?> receptionistGetAllOrder(
         }
         
         return  null;
+    }
+
+    @PostMapping("booking/createFarmer")
+    public ResponseEntity<?> receptionistCreateFarmer(@RequestBody User user)
+    {
+        Farmer farmer = new Farmer();
+        farmer.setUser(user);
+        farmer.setRole(Role.Farmer);
+        UserDTO farmerDTO = new DTOConverter().convertUserDataToObject(userService.register(farmer));
+        return ResponseEntity.ok(farmerDTO);
     }
 }

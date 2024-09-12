@@ -127,13 +127,16 @@ function createNewFarmer(email, firstName, lastName) {
     })
         .then(response => response.json())
         .then(data => {
-            if (data && data.email) {
+            if (data) {
                 // Set the newly created farmer as the sentUser
+                hideManualFarmerInputs();
+
+                // Set the found farmer as the sentUser
                 sentUser = { email: data.email };
 
-                // Hide the manual inputs and show the booking form
+                // Show the booking form for the receptionist to proceed
                 document.getElementById('receptionist-phone-form').style.display = 'none';
-                document.getElementById('bookingForm').style.display = 'block';
+                document.getElementById('booking-form').style.display = 'block';
             } else {
                 alert('Error creating farmer. Please try again.');
             }
