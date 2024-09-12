@@ -37,7 +37,10 @@ public class ValidRegistrationResponse {
         if (isDuplicateFarmer(user)) {
             return null;
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
+        if(user.getPassword() != null)
+        {
+            user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
+        }
         List<Farmer> farmers = farmerRepository.findAll();
         user.setId(utilsClass.generateFarmerId(farmers)); // Generate ID for farmer
         return farmerRepository.save((Farmer) user);
