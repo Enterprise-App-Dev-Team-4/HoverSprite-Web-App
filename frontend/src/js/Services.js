@@ -87,6 +87,22 @@ function displayServices(services, append = false) {
 
 function createServiceCard(service) {
     const cropType = service.cropType ? service.cropType : "For All Croptypes";
+    
+    // Generate feedback HTML based on the orders
+    let feedbackHTML = '';
+    if (service.order && service.order.length > 0) {
+        service.order.forEach(order => {
+            if (order.feedback) {
+                feedbackHTML += `
+                    <p><strong>Farmer Feedback:</strong> ${order.feedback.content}</p>
+                    <p><strong>Rating:</strong> ${order.feedback.ratingScore} / 5</p>
+                `;
+            }
+        });
+    } else {
+        feedbackHTML = '<p>No feedback available</p>';
+    }
+
     return `
         <div class="col-md-6 col-lg-4">
             <div class="card service-card h-100" data-service-id="${service.id}">
@@ -95,6 +111,7 @@ function createServiceCard(service) {
                     <h5 class="card-title">${service.serviceName}</h5>
                     <p class="card-text">Crop Type: ${cropType}</p>
                     <p class="card-text flex-grow-1">${service.description}</p>
+                    ${feedbackHTML} <!-- Feedback section -->
                     <button class="btn btn-primary mt-auto book-now-btn" data-service-id="${service.id}">Book Now</button>
                 </div>
             </div>
@@ -125,12 +142,28 @@ function openModal(service) {
     const modalBody = document.getElementById('modal-body-content');
     const bookNowButton = document.getElementById('bookNowModal');
 
+    // Prepare feedback details for the modal
+    let feedbackDetails = '';
+    if (service.order && service.order.length > 0) {
+        service.order.forEach(order => {
+            if (order.feedback) {
+                feedbackDetails += `
+                    <p><strong>Farmer Feedback:</strong> ${order.feedback.content}</p>
+                    <p><strong>Rating:</strong> ${order.feedback.ratingScore} / 5</p>
+                `;
+            }
+        });
+    } else {
+        feedbackDetails = '<p>No feedback available for this service.</p>';
+    }
+
     modalTitle.textContent = service.serviceName;
     modalBody.innerHTML = `
         <p><strong>Crop Type:</strong> ${service.cropType || 'For All Croptypes'}</p>
         <p><strong>Description:</strong> ${service.description}</p>
         <p><strong>Service Type:</strong> ${service.serviceType}</p>
         <p><strong>Price:</strong> ${service.price} VND</p>
+        ${feedbackDetails} <!-- Feedback details in modal -->
     `;
 
     bookNowButton.onclick = () => redirectToBooking(service, user);
