@@ -1,17 +1,21 @@
 package rmit.hoversprite.Request;
 
-import rmit.hoversprite.Model.Feedback.Feedback;
+
+import rmit.hoversprite.Model.Feedback.FeedbackSprayer;
+import rmit.hoversprite.Model.Feedback.OrderFeedback;
 
 public class FarmerFeedbackRequest {
-    private Feedback feedback;
+    private OrderFeedback orderFeedback;
+    private FeedbackSprayer sprayerFeedback;
     private String orderID;
 
     public FarmerFeedbackRequest() {}
 
-    public FarmerFeedbackRequest(Feedback feedback, String orderID)
+    public FarmerFeedbackRequest(OrderFeedback orderFeedback, FeedbackSprayer sprayerFeedback, String orderID)
     {
-        this.feedback = feedback;
+        this.orderFeedback = orderFeedback;
         this.orderID = orderID;
+        this.sprayerFeedback = sprayerFeedback;
     }
 
     public String getOrderID()
@@ -19,9 +23,14 @@ public class FarmerFeedbackRequest {
         return this.orderID;
     }
 
-    public Feedback getFeedback()
+    public OrderFeedback getOrderFeedback()
     {
-        return this.feedback;
+        return this.orderFeedback;
+    }
+
+    public FeedbackSprayer getSprayerFeedback()
+    {
+        return this.sprayerFeedback;
     }
 
 }

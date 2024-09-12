@@ -6,6 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.FeedbackSprayerDTO;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Utils.Enum.Role;
 import rmit.hoversprite.Utils.Enum.SprayerExpertise;
@@ -14,7 +15,7 @@ public class SprayerDTO extends UserDTO{
      @Enumerated(EnumType.STRING)
     private SprayerExpertise sprayerExpertise;
 
-    private List<FeedbackDTO> feedbacks;
+    private List<FeedbackSprayerDTO> feedbacks;
 
     // Default constructor
     public SprayerDTO() {
@@ -23,7 +24,7 @@ public class SprayerDTO extends UserDTO{
 
     // Parameterized constructor
     public SprayerDTO(String id, String email, String fullName, String phoneNumber, String homeAddress,
-     String firstName, String lastName, Role role, String token, String profileImage, SprayerExpertise sprayerExpertise, List<FeedbackDTO> feedbacks) {
+     String firstName, String lastName, Role role, String token, String profileImage, SprayerExpertise sprayerExpertise, List<FeedbackSprayerDTO> feedbacks) {
         super(id, email, fullName, firstName, lastName, phoneNumber, homeAddress, role, token, profileImage);
         this.sprayerExpertise = sprayerExpertise;
         this.feedbacks = feedbacks;
@@ -37,12 +38,12 @@ public class SprayerDTO extends UserDTO{
         this.sprayerExpertise = sprayerExpertise;
     }
 
-    public List<FeedbackDTO> getFeedback()
+    public List<FeedbackSprayerDTO> getFeedback()
     {
         return this.feedbacks;
     }
 
-    public void setFeedback(List<FeedbackDTO> feedbacks)
+    public void setFeedback(List<FeedbackSprayerDTO> feedbacks)
     {
         this.feedbacks = feedbacks;
     }

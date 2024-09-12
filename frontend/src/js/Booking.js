@@ -26,7 +26,6 @@ const availableSessions = [
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
     initializeApp();
-
     // Add event listener for date picker to verify time slots upon selection
     // Add event listener for date picker to verify time slots upon selection
     const dateInput = document.getElementById("date");
@@ -113,6 +112,7 @@ function convertTo24HourFormat(time) {
 }
 
 function verifyTimeSlots(selectedDate, serviceID) {
+    console.log(serviceID);
     fetch(`${checkTimeSlotAPI}?date=${selectedDate}&serviceID=${serviceID}`)
         .then(response => response.json())
         .then(data => {
