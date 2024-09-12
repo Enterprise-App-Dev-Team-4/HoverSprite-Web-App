@@ -32,6 +32,7 @@ import rmit.hoversprite.Middleware.FarmerHandleOrderMiddleware;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Middleware.FeedbackRequestHandler;
+import rmit.hoversprite.Middleware.ReceptionistBooking;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;

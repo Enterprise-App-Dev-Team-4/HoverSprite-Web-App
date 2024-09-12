@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
+import rmit.hoversprite.DTO.UserDTO.FarmerDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
 import rmit.hoversprite.DTO.UserDTO.UserDTO;
+import rmit.hoversprite.Middleware.ReceptionistBooking;
 import rmit.hoversprite.Middleware.ReceptionistHandleSprayer;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Middleware.ReceptionistProfileUpdateRequest;
@@ -53,6 +55,9 @@ public class ReceptionistController {
 
     @Autowired
     ReceptionistHandleSprayer receptionistHandleSprayerMiddleware;
+
+    @Autowired
+    ReceptionistBooking receptionistBooking;
 
 
     @GetMapping("receptionist")
@@ -133,5 +138,23 @@ public ResponseEntity<?> receptionistGetAllOrder(
         Order order = receptionistHandleSprayerMiddleware.assignSprayers(request);
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(order);
         return ResponseEntity.ok(orderDTO);
+    }
+
+    @GetMapping("booking/checkPhone")
+    public ResponseEntity<?> receptionistCheckFarmerByPhone(@RequestParam String phone)
+    {
+        try {
+            
+            Farmer farmer = receptionistBooking.receptionistCheckFarmerPhoneNumber(phone);
+            if(farmer == null) return null;
+            UserDTO returnedFarmer = new DTOConverter().convertUserDataToObject(farmer);
+            System.out.println(returnedFarmer.getEmail());
+            return ResponseEntity.ok(returnedFarmer);
+        } catch (Exception e)
+        {
+            System.out.println("Error: " + e.getLocalizedMessage());
+        }
+        
+        return  null;
     }
 }

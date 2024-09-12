@@ -7,6 +7,7 @@ const ReceptionistURL = 'http://localhost:8080/receptionist';
 const stripeAPI = 'http://localhost:8080/simulate-visa-payment';
 const checkTimeSlotAPI = 'http://localhost:8080/booking/checkTimeSlot';
 const checkFarmerAPI = 'http://localhost:8080/booking/checkPhone';
+const createFarmerAPI = 'http://localhost:8080/booking/createFarmer';
 
 let role = null;  // To allow reassignment later
 let sentUser = null;
@@ -76,19 +77,29 @@ function showBookingForm() {
 
 // Check the farmer by phone number via the API
 function checkFarmerByPhone(phone) {
+    console.log(phone);
     sendRequestWithToken(`${checkFarmerAPI}?phone=${phone}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Farmer not found');
-            }
-            return response.json();
-        })
         .then(data => {
-            console.log("Farmer found:", data);
-            sentUser = { email: data.email };
-            document.getElementById('phoneErrorMessage').style.display = 'none';
-            autoFillFarmerDetails(data);
-            showBookingForm();
+            if (data && data.email) {
+                // Farmer found, use their data, hide manual input fields
+                document.getElementById('farmerEmailInput').value = data.email;
+                document.getElementById('farmerEmailInput').readOnly = true;
+                document.getElementById('phoneErrorMessage').style.display = 'none';
+
+                // Hide all manual input fields since we found the farmer
+                hideManualFarmerInputs();
+
+                // Set the found farmer as the sentUser
+                sentUser = { email: data.email };
+
+                // Show the booking form for the receptionist to proceed
+                document.getElementById('receptionist-phone-form').style.display = 'none';
+                document.getElementById('booking-form').style.display = 'block';
+            } else {
+                // If farmer is not found, allow manual input for new farmer creation
+                showManualFarmerInputs();
+                document.getElementById('phoneErrorMessage').style.display = 'block';
+            }
         })
         .catch(error => {
             console.error('Error fetching farmer data:', error);
@@ -96,22 +107,76 @@ function checkFarmerByPhone(phone) {
         });
 }
 
+function createNewFarmer(email, firstName, lastName) {
+    const fullName = `${firstName} ${lastName}`; // Automatically define full name
+    
+    const farmerData = {
+        email: email,
+        phone: document.getElementById('farmerPhone').value, // Get phone from form
+        firstName: firstName,
+        lastName: lastName,
+        fullName: fullName  // Full name is automatically defined by firstName + lastName
+    };
+
+    fetch(createFarmerAPI, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(farmerData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.email) {
+                // Set the newly created farmer as the sentUser
+                sentUser = { email: data.email };
+
+                // Hide the manual inputs and show the booking form
+                document.getElementById('receptionist-phone-form').style.display = 'none';
+                document.getElementById('bookingForm').style.display = 'block';
+            } else {
+                alert('Error creating farmer. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error creating farmer:', error);
+        });
+}
+
+// Function to show manual inputs when farmer is not found
+function showManualFarmerInputs() {
+    document.getElementById('emailInputContainer').style.display = 'block';
+    document.getElementById('firstNameInputContainer').style.display = 'block';
+    document.getElementById('lastNameInputContainer').style.display = 'block';
+    document.getElementById('continueButtonContainer').style.display = 'block';
+}
+
+// Function to hide manual inputs when farmer is found
+function hideManualFarmerInputs() {
+    document.getElementById('emailInputContainer').style.display = 'none';
+    document.getElementById('firstNameInputContainer').style.display = 'none';
+    document.getElementById('lastNameInputContainer').style.display = 'none';
+    document.getElementById('continueButtonContainer').style.display = 'none';
+}
+
+// Event listener for the Continue button
+document.getElementById('continueButton').addEventListener('click', function () {
+    const email = document.getElementById('farmerEmailInput').value;
+    const firstName = document.getElementById('firstNameInput').value;
+    const lastName = document.getElementById('lastNameInput').value;
+
+    if (email && firstName && lastName) {
+        createNewFarmer(email, firstName, lastName);
+    } else {
+        alert('Please fill out all required fields.');
+    }
+});
+
 // Auto-fill the farmer's email in the form after fetching the details
 function autoFillFarmerDetails(farmer) {
     document.getElementById("farmerEmailInput").value = farmer.email; // assuming there is a farmerEmailInput in your form
 }
 
-// Show phone input form for receptionist
-function showReceptionistPhoneForm() {
-    document.getElementById("receptionist-phone-form").style.display = 'block';
-    const checkFarmerButton = document.getElementById('checkFarmerButton');
-    checkFarmerButton.addEventListener('click', function () {
-        const phone = document.getElementById('farmerPhone').value;
-        if (phone) {
-            checkFarmerByPhone(phone);
-        }
-    });
-}
 
 // Extract user role from the URL
 function getUserRoleFromUrl() {
@@ -317,12 +382,11 @@ function convertDate(date, fromType, toType) {
 
 // Extract user and service data from the URL or the receptionist form
 function extractAndStoreUrlParams() {
+    const { user, service } = getUrlParams();
+    sentUser = user;
+    sendService = service;
     if (role === 'receptionist') {
         sentUser = { email: document.getElementById("farmerEmailInput").value };  // Get the email from the input
-    } else {
-        const { user, service } = getUrlParams();
-        sentUser = user;
-        sendService = service;
     }
 }
 
