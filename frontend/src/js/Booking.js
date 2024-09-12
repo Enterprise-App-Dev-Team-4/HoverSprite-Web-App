@@ -6,6 +6,7 @@ const updateServicesAPI = 'http://localhost:8080/services/update';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const stripeAPI = 'http://localhost:8080/simulate-visa-payment';
 const checkTimeSlotAPI = 'http://localhost:8080/booking/checkTimeSlot';
+const checkFarmerAPI = 'http://localhost:8080/booking/checkPhone';
 
 let role = null;  // To allow reassignment later
 let sentUser = null;
@@ -26,18 +27,33 @@ const availableSessions = [
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
     initializeApp();
-    // Add event listener for date picker to verify time slots upon selection
-    // Add event listener for date picker to verify time slots upon selection
+    
     const dateInput = document.getElementById("date");
     dateInput.addEventListener("change", function () {
-        console.log("Date is picked");
         const selectedDate = dateInput.value;
-        console.log(selectedDate);
         if (selectedDate) {
-            verifyTimeSlots(selectedDate, sendService.id); // Assuming sendService.id is the service being booked
+            verifyTimeSlots(selectedDate, sendService.id);
         }
     });
+
+    if (role === 'receptionist') {
+        showReceptionistForm();
+    } else {
+        showBookingForm();
+    }
 });
+
+// Show the receptionist form and hide the booking form
+function showReceptionistForm() {
+    document.getElementById("receptionist-phone-form").style.display = "block";
+    document.getElementById("booking-form").style.display = "none";
+
+    // Set up event listener for the "Check Farmer" button
+    document.getElementById("checkFarmerButton").addEventListener("click", function () {
+        const phone = document.getElementById("farmerPhone").value;
+        checkFarmerByPhone(phone);
+    });
+}
 
 // Initialization function
 function initializeApp() {
@@ -50,6 +66,51 @@ function initializeApp() {
     setupFormHandlers(); // Sets up form, including payment handling
     setInitialDate();
     updatePrice();
+}
+
+// Show the booking form after the farmer is found
+function showBookingForm() {
+    document.getElementById("receptionist-phone-form").style.display = "none";
+    document.getElementById("booking-form").style.display = "block";
+}
+
+// Check the farmer by phone number via the API
+function checkFarmerByPhone(phone) {
+    sendRequestWithToken(`${checkFarmerAPI}?phone=${phone}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Farmer not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Farmer found:", data);
+            sentUser = { email: data.email };
+            document.getElementById('phoneErrorMessage').style.display = 'none';
+            autoFillFarmerDetails(data);
+            showBookingForm();
+        })
+        .catch(error => {
+            console.error('Error fetching farmer data:', error);
+            document.getElementById('phoneErrorMessage').style.display = 'block';
+        });
+}
+
+// Auto-fill the farmer's email in the form after fetching the details
+function autoFillFarmerDetails(farmer) {
+    document.getElementById("farmerEmailInput").value = farmer.email; // assuming there is a farmerEmailInput in your form
+}
+
+// Show phone input form for receptionist
+function showReceptionistPhoneForm() {
+    document.getElementById("receptionist-phone-form").style.display = 'block';
+    const checkFarmerButton = document.getElementById('checkFarmerButton');
+    checkFarmerButton.addEventListener('click', function () {
+        const phone = document.getElementById('farmerPhone').value;
+        if (phone) {
+            checkFarmerByPhone(phone);
+        }
+    });
 }
 
 // Extract user role from the URL
@@ -254,12 +315,15 @@ function convertDate(date, fromType, toType) {
         : momentDate.add(1, 'days').format('YYYY-MM-DDTHH:mm');
 }
 
-// Extract user and service data from the URL
+// Extract user and service data from the URL or the receptionist form
 function extractAndStoreUrlParams() {
-    const { user, service } = getUrlParams();
-    sentUser = user;
-    sendService = service;
-    console.log(sendService);
+    if (role === 'receptionist') {
+        sentUser = { email: document.getElementById("farmerEmailInput").value };  // Get the email from the input
+    } else {
+        const { user, service } = getUrlParams();
+        sentUser = user;
+        sendService = service;
+    }
 }
 
 // Parse URL parameters
