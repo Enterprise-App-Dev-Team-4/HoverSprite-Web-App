@@ -98,7 +98,7 @@ function createServiceCard(service) {
                     <h5 class="card-title">${service.serviceName}</h5>
                     <p class="card-text">Crop Type: ${cropType}</p>
                     <p class="card-text flex-grow-1">${service.description}</p>
-                    <p class="card-text"><strong>Rating:</strong> ${starRatingHTML} (${averageRating})</p>
+                    <p class="card-text"><strong>Overall Rating:</strong> ${starRatingHTML} (${averageRating})</p>
                     <button class="btn btn-primary mt-auto book-now-btn" data-service-id="${service.id}">Book Now</button>
                 </div>
             </div>
@@ -143,8 +143,8 @@ function openModal(service) {
                 feedbackDetails += `
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h6 class="card-title">Farmer: ${order.farmerFullName}</h6>
-                            <p class="card-text">Feedback: ${order.feedBacks.content}</p>
+                            <h6 class="card-title">Name: ${order.farmerFullName}</h6>
+                            <p class="card-text">Comment: ${order.feedBacks.content}</p>
                             <p class="card-text">Rating: ${generateStarRating(order.feedBacks.ratingScore)} (${order.feedBacks.ratingScore})</p>
                         </div>
                     </div>
@@ -164,7 +164,7 @@ function openModal(service) {
         <p><strong>Description:</strong> ${service.description}</p>
         <p><strong>Service Type:</strong> ${service.serviceType}</p>
         <p><strong>Price:</strong> ${service.price} VND</p>
-        <p><strong>Farmer Ratings:</strong></p>
+        <p><strong>Feedbacks:</strong></p>
         <div class="feedback-list" style="max-height: 200px; overflow-y: auto;">
             ${feedbackDetails}
         </div>
