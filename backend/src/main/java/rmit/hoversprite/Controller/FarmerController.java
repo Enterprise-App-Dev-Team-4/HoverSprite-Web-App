@@ -162,8 +162,6 @@ public class FarmerController {
     @GetMapping("order")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestParam String orderId)
     {
-        int feedbackSprayers = farmerService.farmerGetOrderById(orderId).getSprayers().get(0).getFeedback().size();
-        System.out.println("feedback size: " + feedbackSprayers);
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));
         
         return ResponseEntity.ok(orderDTO);
