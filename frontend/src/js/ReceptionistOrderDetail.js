@@ -29,6 +29,7 @@ function fetchOrderDetails(orderId) {
         });
 }
 
+// Function to get the feedback of sprayer who did the order
 function getSprayerFeedbackScore(order, orderId) {
     // Get the first sprayer
     const sprayer = order.sprayer[0];
