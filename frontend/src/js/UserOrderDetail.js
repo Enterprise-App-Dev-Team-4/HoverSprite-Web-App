@@ -46,6 +46,7 @@ function returnToOrderList() {
     window.location.href = `/order-list?role=${encodeURIComponent(role)}`;
 }
 
+// Function to get the feedback of sprayer who did the order
 function getSprayerFeedbackScore(order, orderId) {
     // Get the first sprayer
     const sprayer = order.sprayer[0];

@@ -29,6 +29,27 @@ function fetchOrderDetails(orderId) {
         });
 }
 
+function getSprayerFeedbackScore(order, orderId) {
+    // Get the first sprayer
+    const sprayer = order.sprayer[0];
+
+    if (sprayer && sprayer.feedback && sprayer.feedback.length > 0) {
+        // Find the feedback with the matching orderId
+        const feedback = sprayer.feedback.find(f => f.orderID === orderId);
+
+        if (feedback) {
+            return {
+                attentivenessRating: feedback.attentivenessRating,
+                friendlinessRating: feedback.friendlinessRating,
+                professionalismRating: feedback.professionalismRating,
+                content: feedback.content
+            };
+        }
+    }
+
+    // Return null if not found
+    return null;
+}
 
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
@@ -78,12 +99,20 @@ function displayOrderDetails(order) {
     document.getElementById('orderCost').textContent = `${order.totalCost.toLocaleString()} VND`;
 
     // Handle feedback
-    if (order.feedback) {
-        document.getElementById('feedbackRating').textContent = `${order.feedBacks.orderFeedback.ratingScore} / 5 ⭐`;
-        document.getElementById('feedbackComment').textContent = order.feedBacks.orderFeedback.content || 'N/A';
+    if (order.feedBacks) {
+        let sprayerFeedBack = getSprayerFeedbackScore(order, order.orderID);
+        console.log(sprayerFeedBack);
+        document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
+        document.getElementById('attentivenessRating').textContent = `${sprayerFeedBack.attentivenessRating} / 5 ⭐`;
+        document.getElementById('friendlinessRating').textContent = `${sprayerFeedBack.friendlinessRating} / 5 ⭐`;
+        document.getElementById('professionalRating').textContent = `${sprayerFeedBack.professionalismRating} / 5 ⭐`;
+        document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';
+        document.getElementById('attentivenessRating').textContent = `N/A`;
+        document.getElementById('friendlinessRating').textContent = `N/A`;
+        document.getElementById('professionalRating').textContent = `N/A`;
     }
 
     // Trigger number animations (if applicable)
