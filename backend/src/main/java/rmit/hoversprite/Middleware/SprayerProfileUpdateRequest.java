@@ -39,7 +39,7 @@ public class SprayerProfileUpdateRequest {
         newSprayer.setOrders(oldSprayer.getOrders());
         newSprayer.setToken(oldSprayer.getToken());
         newSprayer.setSprayerExpertise(oldSprayer.getSprayerExpertise());
-        newSprayer.setFeedback(oldSprayer.getFeedback());
+        // newSprayer.setFeedback(oldSprayer.getFeedback());
         return newSprayer;
     }
 }

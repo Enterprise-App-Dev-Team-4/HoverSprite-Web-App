@@ -3,6 +3,7 @@ package rmit.hoversprite.Model.Feedback;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -18,10 +19,10 @@ public class FeedbackSprayer extends Feedback {
     private double friendlinessRating;
     private double professionalismRating;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "feedback_sprayer",
-        joinColumns = @JoinColumn(name = "feedback_sprayer_id"),
+        name = "feedback_sprayer_table",
+        joinColumns = @JoinColumn(name = "feedbackid"),
         inverseJoinColumns = @JoinColumn(name = "sprayer_id")
     )
     private List<Sprayer> sprayer;
