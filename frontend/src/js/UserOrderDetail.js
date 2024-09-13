@@ -70,8 +70,7 @@ function getSprayerFeedbackScore(order, orderId) {
 
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
-    let sprayerFeedBack = getSprayerFeedbackScore(order, order.orderID);
-    console.log(sprayerFeedBack);
+
 
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
@@ -119,6 +118,8 @@ function displayOrderDetails(order) {
 
     // Handle feedback
     if (order.feedBacks) {
+        let sprayerFeedBack = getSprayerFeedbackScore(order, order.orderID);
+        console.log(sprayerFeedBack);
         document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
         document.getElementById('attentivenessRating').textContent = `${sprayerFeedBack.attentivenessRating} / 5 ⭐`;
         document.getElementById('friendlinessRating').textContent = `${sprayerFeedBack.friendlinessRating} / 5 ⭐`;
@@ -127,6 +128,9 @@ function displayOrderDetails(order) {
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';
+        document.getElementById('attentivenessRating').textContent = `N/A`;
+        document.getElementById('friendlinessRating').textContent = `N/A`;
+        document.getElementById('professionalRating').textContent = `N/A`;
     }
     //the feedback button
     handleFeedbackButton(order);
