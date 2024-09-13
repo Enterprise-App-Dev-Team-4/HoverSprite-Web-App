@@ -74,20 +74,21 @@ function displayServices(services) {
 function createServiceCard(service) {
     const cropType = service.cropType ? service.cropType : "For All Croptypes";
     
-    // Generate feedback HTML based on the orders
-    let feedbackHTML = '';
+    // Calculate the overall rating score for the service
+    let totalRating = 0;
+    let numberOfRatings = 0;
+
     if (service.order && service.order.length > 0) {
         service.order.forEach(order => {
-            if (order.feedback) {
-                feedbackHTML += `
-                    <p><strong>Farmer Feedback:</strong> ${order.feedback.content}</p>
-                    <p><strong>Rating:</strong> ${order.feedback.ratingScore} / 5</p>
-                `;
+            if (order.feedBacks) {
+                totalRating += order.feedBacks.ratingScore;
+                numberOfRatings++;
             }
         });
-    } else {
-        feedbackHTML = '<p>No feedback available</p>';
     }
+
+    const averageRating = numberOfRatings > 0 ? (totalRating / numberOfRatings).toFixed(1) : 0;
+    const starRatingHTML = generateStarRating(averageRating); // Generate stars for the average rating
 
     return `
         <div class="col-md-6 col-lg-4">
@@ -97,13 +98,14 @@ function createServiceCard(service) {
                     <h5 class="card-title">${service.serviceName}</h5>
                     <p class="card-text">Crop Type: ${cropType}</p>
                     <p class="card-text flex-grow-1">${service.description}</p>
-                    ${feedbackHTML} <!-- Feedback section -->
+                    <p class="card-text"><strong>Rating:</strong> ${starRatingHTML} (${averageRating})</p>
                     <button class="btn btn-primary mt-auto book-now-btn" data-service-id="${service.id}">Book Now</button>
                 </div>
             </div>
         </div>
     `;
 }
+
 
 function attachEventListeners() {
     document.querySelectorAll('.service-image, .card-title').forEach(element => {
@@ -128,14 +130,24 @@ function openModal(service) {
     const modalBody = document.getElementById('modal-body-content');
     const bookNowButton = document.getElementById('bookNowModal');
 
-    // Prepare feedback details for the modal
+    // Calculate the overall rating score for the modal
+    let totalRating = 0;
+    let numberOfRatings = 0;
+
     let feedbackDetails = '';
     if (service.order && service.order.length > 0) {
         service.order.forEach(order => {
-            if (order.feedback) {
+            if (order.feedBacks) {
+                totalRating += order.feedBacks.ratingScore;
+                numberOfRatings++;
                 feedbackDetails += `
-                    <p><strong>Farmer Feedback:</strong> ${order.feedback.content}</p>
-                    <p><strong>Rating:</strong> ${order.feedback.ratingScore} / 5</p>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Farmer: ${order.farmerFullName}</h6>
+                            <p class="card-text">Feedback: ${order.feedBacks.content}</p>
+                            <p class="card-text">Rating: ${generateStarRating(order.feedBacks.ratingScore)} (${order.feedBacks.ratingScore})</p>
+                        </div>
+                    </div>
                 `;
             }
         });
@@ -143,19 +155,55 @@ function openModal(service) {
         feedbackDetails = '<p>No feedback available for this service.</p>';
     }
 
+    const averageRating = numberOfRatings > 0 ? (totalRating / numberOfRatings).toFixed(1) : 0;
+    const starRatingHTML = generateStarRating(averageRating); // Generate stars for the average rating
+
     modalTitle.textContent = service.serviceName;
     modalBody.innerHTML = `
         <p><strong>Crop Type:</strong> ${service.cropType || 'For All Croptypes'}</p>
         <p><strong>Description:</strong> ${service.description}</p>
         <p><strong>Service Type:</strong> ${service.serviceType}</p>
         <p><strong>Price:</strong> ${service.price} VND</p>
-        ${feedbackDetails} <!-- Feedback details in modal -->
+        <p><strong>Farmer Ratings:</strong></p>
+        <div class="feedback-list" style="max-height: 200px; overflow-y: auto;">
+            ${feedbackDetails}
+        </div>
     `;
 
     bookNowButton.onclick = () => redirectToBooking(service, user);
 
     const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
     modal.show();
+}
+
+
+
+function generateStarRating(rating) {
+    const fullStar = '<i class="fas fa-star"></i>';
+    const halfStar = '<i class="fas fa-star-half-alt"></i>';
+    const emptyStar = '<i class="far fa-star"></i>';
+
+    let starHTML = '';
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const emptyStars = 5 - Math.ceil(rating);
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+        starHTML += fullStar;
+    }
+
+    // Add half star if applicable
+    if (hasHalfStar) {
+        starHTML += halfStar;
+    }
+
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i++) {
+        starHTML += emptyStar;
+    }
+
+    return starHTML;
 }
 
 function redirectToBooking(service, user) {

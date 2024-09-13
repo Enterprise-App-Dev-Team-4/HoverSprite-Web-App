@@ -74,6 +74,17 @@ body {
     align-self: flex-end;
 }
 
+.feedback-list {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.fas.fa-star, 
+.fas.fa-star-half-alt, 
+.far.fa-star {
+    color: #FFD700; /* Yellow color for the stars */
+}
+
 @media (max-width: 768px) {
     .hero-image {
         height: 200px;
