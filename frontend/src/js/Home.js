@@ -1,6 +1,8 @@
 const navBarURL = 'http://localhost:8080/userName';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const SprayerURL = 'http://localhost:8080/sprayer';
+const orderAPI = 'http://localhost:8080/order/all';
+const userName = document.getElementById('userName');
 let role = null;
 let homeUser = null;
 
@@ -22,9 +24,10 @@ function loadNavBar(userRole) {
             .then(data => {
                 user = data;
                 homeUser = data
+                console.log(homeUser);
+                userName.innerHTML = homeUser.fullName;
                 navbarContainer.innerHTML = returnNavBar(data, role);
                 activeClick();
-                console.log("hello" + homeUser);
             })
             .catch(error => console.error('Error loading navbar:', error));
     } else {
@@ -46,6 +49,7 @@ function getUserRoleFromUrl() {
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
+
     loadNavBar(role);
     loadFooter();
 });
