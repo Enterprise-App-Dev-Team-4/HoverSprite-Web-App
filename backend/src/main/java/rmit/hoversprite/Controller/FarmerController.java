@@ -38,6 +38,8 @@ import rmit.hoversprite.Middleware.FeedbackRequestHandler;
 import rmit.hoversprite.Middleware.ReceptionistBooking;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
+import rmit.hoversprite.Model.Feedback.Feedback;
+import rmit.hoversprite.Model.Feedback.FeedbackSprayer;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
@@ -160,6 +162,8 @@ public class FarmerController {
     @GetMapping("order")
     public ResponseEntity<?> farmerGetOrderDetail(@RequestParam String orderId)
     {
+        int feedbackSprayers = farmerService.farmerGetOrderById(orderId).getSprayers().get(0).getFeedback().size();
+        System.out.println("feedback size: " + feedbackSprayers);
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));
         
         return ResponseEntity.ok(orderDTO);

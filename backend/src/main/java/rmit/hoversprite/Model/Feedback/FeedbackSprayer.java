@@ -2,6 +2,7 @@ package rmit.hoversprite.Model.Feedback;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -19,7 +20,7 @@ public class FeedbackSprayer extends Feedback {
     private double friendlinessRating;
     private double professionalismRating;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
         name = "feedback_sprayer_table",
         joinColumns = @JoinColumn(name = "feedbackid"),
@@ -27,18 +28,30 @@ public class FeedbackSprayer extends Feedback {
     )
     private List<Sprayer> sprayer;
 
+    private String orderID;
+
     public FeedbackSprayer() {}
 
     public FeedbackSprayer(String feedbackID, String content, double ratingScore, String farmer, double attentivenessRating,  
-                           double friendlinessRating, double professionalismRating, Order order, List<Sprayer> sprayer) {
+                           double friendlinessRating, double professionalismRating, Order order, List<Sprayer> sprayer, String orderID) {
         super(feedbackID, content, ratingScore, farmer);
         this.attentivenessRating = attentivenessRating;
         this.friendlinessRating = friendlinessRating;
         this.professionalismRating = professionalismRating;
         this.sprayer = sprayer;
+        this.orderID = orderID;
     }
 
     // Getters and Setters
+    public String getOrderID()
+    {
+        return this.orderID;
+    }
+
+    public void setOrderID(String orderID)
+    {
+        this.orderID = orderID;
+    }
 
     public double getAttentivenessRating() {
         return attentivenessRating;
