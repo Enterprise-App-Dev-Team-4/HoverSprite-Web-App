@@ -183,8 +183,17 @@ function completeOrder(orderID) {
     sendRequestWithToken(completeOrderURL, 'POST') // Assuming you have an endpoint to mark it as complete
         .then(data => {
             console.log(data);
-            alert(`Order #${orderID} has been marked as completed.`);
-            // getAllOrders(currentSortOrder); // Refresh the orders list to reflect the updated status
+            
+            // Show the Order Completed modal
+            const orderCompletedModal = new bootstrap.Modal(document.getElementById('orderCompletedModal'));
+            orderCompletedModal.show();
+
+            // Hide the modal after a delay (e.g., 2 seconds)
+            setTimeout(() => {
+                orderCompletedModal.hide();
+                getAllOrder(); // Refresh orders to reflect the updated status
+            }, 2000);
+ 
         })
         .catch(error => console.error('Error completing the order:', error));
 }
