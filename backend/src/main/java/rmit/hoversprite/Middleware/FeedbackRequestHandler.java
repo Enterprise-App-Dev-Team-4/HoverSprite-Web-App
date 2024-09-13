@@ -60,6 +60,7 @@ public class FeedbackRequestHandler {
         feedbackSprayer.setFriendlinessRating(request.getSprayerFeedback().getFriendlinessRating());
         feedbackSprayer.setProfessionalismRating(request.getSprayerFeedback().getProfessionalismRating());
         feedbackSprayer.setSprayer(sprayer);
+        feedbackSprayer.setOrderID(order.getOrderID());
         
         
 
