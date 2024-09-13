@@ -66,17 +66,17 @@ public class CheckTimeSlotService {
         // Fetch all orders for the specified date
         List<Order> ordersOnRequestedDate = orderService.getOrderByDate(requestedDate.getDate());
         // filter base on order
-        System.out.println("The filtered service: ");
-        System.out.println(ordersOnRequestedDate.get(0).getSprayerServices().getId());
+        if(ordersOnRequestedDate.size() == 0)
+        {
+            return services.getTimeSlots();
+        }
         ordersOnRequestedDate.stream()
             .filter(order -> order.getSprayerServices().getId() == services.getId())
             .forEach(System.out::println);
-        System.out.println(ordersOnRequestedDate.get(0).getSprayerServices().getId());
+
         // Get the list of time slots for the service
         List<Integer> listTimeSlot = services.getTimeSlots();
-        System.out.println("service timeslot: ");
-        System.out.println(services.getTimeSlots());
-        System.out.println(services.getServiceName());
+
         // Validate ordersOnRequestedDate and listTimeSlot
         if (ordersOnRequestedDate == null || listTimeSlot == null) {
             throw new IllegalArgumentException("Orders or service time slots are null.");

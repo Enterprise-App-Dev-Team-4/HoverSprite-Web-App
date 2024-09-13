@@ -3,8 +3,6 @@ const navBarURL = 'http://localhost:8080/userName';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 let role = null;
 let allServices = [];
-let currentPage = 1;
-const servicesPerPage = 10;
 
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();
@@ -24,36 +22,26 @@ function setupEventListeners() {
     document.getElementById('cropTypeSelect').addEventListener('change', handleSearch);
     document.getElementById('serviceTypeSelect').addEventListener('change', handleSearch);
     document.getElementById('searchInput').addEventListener('input', debounce(handleSearch, 300));
-
-    window.addEventListener('scroll', handleInfiniteScroll);
 }
 
 function handleSearch() {
-    currentPage = 1;
     getAllServices();
 }
 
-function handleInfiniteScroll() {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        currentPage++;
-        getAllServices(true);
-    }
-}
-
-function getAllServices(append = false) {
+function getAllServices() {
     showLoading(true);
     const searchInput = document.getElementById('searchInput').value.toUpperCase();
     const cropTypeSelect = document.getElementById('cropTypeSelect').value.toUpperCase();
     const serviceTypeSelect = document.getElementById('serviceTypeSelect').value.toUpperCase();
 
-    const queryString = `searchTerm=${encodeURIComponent(searchInput)}&cropType=${encodeURIComponent(cropTypeSelect)}&serviceType=${encodeURIComponent(serviceTypeSelect)}&page=${currentPage}&size=${servicesPerPage}`;
+    const queryString = `searchTerm=${encodeURIComponent(searchInput)}&cropType=${encodeURIComponent(cropTypeSelect)}&serviceType=${encodeURIComponent(serviceTypeSelect)}`;
 
     fetch(`${serviceAPI}?${queryString}`)
         .then(handleResponse)
         .then(data => {
             console.log(data);
-            allServices = append ? [...allServices, ...data] : data;
-            displayServices(allServices, append);
+            allServices = data;
+            displayServices(allServices);
         })
         .catch(handleError)
         .finally(() => showLoading(false));
@@ -71,11 +59,9 @@ function handleError(error) {
     showErrorMessage('Failed to load services. Please try again later.');
 }
 
-function displayServices(services, append = false) {
+function displayServices(services) {
     const container = document.getElementById('servicesContainer');
-    if (!append) {
-        container.innerHTML = '';
-    }
+    container.innerHTML = '';
 
     services.forEach(service => {
         const serviceCard = createServiceCard(service);
@@ -208,8 +194,6 @@ function loadNavBar(userRole) {
         console.error('Invalid user role or user role not provided.');
     }
 }
-
-
 
 function loadFooter() {
     const footerContainer = document.getElementById("footer-container");

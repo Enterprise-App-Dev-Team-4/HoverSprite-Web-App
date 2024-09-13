@@ -1,5 +1,6 @@
 package rmit.hoversprite.Middleware;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class FeedbackRequestHandler {
         feedbackSprayer.setFriendlinessRating(request.getSprayerFeedback().getFriendlinessRating());
         feedbackSprayer.setProfessionalismRating(request.getSprayerFeedback().getProfessionalismRating());
         feedbackSprayer.setSprayer(sprayer);
+        feedbackSprayer.setOrderID(order.getOrderID());
         
         
 
@@ -66,15 +68,20 @@ public class FeedbackRequestHandler {
         feedback = feedbackService.createOrderFeedback(feedback);
         feedbackSprayer = feedbackService.createFeedbackSprayer(feedbackSprayer);
         order.setFeedback(feedback);
-        orderService.updateOrder(order);
-
+        
+        List<Sprayer> listSprayers = new ArrayList<Sprayer>();
         for(int i = 0; i < sprayer.size(); i++)
         {
             List<FeedbackSprayer> listOfFeedbacks = sprayer.get(i).getFeedback();
             listOfFeedbacks.add(feedbackSprayer);
             sprayer.get(i).setFeedback(listOfFeedbacks);
-            sprayerService.updateSprayer(sprayer.get(i));
+            Sprayer s = sprayerService.updateSprayer(sprayer.get(i));
+            listSprayers.add(s);
         }
+        
+        order.setSprayers(listSprayers);
+        orderService.updateOrder(order);
+
         ReturnedFeedbacks returnedFeedbacks = new ReturnedFeedbacks();
         returnedFeedbacks.setFeedbackSprayerDTO(converter.convertFeedbackSprayerDataToObject(feedbackSprayer));
         returnedFeedbacks.setOrderFeedbackDTO(converter.convertOrderFeedbackDataToObject(feedback));

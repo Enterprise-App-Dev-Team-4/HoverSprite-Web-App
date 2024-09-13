@@ -30,12 +30,8 @@ function loadNavBar(userRole) {
 }
 
 function loadFooter() {
-  console.log('Hello  footer');
-  document.addEventListener("DOMContentLoaded", function () {
-    // Fetch the Navbar component
-    var content = document.getElementById("footer-container");
-    content.innerHTML = returnFooter();
-  });
+  const footerContainer = document.getElementById("footer-container");
+  footerContainer.innerHTML = returnFooter();
 }
 
 function getUserRoleFromUrl() {

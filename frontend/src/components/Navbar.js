@@ -37,7 +37,7 @@ function returnNavBar(data, role) {
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/home?role=${encodeURIComponent(role)}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/about-us?role=${encodeURIComponent(role)}">About</a></li>
                         ${role !== 'sprayer' ? `<li class="nav-item">${servicesTab}</li>` : ''}
                         <li class="nav-item"><a class="nav-link" href="${orderUrl}?role=${encodeURIComponent(role)}">Orders</a></li>
@@ -131,14 +131,14 @@ function returnNavBar(data, role) {
         .dropdown-item:last-child {
             border-bottom: none;
         }
-        .badge {
+        /* .badge {
             font-size: 0.8rem;
             width: 20px;
             height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
+        } */
         .logo-img {
             height: 40px;
             width: auto;

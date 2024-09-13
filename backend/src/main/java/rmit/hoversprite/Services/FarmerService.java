@@ -122,4 +122,9 @@ public class FarmerService {
         farmer.setServiceOrders(listOfOrders);
         return farmerRepository.save(farmer);
     }
+
+    public Farmer getFarmerByPhoneNumber(String phoneNumber)
+    {
+        return farmerRepository.findByPhoneNumber(phoneNumber);
+    }
 }

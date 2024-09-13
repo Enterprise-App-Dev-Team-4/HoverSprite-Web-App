@@ -79,8 +79,8 @@ function displayOrderDetails(order) {
 
     // Handle feedback
     if (order.feedback) {
-        document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
-        document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
+        document.getElementById('feedbackRating').textContent = `${order.feedBacks.orderFeedback.ratingScore} / 5 ⭐`;
+        document.getElementById('feedbackComment').textContent = order.feedBacks.orderFeedback.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';

@@ -46,8 +46,32 @@ function returnToOrderList() {
     window.location.href = `/order-list?role=${encodeURIComponent(role)}`;
 }
 
+function getSprayerFeedbackScore(order, orderId) {
+    // Get the first sprayer
+    const sprayer = order.sprayer[0];
+
+    if (sprayer && sprayer.feedback && sprayer.feedback.length > 0) {
+        // Find the feedback with the matching orderId
+        const feedback = sprayer.feedback.find(f => f.orderID === orderId);
+
+        if (feedback) {
+            return {
+                attentivenessRating: feedback.attentivenessRating,
+                friendlinessRating: feedback.friendlinessRating,
+                professionalismRating: feedback.professionalismRating,
+                content: feedback.content
+            };
+        }
+    }
+
+    // Return null if not found
+    return null;
+}
+
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
+    let sprayerFeedBack = getSprayerFeedbackScore(order, order.orderID);
+    console.log(sprayerFeedBack);
 
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
@@ -96,6 +120,9 @@ function displayOrderDetails(order) {
     // Handle feedback
     if (order.feedBacks) {
         document.getElementById('feedbackRating').textContent = `${order.feedBacks.ratingScore} / 5 ⭐`;
+        document.getElementById('attentivenessRating').textContent = `${sprayerFeedBack.attentivenessRating} / 5 ⭐`;
+        document.getElementById('friendlinessRating').textContent = `${sprayerFeedBack.friendlinessRating} / 5 ⭐`;
+        document.getElementById('professionalRating').textContent = `${sprayerFeedBack.professionalismRating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';

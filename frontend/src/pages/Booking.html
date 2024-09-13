@@ -28,8 +28,45 @@
         </div>
     </div>
 
+    <!-- Receptionist Phone Form -->
+<div id="receptionist-phone-form" style="display: none;">
+    <h2>Receptionist Farmer Lookup</h2>
+    <div class="form-group">
+        <label for="farmerPhone">Farmer Phone Number</label>
+        <input type="text" class="form-control" id="farmerPhone" placeholder="Enter farmer's phone number" required>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" id="checkFarmerButton">Check Farmer</button>
+    </div>
+    <div class="form-group" id="emailInputContainer" style="display:none;">
+        <label for="farmerEmailInput">Farmer Email</label>
+        <input type="email" class="form-control" id="farmerEmailInput" placeholder="Enter farmer's email" required>
+    </div>
+    
+    <!-- Manual First Name and Last Name for New Farmer Creation (only shown if farmer not found) -->
+    <div class="form-group" id="firstNameInputContainer" style="display:none;">
+        <label for="firstNameInput">First Name</label>
+        <input type="text" class="form-control" id="firstNameInput" placeholder="Enter farmer's first name" required>
+    </div>
+
+    <div class="form-group" id="lastNameInputContainer" style="display:none;">
+        <label for="lastNameInput">Last Name</label>
+        <input type="text" class="form-control" id="lastNameInput" placeholder="Enter farmer's last name" required>
+    </div>
+    
+    <!-- Continue Button (shown only if farmer not found) -->
+    <div class="form-group text-center" id="continueButtonContainer" style="display:none;">
+        <button type="button" class="btn btn-success" id="continueButton">Continue</button>
+    </div>
+
+    <div id="phoneErrorMessage" class="text-danger" style="display:none;">
+        <p>Farmer not found. Please verify the phone number.</p>
+    </div>
+</div>
+
+
     <!-- Booking Form Section -->
-    <div class="container booking-form">
+    <div class="container booking-form" id="booking-form" style="display: none;">
         <h2>Request Spray Order</h2>
         <div class="row">
             <div class="col-md-6">
@@ -193,7 +230,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Footer -->
     <div id="footer-container"></div>
