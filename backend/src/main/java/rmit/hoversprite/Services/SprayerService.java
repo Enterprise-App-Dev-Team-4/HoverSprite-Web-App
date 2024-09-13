@@ -57,6 +57,7 @@ public class SprayerService {
     {
         Sprayer oldSprayer = sprayerRepository.findByEmail(sprayer.getEmail());
         Sprayer updateSprayer = sprayerProfileUpdateRequest.sprayerToSprayer(sprayer, oldSprayer);
+        updateSprayer.setFeedback(sprayer.getFeedback());
         return sprayerRepository.save(updateSprayer);
     }
 

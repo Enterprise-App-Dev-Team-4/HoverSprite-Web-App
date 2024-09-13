@@ -9,6 +9,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -52,7 +53,7 @@ public class Order {
     @JsonBackReference (value = "service")
     private SprayServices sprayerServices;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "sprayer",
         joinColumns = @JoinColumn(name = "order_id"),

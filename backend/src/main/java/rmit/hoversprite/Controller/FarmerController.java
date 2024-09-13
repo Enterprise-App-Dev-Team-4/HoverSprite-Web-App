@@ -3,6 +3,8 @@ package rmit.hoversprite.Controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.text.StyledEditorKit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import rmit.hoversprite.DTO.FarmDTO.FarmDTO;
 import rmit.hoversprite.DTO.FeedbackDTO.FeedbackDTO;
+import rmit.hoversprite.DTO.FeedbackDTO.ReturnedFeedbacks;
 import rmit.hoversprite.DTO.OrderDTO.OrderDTO;
 import rmit.hoversprite.DTO.OrderQueueDTO.OrderQueueDTO;
 import rmit.hoversprite.DTO.UserDTO.SprayerDTO;
@@ -32,6 +35,7 @@ import rmit.hoversprite.Middleware.FarmerHandleOrderMiddleware;
 import rmit.hoversprite.Middleware.FarmerOrderRequestHandler;
 import rmit.hoversprite.Middleware.FarmerProfileUpdateRequestHandler;
 import rmit.hoversprite.Middleware.FeedbackRequestHandler;
+import rmit.hoversprite.Middleware.ReceptionistBooking;
 import rmit.hoversprite.Middleware.ReceptionistOrderCheckStatus;
 import rmit.hoversprite.Model.Farm.Farm;
 import rmit.hoversprite.Model.Order.Order;
@@ -157,6 +161,7 @@ public class FarmerController {
     public ResponseEntity<?> farmerGetOrderDetail(@RequestParam String orderId)
     {
         OrderDTO orderDTO = new DTOConverter().convertOrderDataToObject(farmerService.farmerGetOrderById(orderId));
+        
         return ResponseEntity.ok(orderDTO);
     }
 
@@ -165,7 +170,8 @@ public class FarmerController {
     {
         // add feedback dto
         // FeedbackDTO feedbackDTO = new DTOConverter().convertOrderFeedbackDataToObject(feedbackRequestHandler.farmerFeedback(request));
-        return ResponseEntity.ok(feedbackRequestHandler.farmerFeedback(request, new DTOConverter()));
+        ReturnedFeedbacks result = feedbackRequestHandler.farmerFeedback(request, new DTOConverter());
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("checkOrderQueue")
