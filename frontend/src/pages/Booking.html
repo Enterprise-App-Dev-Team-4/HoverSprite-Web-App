@@ -21,48 +21,49 @@
     <div id="navbar-container"></div>
 
     <!-- Hero Section -->
-    <div class="hero-image">
-        <div class="hero-text">
-            <h1 class="display-4">Booking</h1>
-            <p>Home &gt; Booking</p>
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Book Your Spray Service</h1>
+            <p class="hero-subtitle">Efficient and Precise Agricultural Solutions</p>
         </div>
-    </div>
+    </header>
 
     <!-- Receptionist Phone Form -->
-<div id="receptionist-phone-form" style="display: none;">
-    <h2>Receptionist Farmer Lookup</h2>
-    <div class="form-group">
-        <label for="farmerPhone">Farmer Phone Number</label>
-        <input type="text" class="form-control" id="farmerPhone" placeholder="Enter farmer's phone number" required>
-    </div>
-    <div class="form-group">
-        <button type="button" class="btn btn-primary" id="checkFarmerButton">Check Farmer</button>
-    </div>
-    <div class="form-group" id="emailInputContainer" style="display:none;">
-        <label for="farmerEmailInput">Farmer Email</label>
-        <input type="email" class="form-control" id="farmerEmailInput" placeholder="Enter farmer's email" required>
-    </div>
-    
-    <!-- Manual First Name and Last Name for New Farmer Creation (only shown if farmer not found) -->
-    <div class="form-group" id="firstNameInputContainer" style="display:none;">
-        <label for="firstNameInput">First Name</label>
-        <input type="text" class="form-control" id="firstNameInput" placeholder="Enter farmer's first name" required>
-    </div>
+    <div id="receptionist-phone-form" style="display: none;">
+        <h2>Receptionist Farmer Lookup</h2>
+        <div class="form-group">
+            <label for="farmerPhone">Farmer Phone Number</label>
+            <input type="text" class="form-control" id="farmerPhone" placeholder="Enter farmer's phone number" required>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="checkFarmerButton">Check Farmer</button>
+        </div>
+        <div class="form-group" id="emailInputContainer" style="display:none;">
+            <label for="farmerEmailInput">Farmer Email</label>
+            <input type="email" class="form-control" id="farmerEmailInput" placeholder="Enter farmer's email" required>
+        </div>
 
-    <div class="form-group" id="lastNameInputContainer" style="display:none;">
-        <label for="lastNameInput">Last Name</label>
-        <input type="text" class="form-control" id="lastNameInput" placeholder="Enter farmer's last name" required>
-    </div>
-    
-    <!-- Continue Button (shown only if farmer not found) -->
-    <div class="form-group text-center" id="continueButtonContainer" style="display:none;">
-        <button type="button" class="btn btn-success" id="continueButton">Continue</button>
-    </div>
+        <!-- Manual First Name and Last Name for New Farmer Creation (only shown if farmer not found) -->
+        <div class="form-group" id="firstNameInputContainer" style="display:none;">
+            <label for="firstNameInput">First Name</label>
+            <input type="text" class="form-control" id="firstNameInput" placeholder="Enter farmer's first name"
+                required>
+        </div>
 
-    <div id="phoneErrorMessage" class="text-danger" style="display:none;">
-        <p>Farmer not found. Please verify the phone number.</p>
+        <div class="form-group" id="lastNameInputContainer" style="display:none;">
+            <label for="lastNameInput">Last Name</label>
+            <input type="text" class="form-control" id="lastNameInput" placeholder="Enter farmer's last name" required>
+        </div>
+
+        <!-- Continue Button (shown only if farmer not found) -->
+        <div class="form-group text-center" id="continueButtonContainer" style="display:none;">
+            <button type="button" class="btn btn-success" id="continueButton">Continue</button>
+        </div>
+
+        <div id="phoneErrorMessage" class="text-danger" style="display:none;">
+            <p>Farmer not found. Please verify the phone number.</p>
+        </div>
     </div>
-</div>
 
 
     <!-- Booking Form Section -->
@@ -122,7 +123,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-dark btn-block">Submit Request</button>
                     </div>
@@ -218,7 +219,8 @@
     </div>
 
     <!-- Booking Successful Modal -->
-    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-labelledby="bookingSuccessModalLabel" aria-hidden="true">
+    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-labelledby="bookingSuccessModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-body">
