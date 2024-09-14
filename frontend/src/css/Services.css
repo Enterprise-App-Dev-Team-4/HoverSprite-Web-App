@@ -10,7 +10,7 @@ body {
     background-image: url('../../public/about-2drones.jpg');
     background-size: cover;
     background-position: center;
-    height: 65vh;
+    height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;

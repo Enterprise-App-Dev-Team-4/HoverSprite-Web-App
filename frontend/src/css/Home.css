@@ -1,0 +1,57 @@
+:root {
+    --primary-color: #2c7744;
+    --secondary-color: #4caf50;
+    --background-color: #f0f8ea;
+    --text-color: #333;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color);
+}
+
+
+.card {
+    height: 100%;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #1e5631;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    padding: 5px 8px;
+    border-radius: 50%;
+    background-color: #ff4444;
+    color: white;
+    font-size: 12px;
+}
+
+@media (max-width: 767px) {
+    .card {
+        margin-bottom: 20px;
+    }
+}
