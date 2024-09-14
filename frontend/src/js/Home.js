@@ -8,6 +8,11 @@ const userName = document.getElementById('userName');
 let role = null;
 let homeUser = null;
 
+// Weather API constants
+const WEATHER_API_KEY = '4d3356044c814d28b04123015241409';
+const WEATHER_API_URL = 'https://api.weatherapi.com/v1/current.json';
+const HO_CHI_MINH_CITY = 'Ho Chi Minh City';
+
 function loadNavBar(userRole) {
     const navbarContainer = document.getElementById("navbar-container");
     let userAPI = null;
@@ -141,6 +146,60 @@ function updateQuickActions(role) {
     }
 }
 
+// Weather API
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                position => resolve(position.coords),
+                error => reject(error)
+            );
+        } else {
+            reject(new Error("Geolocation is not supported by this browser."));
+        }
+    });
+}
+
+function fetchWeatherData(latitude, longitude) {
+    const url = `${WEATHER_API_URL}?key=${WEATHER_API_KEY}&q=${latitude},${longitude}&aqi=no`;
+
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            updateWeatherCard(data);
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+            updateWeatherCard(null);
+        });
+}
+
+function updateWeatherCard(weatherData) {
+    const weatherCard = document.getElementById('weather-card');
+
+    if (weatherData && weatherData.current) {
+        const temperature = Math.round(weatherData.current.temp_c);
+        const condition = weatherData.current.condition.text;
+        const iconUrl = `https:${weatherData.current.condition.icon}`;
+
+        weatherCard.innerHTML = `
+            <img src="${iconUrl}" alt="Weather icon" class="mb-3" style="width: 64px; height: 64px;">
+            <h3>${temperature}°C</h3>
+            <p>${condition}</p>
+            <p>${weatherData.location.name}, ${weatherData.location.country}</p>
+        `;
+    } else {
+        weatherCard.innerHTML = `
+            <i class="fas fa-exclamation-triangle fa-4x mb-3" style="color: #ffc107;"></i>
+            <h3>Weather Unavailable</h3>
+            <p>Unable to fetch weather data</p>
+        `;
+    }
+}
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM content loaded');
     role = getUserRoleFromUrl();
@@ -148,4 +207,13 @@ document.addEventListener("DOMContentLoaded", function () {
     loadNavBar(role);
     loadFooter();
     fetchOrderData();
+
+    // Fetch weather data based on user's location
+    getUserLocation()
+        .then(coords => fetchWeatherData(coords.latitude, coords.longitude))
+        .catch(error => {
+            console.error('Error getting user location:', error);
+            // Fallback to a default location (e.g., Ho Chi Minh City)
+            fetchWeatherData(10.8231, 106.6297);
+        });
 });
