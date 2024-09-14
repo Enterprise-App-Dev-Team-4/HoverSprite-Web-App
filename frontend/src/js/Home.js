@@ -2,6 +2,8 @@ const navBarURL = 'http://localhost:8080/userName';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const SprayerURL = 'http://localhost:8080/sprayer';
 const orderAPI = 'http://localhost:8080/order/all';
+const orderReceptionistAPI = 'http://localhost:8080/receptionistOrder';
+const orderSprayerAPI = 'http://localhost:8080/sprayerOrder';
 const userName = document.getElementById('userName');
 let role = null;
 let homeUser = null;
@@ -51,7 +53,15 @@ function getUserRoleFromUrl() {
 }
 
 function fetchOrderData() {
-    const apiUrl = `${orderAPI}?page=0&size=30&sort=date,desc`; // Fetch the 30 most recent orders
+    let apiUrl = null
+    if (role == 'farmer') {
+        apiUrl = `${orderAPI}?page=0&size=30&sort=date,desc`; // Fetch the 30 most recent orders
+    } else if (role == 'receptionist') {
+        apiUrl = `${orderReceptionistAPI}?page=0&size=30&sort=date,desc`; // Fetch the 30 most recent orders
+    } else if (role == 'sprayer') {
+        apiUrl = `${orderSprayerAPI}?page=0&size=30&sort=date,desc`; // Fetch the 30 most recent orders
+    }
+
     console.log('Fetching order data from:', apiUrl); // Added console log
     sendRequestWithToken(apiUrl)
         .then(data => {
