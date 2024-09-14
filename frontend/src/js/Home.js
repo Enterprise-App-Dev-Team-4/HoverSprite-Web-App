@@ -147,6 +147,7 @@ function updateQuickActions(role) {
 }
 
 // Weather API
+// Get user's location
 function getUserLocation() {
     return new Promise((resolve, reject) => {
         if ("geolocation" in navigator) {
@@ -196,9 +197,6 @@ function updateWeatherCard(weatherData) {
         `;
     }
 }
-
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM content loaded');
