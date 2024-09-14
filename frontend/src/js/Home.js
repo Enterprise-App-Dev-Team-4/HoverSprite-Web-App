@@ -104,9 +104,37 @@ function formatDate(dateString) {
     return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 }
 
+function updateQuickActions(role) {
+    const bookServiceBtn = document.getElementById('bookServiceBtn');
+    const viewOrdersBtn = document.getElementById('viewOrdersBtn');
+    const updateProfileBtn = document.getElementById('updateProfileBtn');
+    const viewHistoryBtn = document.getElementById('viewHistoryBtn');
+
+    if (role === 'farmer') {
+        bookServiceBtn.onclick = () => location.href = '/service?role=farmer';
+        viewOrdersBtn.onclick = () => location.href = '/order-list?role=farmer';
+        updateProfileBtn.onclick = () => location.href = '/profile?role=farmer';
+        viewHistoryBtn.onclick = () => location.href = '/order-list?role=farmer';
+    } else if (role === 'receptionist') {
+        bookServiceBtn.textContent = 'Manage Services';
+        bookServiceBtn.onclick = () => location.href = '/service?role=receptionist';
+        viewOrdersBtn.textContent = 'Manage Orders';
+        viewOrdersBtn.onclick = () => location.href = '/receptionist-order?role=receptionist';
+        updateProfileBtn.onclick = () => location.href = '/profile?role=receptionist';
+        viewHistoryBtn.onclick = () => location.href = '/receptionist-order?role=receptionist';
+    } else if (role === 'sprayer') {
+        bookServiceBtn.style.display = 'none';
+        viewOrdersBtn.textContent = 'View Assigned Orders';
+        viewOrdersBtn.onclick = () => location.href = '/sprayer-order?role=sprayer';
+        updateProfileBtn.onclick = () => location.href = '/profile?role=sprayer';
+        viewHistoryBtn.onclick = () => location.href = '/sprayer-order?role=sprayer';
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM content loaded');
     role = getUserRoleFromUrl();
+    updateQuickActions(role);
     loadNavBar(role);
     loadFooter();
     fetchOrderData();
