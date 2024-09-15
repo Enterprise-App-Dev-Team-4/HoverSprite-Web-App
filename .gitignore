@@ -44,3 +44,4 @@ build/
 /tmp
 
 node_modules/
+backend/src/main/resources/.env
