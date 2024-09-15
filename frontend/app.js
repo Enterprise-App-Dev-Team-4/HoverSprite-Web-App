@@ -17,6 +17,7 @@ const sprayerOrderPath = __dirname + '/src/pages/SprayerOrder.html'
 const sprayerOrderDetailPath = __dirname + '/src/pages/SprayerOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 const orderFeedBackPath = __dirname + '/src/pages/FeedBack.html'
+const oAuth2Page = __dirname + '/src/pages/OAuth.html'
 
 const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
@@ -102,6 +103,10 @@ app.get('/feed-back/:id', (req, res) => { // add real id to feedback
 app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/src/pages/UserHome.html');
 });
+
+app.get('/oauth2callback', (req, res) => {
+    res.sendFile(oAuth2Page);
+})
 
 app.listen(3000, () => {
     console.log("listen on port");
