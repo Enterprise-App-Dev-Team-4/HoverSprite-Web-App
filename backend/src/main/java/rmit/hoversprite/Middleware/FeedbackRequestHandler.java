@@ -48,6 +48,7 @@ public class FeedbackRequestHandler {
         }
         
         feedback.setContent(request.getOrderFeedback().getContent());
+        feedback.setFeedbackImage(request.getOrderFeedback().getFeedbackImage());
         feedback.setRatingScore(request.getOrderFeedback().getRatingScore());
         feedback.setFarmer(farmerService.getFarmerData().getFullName());
         feedback.setOrder(order);

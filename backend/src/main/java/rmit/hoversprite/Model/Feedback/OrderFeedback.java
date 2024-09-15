@@ -24,13 +24,15 @@ public class OrderFeedback extends Feedback{
     @JoinColumn(name = "order_id")
     private Order order;
 
+    private String feedbackImage;
+
     public OrderFeedback() {}
 
-    public OrderFeedback(String feedbackID, String content, double ratingScore, String farmer,Order order) {
+    public OrderFeedback(String feedbackID, String content, double ratingScore, String farmer,Order order, String feedbackImage) {
         super(feedbackID, content, ratingScore, farmer);
 
         this.order = order;
-        
+        this.feedbackImage = feedbackImage;
     }
 
     // Getter and Setter for feedbackID
@@ -45,5 +47,14 @@ public class OrderFeedback extends Feedback{
         this.order = order;
     }
 
-   
+    public String getFeedbackImage()
+    {
+        return this.feedbackImage;
+    }
+
+    public void setFeedbackImage(String feedbackImage)
+    {
+        this.feedbackImage = feedbackImage;
+    }
+    
 }

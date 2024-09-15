@@ -171,7 +171,8 @@ public class DTOConverter {
                 feedback.getFeedbackID(),
                 feedback.getContent(),
                 feedback.getRatingScore(),
-                feedback.getFarmer()
+                feedback.getFarmer(),
+                feedback.getFeedbackImage()
             );
         }
         return null;
