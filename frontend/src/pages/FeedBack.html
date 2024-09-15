@@ -69,6 +69,16 @@
             </div>
         </div>
 
+        <!-- New section for uploading product image -->
+        <div class="upload-section">
+            <h4>Upload Product Image</h4>
+            <label for="profileImageUpload" class="upload-label">Choose File</label>
+            <input type="file" id="profileImageUpload" name="profileImage" accept="image/*" class="file-input">
+            <p id="fileNameDisplay" style="margin-top: 10px;">No file chosen</p> <!-- To display selected file name -->
+        </div>
+
+        
+
         <div class="section feedback-section">
             <h3>Your Feedback</h3>
             <textarea id="feedbackText" rows="5"
@@ -89,6 +99,9 @@
 
     <script src="../js/FeedBack.js"></script>
     <script src="../../components/sendToken.js"></script>
+    <script src="../../components/ImageProcessor.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
 </body>
 
 </html>
