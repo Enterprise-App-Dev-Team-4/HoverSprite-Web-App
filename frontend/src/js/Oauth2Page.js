@@ -41,9 +41,9 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + value + ";" + expires + ";path=/;Secure;SameSite=Lax";
 }
 
-// Function to send the encoded email to the OAuth2 API using POST request
-async function compareUserToDatabase(email) {
-    const payload = { email };  // Data to send in the POST request
+// Function to send the encoded email and name to the OAuth2 API using POST request
+async function compareUserToDatabase(email, name) {
+    const payload = { email, name };  // Data to send in the POST request
 
     try {
         const response = await fetch(oauth2API, {
@@ -51,7 +51,7 @@ async function compareUserToDatabase(email) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams(payload) // Send the email in the body
+            body: new URLSearchParams(payload) // Send the email and name in the body
         });
 
         if (!response.ok) {
@@ -72,7 +72,7 @@ async function compareUserToDatabase(email) {
     }
 }
 
-// Main function to handle the OAuth flow and get the user's email
+// Main function to handle the OAuth flow and get the user's email and name
 async function handleOAuth2() {
     // Get the access token from the URL
     const accessToken = getAccessTokenFromUrl();
@@ -80,9 +80,10 @@ async function handleOAuth2() {
     if (accessToken) {
         // Fetch user info using the access token
         const userInfo = await getUserInfo(accessToken);
-
+        console.log(userInfo);
         if (userInfo && userInfo.email) {
-            compareUserToDatabase(userInfo.email);
+            // Pass both email and name to compareUserToDatabase
+            compareUserToDatabase(userInfo.email, userInfo.name);
         } else {
             console.error('User info not available');
             document.body.innerHTML = '<h1>Failed to retrieve user info</h1>';
