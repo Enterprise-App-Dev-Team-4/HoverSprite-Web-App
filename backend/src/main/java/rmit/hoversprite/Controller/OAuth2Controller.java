@@ -16,7 +16,10 @@ import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.UserService;
 import rmit.hoversprite.Utils.DTOConverter;
+import rmit.hoversprite.Utils.Enum.Role;
 import rmit.hoversprite.Utils.JwtUtil;
+import rmit.hoversprite.Utils.PasswordGenerator;
+import rmit.hoversprite.Utils.Utils;
 
 @RestController
 @RequestMapping("/")
@@ -27,19 +30,29 @@ public class OAuth2Controller {
     JwtUtil util;
 
     @Autowired
+    Utils utilsClass;
+
+    @Autowired
     FarmerService farmerService;
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordGenerator passwordGenerator;
+
     @PostMapping("api/oauth/config")
-    public ResponseEntity<UserDTO> checkFarmerOAuth(@RequestParam String email, HttpServletResponse response) {
+    public ResponseEntity<UserDTO> checkFarmerOAuth(@RequestParam String email, @RequestParam String name, HttpServletResponse response) {
         // Retrieve the farmer by email
         Farmer farmer = farmerService.getFarmerByEmail(email);
+        if(farmer == null)
+        {
+            farmer = handleUnauthenticateFarmer(email, name);
+        }
 
         // Generate the JWT token
         String token = util.generateToken(farmer.getEmail());
-
+        System.out.println("Farmer full name: " + name);
         farmer.setToken(token);
         // Convert farmer data to UserDTO and include the token
         UserDTO userDTO = new DTOConverter().convertUserDataToObject(farmer);
@@ -60,6 +73,18 @@ public class OAuth2Controller {
 
         // Return the UserDTO object to the client as the response body
         return ResponseEntity.ok(userDTO);
+    }
+
+    private Farmer handleUnauthenticateFarmer(String email, String fullName)
+    {
+        Farmer farmer = new Farmer();
+        farmer.setEmail(email);
+        farmer.setFullName(fullName);
+        farmer.setFirstName(utilsClass.extractFirstName(fullName));
+        farmer.setLastName(utilsClass.extractLastName(fullName));
+        farmer.setRole(Role.Farmer);
+        farmer.setPassword(passwordGenerator.generateRandomPassword());
+        return (Farmer) userService.register(farmer);
     }
 }
 
