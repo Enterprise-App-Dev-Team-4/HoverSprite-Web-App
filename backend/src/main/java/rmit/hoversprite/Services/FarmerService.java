@@ -127,4 +127,9 @@ public class FarmerService {
     {
         return farmerRepository.findByPhoneNumber(phoneNumber);
     }
+
+    public Farmer getFarmerByEmail(String email)
+    {
+        return farmerRepository.findByEmail(email);
+    }
 }

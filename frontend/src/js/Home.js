@@ -198,6 +198,64 @@ function updateWeatherCard(weatherData) {
     }
 }
 
+// Function to add a new notification
+function addNotification(messageContent) {
+    const notificationListContainer = document.getElementById('notification-list-container');
+
+    // Create a new notification item
+    const newNotification = document.createElement('div');
+    newNotification.classList.add('notification-item');
+    newNotification.innerHTML = `<p>${messageContent}</p>`;
+
+    // Append the new notification to the list container
+    notificationListContainer.appendChild(newNotification);
+
+    // Update notification badge count
+    const notificationBadge = document.querySelector('.notification-badge');
+    let count = parseInt(notificationBadge.innerText) || 0;
+    notificationBadge.innerText = count + 1;
+}
+
+
+// Function to connect to WebSocket server and subscribe to topics
+function connectToWebSocket() {
+    const socket = new SockJS('http://localhost:8080/ws');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected to WebSocket: ' + frame);
+
+        // Subscribe to the public broadcast topic
+        stompClient.subscribe('/all/messages', function (message) {
+            console.log('Received public message: ' + message.body);
+            addNotification(`Public Message: ${message.body}`);
+        });
+
+        // Subscribe to specific user messages
+        stompClient.subscribe(`/user/${user.email}/specific/messages`, function (message) {
+            console.log('Received specific user message: ' + message.body);
+            addNotification(`User Message: ${message.body}`);
+        });
+    });
+}
+
+// Function to reset the notification count and toggle icons
+function resetNotifications() {
+    const bellIconEmpty = document.getElementById('bell-icon-empty');
+    const bellIconFilled = document.getElementById('bell-icon-filled');
+    const notificationCountElement = document.getElementById('notification-count');
+
+    // Reset notification count and hide badge
+    notificationCount = 0;
+    notificationCountElement.innerText = '0';
+    notificationCountElement.classList.add('d-none');
+
+    // Switch back to empty bell icon
+    bellIconFilled.classList.add('d-none');
+    bellIconEmpty.classList.remove('d-none');
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM content loaded');
     role = getUserRoleFromUrl();
@@ -205,6 +263,9 @@ document.addEventListener("DOMContentLoaded", function () {
     loadNavBar(role);
     loadFooter();
     fetchOrderData();
+
+    // Connect to WebSocket when the DOM is loaded
+    connectToWebSocket();
 
     // Fetch weather data based on user's location
     getUserLocation()
