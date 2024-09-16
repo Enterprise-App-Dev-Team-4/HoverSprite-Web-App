@@ -38,4 +38,28 @@ public class WebSocketController {
         // Send the message to the user (farmer) using their email as the identifier
         messagingTemplate.convertAndSendToUser(order.getFarmer().getEmail(), "/specific/messages", message);
     }
+
+    public void sendOrderAssignedNotification(Order order) {
+        // Include the order ID in the notification message
+        String message = "Your Order with ID " + order.getOrderID() + " has been assigned";
+        
+        // Send the message to the user (farmer) using their email as the identifier
+        messagingTemplate.convertAndSendToUser(order.getFarmer().getEmail(), "/specific/messages", message);
+    }
+
+    public void sendOrderInProgressNotification(Order order) {
+        // Include the order ID in the notification message
+        String message = "Your Order with ID " + order.getOrderID() + " is in progress";
+        
+        // Send the message to the user (farmer) using their email as the identifier
+        messagingTemplate.convertAndSendToUser(order.getFarmer().getEmail(), "/specific/messages", message);
+    }
+
+    public void sendOrderCompletedNotification(Order order) {
+        // Include the order ID in the notification message
+        String message = "Your Order with ID " + order.getOrderID() + " has been Completed";
+        
+        // Send the message to the user (farmer) using their email as the identifier
+        messagingTemplate.convertAndSendToUser(order.getFarmer().getEmail(), "/specific/messages", message);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
+import rmit.hoversprite.Proxies.WebSocketController;
 import rmit.hoversprite.Request.AssignSprayerRequest;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.OrderService;
@@ -32,6 +33,9 @@ public class ReceptionistHandleSprayer {
 
     @Autowired
     OrderEmailProxy orderEmailProxy;
+
+    @Autowired
+    private WebSocketController webSocketController;
 
     public List<Sprayer> getAllSprayer()
     {
@@ -65,6 +69,8 @@ public class ReceptionistHandleSprayer {
 
         //proxy email to farmer
         orderEmailProxy.sendEmailOrderAssigned(order);
+
+        webSocketController.sendOrderAssignedNotification(order);
         return order;
     }
     
