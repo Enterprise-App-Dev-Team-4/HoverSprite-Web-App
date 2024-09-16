@@ -2,7 +2,7 @@ const UserURL = 'http://localhost:8080/userName';
 const UpdateProfileUrl = 'http://localhost:8080/updateProfile';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const ReceptionistEditProfile = 'http://localhost:8080/receptionistProfile';
-const SprayerURL =  'http://localhost:8080/sprayer';
+const SprayerURL = 'http://localhost:8080/sprayer';
 const SprayerEditProfile = 'http://localhost:8080/sprayerProfile';
 
 // Global variable to store user data
@@ -14,7 +14,7 @@ function getUserRoleFromUrl() {
     return urlParams.get('role');
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const userRole = getUserRoleFromUrl();
     role = userRole;
     loadNavBar(userRole);
@@ -25,14 +25,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function fetchUserData(userRole) {
     var userAPI = null;
-    if(userRole === 'receptionist')
-    {
+    if (userRole === 'receptionist') {
         userAPI = ReceptionistURL;
-    } else if(userRole === 'farmer')
-    {
+    } else if (userRole === 'farmer') {
         userAPI = UserURL;
-    } else if(userRole === 'sprayer')
-    {
+    } else if (userRole === 'sprayer') {
         userAPI = SprayerURL;
     }
 
@@ -48,7 +45,7 @@ function fetchUserData(userRole) {
 
 function updateProfileInfo(data) {
     document.getElementById('profileName').textContent = data.fullName || 'John Smith';
-    document.getElementById('profileUsername').textContent = '@' + (data.username || 'john');
+    document.getElementById('profileUsername').textContent = '@' + (data.firstName || 'john');
     document.getElementById('profileEmail').textContent = 'Email: ' + (data.email || 'demomail@mail.com');
     document.getElementById('firstNameDisplay').textContent = data.firstName || 'John';
     document.getElementById('lastNameDisplay').textContent = data.lastName || 'Doe';
@@ -75,48 +72,48 @@ function initializeProfileButtons(userRole) {
     const profileImage = document.getElementById('profileImage');
     const profileImageUpload = document.getElementById('profileImageUpload');
 
-    editBtn.addEventListener('click', function() {
+    editBtn.addEventListener('click', function () {
         profileForm.style.display = 'block';
         profileInfo.style.display = 'none';
         editBtn.style.display = 'none';
     });
 
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', function () {
         profileForm.style.display = 'none';
         profileInfo.style.display = 'block';
         editBtn.style.display = 'block';
     });
 
     // Update profile image preview when a new image is selected
-    profileImageUpload.addEventListener('change', function(e) {
+    profileImageUpload.addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = function (event) {
                 profileImage.src = event.target.result; // Display the image preview
             };
             reader.readAsDataURL(file); // Read the image file as a data URL
         }
     });
 
-    profileForm.addEventListener('submit', function(e) {
+    profileForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         // Validate phone number before submission
         const phoneNumber = document.getElementById('phoneNumber').value;
         const phoneRegex = /^(0|\+84)\s?\d{2,3}\s?\d{3}\s?\d{3,4}$/;
 
         if (!phoneRegex.test(phoneNumber)) {
-            displayAlert('danger','Phone number must start with 0 or +84, followed by 9 or 10 digits, and can include spaces.');
+            displayAlert('danger', 'Phone number must start with 0 or +84, followed by 9 or 10 digits, and can include spaces.');
             return; // Stop form submission if validation fails
         }
 
         var userAPI = null;
-        if(userRole === 'receptionist') {
+        if (userRole === 'receptionist') {
             userAPI = ReceptionistEditProfile;
-        } else if(userRole === 'farmer') {
+        } else if (userRole === 'farmer') {
             userAPI = UpdateProfileUrl;
-        } else if(userRole === 'sprayer') {
+        } else if (userRole === 'sprayer') {
             userAPI = SprayerEditProfile;
         }
 
@@ -171,14 +168,11 @@ function finalizeProfileUpdate() {
 function loadNavBar(userRole) {
     const navbarContainer = document.getElementById("navbar-container");
     var userAPI = null;
-    if(userRole === 'receptionist')
-    {
+    if (userRole === 'receptionist') {
         userAPI = ReceptionistURL;
-    } else if(userRole === 'farmer')
-    {
+    } else if (userRole === 'farmer') {
         userAPI = UserURL;
-    } else if(userRole === 'sprayer')
-    {
+    } else if (userRole === 'sprayer') {
         userAPI = SprayerURL;
     }
     console.log(userAPI);
