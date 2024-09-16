@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
+import rmit.hoversprite.Proxies.WebSocketController;
 import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.OrderQueueService;
 import rmit.hoversprite.Services.OrderService;
@@ -30,12 +31,17 @@ public class SprayerHandleOrderMiddleware {
     @Autowired
     OrderQueueService orderQueueService;
 
+    @Autowired
+    private WebSocketController webSocketController;
+
     public Order sprayerConfirmAssignedOrder(String orderID)
     {
         Order order = orderService.getOrderById(orderID);
         order.setOrderStatus(OrderStatus.IN_PROGRESS);
 
         orderEmailProxy.sendEmailOrderInProgress(order);
+
+        webSocketController.sendOrderInProgressNotification(order);
         return orderService.updateOrder(order);
     }
 

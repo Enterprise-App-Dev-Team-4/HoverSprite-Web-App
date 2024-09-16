@@ -59,12 +59,14 @@ public class ReceptionistOrderCheckStatus {
         {
             // send proxy
             orderEmailProxy.sendEmailOrderAssigned(order);
+            webSocketController.sendOrderAssignedNotification(order);
         }
 
         if(order.getOrderStatus() == OrderStatus.COMPLETED)
         {
             // send proxy
             orderEmailProxy.sendEmailOrderCompleted(order);
+            webSocketController.sendOrderCompletedNotification(order);
         }
     }
 
