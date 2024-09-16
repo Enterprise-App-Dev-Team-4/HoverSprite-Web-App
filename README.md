@@ -58,10 +58,12 @@ This is a web application built to streamline and manage the business operations
 - **HTML**: For structuring the web pages.
 - **CSS**: For styling and layout.
 - **JavaScript**: For interactivity and dynamic content.
+- **Express.js**: For routing between the webpage
 
 ### Backend
 
 - **Spring Boot**: Main framework for developing the backend services.
 - **Java**: Primary programming language for the backend.
 - **PostgreSQL**: Database management system for storing application data.
+- **Websocket**: To fetch realtime data to the subcribers.
 
