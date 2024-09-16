@@ -1,4 +1,4 @@
-const oauth2API = 'http://localhost:8080/api/oauth/config'; // Your OAuth2 API endpoint
+const oauth2API = 'http://localhost:8080/api/oauth/config'; 
 
 // This function will extract the access token from the URL hash fragment.
 function getAccessTokenFromUrl() {
