@@ -16,7 +16,7 @@
     <div class="container-fluid h-100">
         <div class="row h-100 no-gutters">
             <div class="col-lg-6 bg-image d-none d-lg-block">
-                <img src="../../public/HoverSpriteLogo.png" alt="Wine Community Logo" class="logo">
+                <img src="../../public/HoverSpriteLogo.png" alt="Hover Sprite Logo" class="logo">
                 <div class="image-text">
                     <h1>Hover Sprite</h1>
                     <p>We specialize in organic fertilizer and pesticide spraying, serving orchards, cereal fields, and
@@ -26,11 +26,11 @@
             <div class="col-lg-6 col-md-12">
                 <div class="form-container">
                     <div class="form-box">
-                        <img src="../../public/HoverSpriteLogo.png" alt="Wine Community Logo" class="logo d-lg-none">
+                        <img src="../../public/HoverSpriteLogo.png" alt="Hover Sprite Logo" class="logo d-lg-none">
                         <h2 class="text-center mb-4">Sign Up</h2>
                         <p class="text-center mb-4">Gain full access to our services</p>
                         <div class="social-buttons mb-4">
-                            <button class="btn btn-outline-dark btn-block">
+                            <button class="btn btn-outline-dark btn-block" onclick="oauthSignIn()">
                                 <i class="fab fa-google mr-2"></i> Sign up with Google
                             </button>
                             <button class="btn btn-outline-primary btn-block">
@@ -40,19 +40,16 @@
                         <div class="divider">
                             <span>OR</span>
                         </div>
-                        <button class="btn btn-primary btn-block mb-3" id="register-button"
-                            onclick="redirectToRegister()">
+                        <button class="btn btn-primary btn-block mb-3" id="register-button" onclick="redirectToRegister()">
                             Sign up with Email
                         </button>
                         <p class="text-center small mt-3">
-                            By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy
-                                Policy</a>,
+                            By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>,
                             including <a href="#">Cookie Use</a>.
                         </p>
                         <div class="text-center mt-4">
                             <p>Already have an account?</p>
-                            <button class="btn btn-outline-primary btn-log-in" onclick="redirectToLogin()">Log
-                                in</button>
+                            <button class="btn btn-outline-primary btn-log-in" onclick="redirectToLogin()">Log in</button>
                         </div>
                     </div>
                 </div>

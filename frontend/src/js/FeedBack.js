@@ -46,6 +46,8 @@ function highlightStars(category, rating) {
 
 function submitFeedback() {
     let feedbackText = document.getElementById('feedbackText').value;
+    const profileImageUpload = document.getElementById('profileImageUpload');
+    
     if (Object.values(ratings).some(rating => rating === 0)) {
         alert("Please provide ratings for all categories before submitting.");
         return;
@@ -57,11 +59,31 @@ function submitFeedback() {
 
     const orderIdFromLink = window.location.pathname.split('/').pop().split('?')[0];
 
+    // Check if there's a file selected for upload
+    const file = profileImageUpload.files[0];
+    
+    if (file) {
+        // Upload image if a file is selected
+        uploadUserImage(file).then(productImageUrl => {
+            // If image upload succeeds, continue to submit feedback
+            submitFeedbackWithImage(orderIdFromLink, feedbackText, productImageUrl);
+        }).catch(error => {
+            console.error('Error uploading image:', error);
+            alert('Image upload failed. Please try again.');
+        });
+    } else {
+        // If no image is selected, submit feedback without image URL
+        submitFeedbackWithImage(orderIdFromLink, feedbackText);
+    }
+}
+
+function submitFeedbackWithImage(orderIdFromLink, feedbackText, imageUrl) {
     const feedbackData = {
         orderID: orderIdFromLink,
         orderFeedback: {
             ratingScore: ratings.overall,
-            content: feedbackText
+            content: feedbackText,
+            feedbackImage: imageUrl // Add the image URL here
         },
         sprayerFeedback: {
             content: feedbackText,
@@ -71,7 +93,9 @@ function submitFeedback() {
         }
     };
 
-    // Send the data to the server using sendRequestWithToken
+    console.log(feedbackData.orderFeedback.feedbackImage);
+
+    // Send the feedback data to the server
     sendRequestWithToken(UpdateFeedBackUrl, 'POST', feedbackData)
         .then(data => {
             console.log('Success:', data);
@@ -86,6 +110,7 @@ function submitFeedback() {
             alert('An error occurred while submitting your feedback. Please try again.');
         });
 }
+
 
 function showPopup() {
     document.getElementById('thankYouPopup').style.display = 'flex';

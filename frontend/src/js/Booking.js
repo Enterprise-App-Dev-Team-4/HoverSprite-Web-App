@@ -417,11 +417,20 @@ function sendAddFarmRequest(farm) {
 }
 
 // Send booking request to the server
+// Send booking request to the server
 function sendRequestOrder(formData) {
-    sendRequestWithToken(apiEndpoint, 'POST', formData)
-        .then(data => console.log('order response:', data))
-        .catch(error => console.error('Error submitting request:', error));
+    const endpointWithRole = `${apiEndpoint}?role=${encodeURIComponent(role)}`;
+    
+    console.log('Sending request to endpoint:', endpointWithRole);  // Debugging output
+    sendRequestWithToken(endpointWithRole, 'POST', formData)
+        .then(data => {
+            console.log('Order response:', data);
+        })
+        .catch(error => {
+            console.error('Error submitting request:', error);
+        });
 }
+
 
 // Send updated service data
 function sendRequestUpdateService(services) {

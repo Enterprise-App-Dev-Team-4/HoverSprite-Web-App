@@ -2,6 +2,7 @@ const logoutAPI = 'http://localhost:8080/log-out';
 var user = null;
 var user_role = null;
 var stompClient = null;
+var noti = '';
 
 function returnNavBar(data, role) {
     console.log('hello navbar');
@@ -248,6 +249,7 @@ function connectToWebSocket() {
         // Subscribe to specific user messages
         stompClient.subscribe(`/user/${user.email}/specific/messages`, function (message) {
             console.log('Received specific user message: ' + message.body);
+            noti = message.body; 
             // Add the specific message to the notification dropdown
             addNotification(`User Message: ${message.body}`);
         });

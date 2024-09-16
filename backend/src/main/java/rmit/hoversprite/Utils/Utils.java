@@ -1,5 +1,6 @@
 package rmit.hoversprite.Utils;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -183,4 +184,27 @@ public class Utils {
         return extractedDateAndTime;
     }
     
+    // Function to extract the first name
+    public String extractFirstName(String fullName) {
+        // Split the full name by spaces
+        String[] nameParts = fullName.trim().split("\\s+");
+
+        // The first name is always the first word
+        return nameParts[0]; // Returns the first name
+    }
+
+     // Function to extract the last name
+     public String extractLastName(String fullName) {
+        // Split the full name by spaces
+        String[] nameParts = fullName.trim().split("\\s+");
+
+        // If there is only one word, return an empty string for last name
+        if (nameParts.length == 1) {
+            return ""; // No last name, return empty
+        }
+
+        // The last name is everything after the first word
+        return String.join(" ", Arrays.copyOfRange(nameParts, 1, nameParts.length));
+    }
+
 }

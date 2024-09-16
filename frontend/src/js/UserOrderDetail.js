@@ -72,7 +72,7 @@ function getSprayerFeedbackScore(order, orderId) {
 function displayOrderDetails(order) {
     console.log(order);  // Debugging: Ensure the order object is correct
 
-
+    // Set order details
     document.getElementById('orderId').textContent = order.orderID || 'N/A';
     document.getElementById('orderStatus').textContent = order.orderStatus || 'N/A';
     document.getElementById('orderStatus').classList.add(`bg-${getStatusColor(order.orderStatus)}`);
@@ -126,6 +126,16 @@ function displayOrderDetails(order) {
         document.getElementById('friendlinessRating').textContent = `${sprayerFeedBack.friendlinessRating} / 5 ⭐`;
         document.getElementById('professionalRating').textContent = `${sprayerFeedBack.professionalismRating} / 5 ⭐`;
         document.getElementById('feedbackComment').textContent = order.feedBacks.content || 'N/A';
+
+        // Display feedback image if exists
+        const feedbackImage = document.getElementById('feedbackImage');
+        if (order.feedBacks.feedbackImage) {
+            feedbackImage.src = order.feedBacks.feedbackImage;
+            feedbackImage.style.display = 'block'; // Show the image
+        } else {
+            feedbackImage.style.display = 'none'; // Hide the image if there's no URL
+        }
+
     } else {
         document.getElementById('feedbackRating').textContent = 'N/A';
         document.getElementById('feedbackComment').textContent = 'N/A';
@@ -133,11 +143,14 @@ function displayOrderDetails(order) {
         document.getElementById('friendlinessRating').textContent = `N/A`;
         document.getElementById('professionalRating').textContent = `N/A`;
     }
-    //the feedback button
+
+    // Handle feedback button
     handleFeedbackButton(order);
+
     // Trigger number animations (if applicable)
     animateNumbers();
 }
+
 
 
 function getStatusColor(status) {

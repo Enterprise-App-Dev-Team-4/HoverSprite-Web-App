@@ -58,6 +58,7 @@ import rmit.hoversprite.Services.FarmerService;
 import rmit.hoversprite.Services.SprayerFeatureServices;
 import rmit.hoversprite.Utils.DTOConverter;
 import rmit.hoversprite.Utils.Utils;
+import rmit.hoversprite.Utils.Enum.OrderStatus;
 
 @RestController
 @RequestMapping("/")
@@ -116,13 +117,18 @@ public class FarmerController {
 
     @PostMapping("requestOrder")
     
-    public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerOrderRequest farmerOrderRequest)
+    public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerOrderRequest farmerOrderRequest, @RequestParam String role)
     {
         
         Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
         order.setDate(utilsClass.dateAndTimeValueExtracted(order.getDate()).getDate());
+        if(role.equals("receptionist"))
+        {
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+        }
+        
         Order savedOrder = farmerService.farmerCreateOrder(order);
-
+        
         // send email proxy
         orderEmailProxy.sendEmailOrderCreated(savedOrder);
         // System.out.println("Success");
