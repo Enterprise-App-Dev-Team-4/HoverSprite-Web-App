@@ -1,9 +1,12 @@
 package rmit.hoversprite.Services;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +17,7 @@ import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
 import rmit.hoversprite.Model.User.Sprayer;
 import rmit.hoversprite.Repositories.DBOrderRepository;
+import rmit.hoversprite.Utils.Enum.OrderStatus;
 import rmit.hoversprite.Utils.Utils;
 
 @Component
@@ -71,14 +75,27 @@ public class OrderService {
 
                     sortBy = Sort.by(
                         Sort.Order.desc("orderStatus")
-                        .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last
                     );
                     break;
             }
     
-        // Combine pageable and sort order
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
-        return orderRepository.findByFarmer(farmer, sortedPageable);
+            Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
+            Page<Order> ordersPage = orderRepository.findByFarmer(farmer, sortedPageable);
+        
+            // Apply custom sorting logic to ensure COMPLETED is always last
+            List<Order> sortedOrders = ordersPage.getContent().stream()
+                .sorted(Comparator.comparing(Order::getOrderStatus, (status1, status2) -> {
+                    if (status1 == OrderStatus.COMPLETED && status2 != OrderStatus.COMPLETED) {
+                        return 1;  // COMPLETED should come after any other status
+                    } else if (status1 != OrderStatus.COMPLETED && status2 == OrderStatus.COMPLETED) {
+                        return -1; // Any other status should come before COMPLETED
+                    } else {
+                        return status1.compareTo(status2); // Otherwise, use natural order of enums
+                    }
+                }))
+                .collect(Collectors.toList());
+        
+        return new PageImpl<>(sortedOrders, pageable, ordersPage.getTotalElements());
     }
     // public Order saveFeedbackToOrder()
 
@@ -102,12 +119,27 @@ public class OrderService {
                 default:  // Default sorting by status
                     sortBy = Sort.by(
                         Sort.Order.desc("orderStatus")
-                        .with(Sort.NullHandling.NULLS_LAST) // Ensure nulls (if any) are last
                     );
                     break;
             }
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
-        return orderRepository.findBySprayers(sprayer, sortedPageable);
+             // Fetch paginated data from repository using sort defined above
+             Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortBy);
+             Page<Order> ordersPage = orderRepository.findBySprayers(sprayer, sortedPageable);
+        
+        // Apply custom sorting logic to ensure COMPLETED is always last
+        List<Order> sortedOrders = ordersPage.getContent().stream()
+            .sorted(Comparator.comparing(Order::getOrderStatus, (status1, status2) -> {
+                if (status1 == OrderStatus.COMPLETED && status2 != OrderStatus.COMPLETED) {
+                    return 1;  // COMPLETED should come after any other status
+                } else if (status1 != OrderStatus.COMPLETED && status2 == OrderStatus.COMPLETED) {
+                    return -1; // Any other status should come before COMPLETED
+                } else {
+                    return status1.compareTo(status2); // Otherwise, use natural order of enums
+                }
+            }))
+            .collect(Collectors.toList());
+        
+        return new PageImpl<>(sortedOrders, pageable, ordersPage.getTotalElements());
     }
 
     public List<Order> getOrderByDate(String date) {

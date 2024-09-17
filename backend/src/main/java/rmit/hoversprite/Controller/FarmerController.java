@@ -117,7 +117,7 @@ public class FarmerController {
 
     @PostMapping("requestOrder")
     
-    public ResponseEntity<?> farmerUpdateProfile(@RequestBody FarmerOrderRequest farmerOrderRequest, @RequestParam String role)
+    public ResponseEntity<?> farmerRequestOrder(@RequestBody FarmerOrderRequest farmerOrderRequest, @RequestParam String role)
     {
         
         Order order = new FarmerOrderRequestHandler().transferRequestToOrder(farmerOrderRequest);
