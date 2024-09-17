@@ -11,6 +11,34 @@ let role = null;
 let isGridView = true;
 let currentSortOrder = 'status'; // Default sort by status
 
+// Add event listeners for other filters (search, status, date)
+document.getElementById('searchInput').addEventListener('input', filterOrders);
+document.getElementById('statusFilter').addEventListener('change', filterOrders);
+document.getElementById('dateFilter').addEventListener('change', filterOrders);
+
+function filterOrders() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    const dateFilter = document.getElementById('dateFilter').value;
+
+    const filteredOrders = orders.filter(order => {
+        const matchesSearch =
+            order.orderID.toLowerCase().includes(searchTerm) ||
+            order.location.toLowerCase().includes(searchTerm) ||
+            order.cropType.toLowerCase().includes(searchTerm) ||
+            order.orderStatus.toLowerCase().includes(searchTerm) ||
+            order.totalCost.toString().toLowerCase().includes(searchTerm);
+
+        const matchesStatus = statusFilter === '' || order.orderStatus === statusFilter;
+        const matchesDate = dateFilter === '' || matchesDateFilter(order.date, dateFilter);
+
+        return matchesSearch && matchesStatus && matchesDate;
+    });
+
+    const orderList = document.getElementById('orderList');
+    orderList.innerHTML = filteredOrders.map(createOrderCard).join('');
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the role from the URL
     loadNavBar();
