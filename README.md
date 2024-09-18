@@ -8,13 +8,28 @@ This project is developed by Team 4 for the [EEET2580] Enterprise Application De
 
 ## Team Members
 
-| Member Name     | sID        | Role                | Works                                                                                               | Contribution |
-|-----------------|------------|---------------------|-----------------------------------------------------------------------------------------------------|--------------|
-| Hua Nam Huy     | s3881103   | Frontend Developer   | Designed UI for the web, developed UI for Service page, Booking page, Landing page, Receptionist View Order page, Alert Modal. |              |
-| Dinh Gia Bao    | s3877923   | Frontend Developer   |                                                                                                     |              |
-| Nguyen Duc Anh  | s3878010   | Frontend Developer   |                                                                                                     |              |
-| Dinh Ngoc Minh  | s3925113   | Fullstack Developer, Team Leader  | Designed system architecture, data model, handled all backend services, OAuth2, JWT, Websocket service, Cloud Server config, wrote API for system interaction, Order management logic, Service management logic, Account management logic, handle realtime notification, developed UI for Navbar,  Booking page, fixed UI for other pages|              |
-| Tran Ngoc Minh  | s3911737   | Frontend Developer   |                                                                                                     |              |
+| Member Name     | sID        | Role                            | Works                                                                                                                                                                               |
+|-----------------|------------|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dinh Ngoc Minh  | s3925113   | Fullstack Developer, Team Leader | Designed system architecture, data model, handled all backend services, OAuth2, JWT, Websocket service, Cloud Server config, wrote API for system interaction, Order management logic, Service management logic, Account management logic, handled real-time notification, handled system layer, developed UI for Navbar, Booking page, fixed UI for other pages. |
+| Hua Nam Huy     | s3881103   | Frontend Developer              | Designed UI for the web, developed UI for Service page, Booking page, Landing page, Receptionist View Order page, Alert Modal.                                                       |
+| Dinh Gia Bao    | s3877923   | Frontend Developer              | Developed Service Detail, Developed Modal for Service page, Login/Signup Alert Box, Developed Navbar.                                                                                |
+| Nguyen Duc Anh  | s3878010   | Frontend Developer              | Login/Signup Alert Box, Receptionist Add User, User Profile, Edit User Profile.                                                                                                      |
+| Tran Ngoc Minh  | s3911737   | Frontend Developer              | Developed Responsive mode for all pages, Developed HomePage for all users, Developed feedback with Minh, Enhanced the Booking page (address, calendar, map, price), Developed Order Detail, Developed the navbar in mobile mode, Developed the order list. |
+
+## Account data:
+### Sprayer:
+#### Sprayer1: 
+- sprayer1@hoversprite.com
+- 1234
+
+#### Sprayer2:
+- sprayer2@hoversprite.com
+- 1234
+
+### Receptionist:
+- ngocminh@hoversprite.com
+- 1234
+
 
 ## How to run the project:
 - Step1: cd to ``frontend``  folder and run the following script:
