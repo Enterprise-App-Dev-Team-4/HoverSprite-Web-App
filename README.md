@@ -16,6 +16,13 @@ This project is developed by Team 4 for the [EEET2580] Enterprise Application De
 | Dinh Ngoc Minh  | s3925113   | Fullstack Developer, Team Leader  | Designed system architecture, data model, handled all backend services, OAuth2, JWT, Websocket service, Cloud Server config, wrote API for system interaction, Order management logic, Service management logic, Account management logic, handle realtime notification, developed UI for Navbar,  Booking page, fixed UI for other pages|              |
 | Tran Ngoc Minh  | s3911737   | Frontend Developer   |                                                                                                     |              |
 
+## How to run the project:
+- Step1: cd to ``frontend``  folder and run the following script:
+```js
+nodemon app
+```
+- Step2: cd to ``./backend/src/main/java/HoverSpriteApplication.java`` to click run the file
+
 
 ## Project Features
 
