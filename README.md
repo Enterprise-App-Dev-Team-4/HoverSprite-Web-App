@@ -8,11 +8,14 @@ This project is developed by Team 4 for the [EEET2580] Enterprise Application De
 
 ## Team Members
 
-- **Member 1**: [Hua Nam Huy] (s3881103)
-- **Member 2**: [Dinh Gia Bao] (s3877923)
-- **Member 3**: [Nguyen Duc Anh] (s3878010)
-- **Member 4**: [Dinh Ngoc Minh] (s3925113)
-- **Member 5**: [Tran Ngoc Minh] (s3911737)
+| Member Name     | sID        | Role                | Works                                                                                               | Contribution |
+|-----------------|------------|---------------------|-----------------------------------------------------------------------------------------------------|--------------|
+| Hua Nam Huy     | s3881103   | Frontend Developer   | Designed UI for the web, developed UI for Service page, Booking page, Landing page, Receptionist View Order page, Alert Modal. |              |
+| Dinh Gia Bao    | s3877923   | Frontend Developer   |                                                                                                     |              |
+| Nguyen Duc Anh  | s3878010   | Frontend Developer   |                                                                                                     |              |
+| Dinh Ngoc Minh  | s3925113   | Fullstack Developer, Team Leader  | Designed system architecture, data model, handled all backend services, OAuth2, JWT, Websocket service, Cloud Server config, wrote API for system interaction, Order management logic, Service management logic, Account management logic, handle realtime notification, developed UI for Navbar,  Booking page, fixed UI for other pages|              |
+| Tran Ngoc Minh  | s3911737   | Frontend Developer   |                                                                                                     |              |
+
 
 ## Project Features
 
