@@ -1,0 +1,92 @@
+        /* Custom styles */
+        body {
+            background-color: #f0f8f5;
+        }
+
+        .chat-sidebar {
+            background-color: #e0f7e7;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .chat-list-item {
+            padding: 15px;
+            border-bottom: 1px solid #d4f1dc;
+        }
+
+        .chat-list-item:hover {
+            background-color: #cde8d8;
+        }
+
+        .chat-window {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background-color: #80cfa9;
+            color: white;
+        }
+
+        .chat-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+        }
+
+        .chat-message.sent {
+            text-align: right;
+        }
+
+        .chat-message .message {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        .chat-message.sent .message {
+            background-color: #80cfa9;
+            color: white;
+        }
+
+        .chat-message.received .message {
+            background-color: #e0f7e7;
+            color: #333;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            background-color: #e0f7e7;
+        }
+
+        /* Custom return order button */
+        #returnOrder {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        /* Ensure proper header and button spacing */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .sidebar-header h5 {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        #returnOrder {
+            margin-right: 10px;
+        }

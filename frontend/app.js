@@ -18,6 +18,7 @@ const sprayerOrderDetailPath = __dirname + '/src/pages/SprayerOrderDetail.html'
 const landingPagePath = __dirname + '/src/pages/LandingPage.html'
 const orderFeedBackPath = __dirname + '/src/pages/FeedBack.html'
 const oAuth2Page = __dirname + '/src/pages/OAuth.html'
+const chatPagePath = __dirname + '/src/pages/ChatPage.html'
 
 const testPath = __dirname + '/src/pages/temp.html'
 app.use(body_parser.urlencoded({ extended: true }));
@@ -106,6 +107,10 @@ app.get('/home', (req, res) => {
 
 app.get('/oauth2callback', (req, res) => {
     res.sendFile(oAuth2Page);
+})
+
+app.get('/farmer/chat', (req, res) => {
+    res.sendFile(chatPagePath);
 })
 
 app.listen(3000, () => {
