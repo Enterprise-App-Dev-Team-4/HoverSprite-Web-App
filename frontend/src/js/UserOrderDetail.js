@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const chatBtn = document.getElementById('chatWithSprayer');
+
+    chatBtn.addEventListener('click', () => {
+        window.location.href = '/farmer/chat';
+    })
+})
+
 function fetchOrderDetails(orderId) {
     const url = `${orderDetailAPI}?orderId=${orderId}`; // Attach the orderId to the URL
     console.log(url);
@@ -144,12 +152,21 @@ function displayOrderDetails(order) {
         document.getElementById('professionalRating').textContent = `N/A`;
     }
 
+    // Hide "Chat with Sprayer" button if order is not in progress
+    const chatWithSprayerBtn = document.getElementById('chatWithSprayer');
+    if (order.orderStatus !== 'IN_PROGRESS') {
+        chatWithSprayerBtn.classList.add('d-none');
+    } else {
+        chatWithSprayerBtn.classList.remove('d-none'); // Ensure it's visible if the status is "IN_PROGRESS"
+    }
+
     // Handle feedback button
     handleFeedbackButton(order);
 
     // Trigger number animations (if applicable)
     animateNumbers();
 }
+
 
 
 
