@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatBtn = document.getElementById('chatWithSprayer');
-
+    const orderId = window.location.pathname.split('/').pop();
     chatBtn.addEventListener('click', () => {
-        window.location.href = '/farmer/chat';
+        window.location.href = `/farmer/chat?role=${encodeURIComponent(role)}&orderID=${orderId}`;
     })
 })
 

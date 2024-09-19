@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="../css/ChatPage.css">
 </head>
 <body>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -25,7 +28,7 @@
                     </button>
                 </div>
 
-                <!-- List of chats -->
+                <!-- List of chats (can be dynamically loaded) -->
                 <div class="mt-4">
                     <div class="chat-list-item">
                         <strong>Annie Carpenter</strong> <br> Did you talk to Mark? 😊
@@ -39,48 +42,38 @@
                     <div class="chat-list-item">
                         <strong>Emilie Wagner</strong> <br> You in? 10 min away
                     </div>
-                    <!-- More chats -->
                 </div>
             </div>
 
             <!-- Chat Window -->
             <div class="col-md-8 chat-window">
-                <!-- Chat Header -->
+                <!-- Chat Header (will be updated dynamically with sprayer's name) -->
                 <div class="chat-header d-flex align-items-center">
-                    <div>
-                        <h5 class="mb-0">Mark Appleyard</h5>
-                    </div>
+                    <h5 class="mb-0">Loading...</h5>  <!-- This will be dynamically updated -->
                 </div>
 
-                <!-- Chat Body -->
+                <!-- Chat Body (dynamically updated) -->
                 <div class="chat-body">
-                    <div class="chat-message received">
-                        <div class="message">Should we move it to next week?</div>
-                    </div>
-                    <div class="chat-message sent">
-                        <div class="message">Sure, whatever suits you. 😊</div>
-                    </div>
-                    <div class="chat-message received">
-                        <div class="message">And I'll update the calendar. Thought I already updated it.</div>
-                    </div>
-                    <div class="chat-message sent">
-                        <div class="message">It's all good fam.</div>
-                    </div>
-                    <!-- More messages -->
+                    <!-- Dynamic chat messages will be appended here by JavaScript -->
                 </div>
 
-                <!-- Chat Footer -->
+                <!-- Chat Footer for sending messages -->
                 <div class="chat-footer d-flex">
-                    <input type="text" class="form-control" placeholder="Send a message...">
-                    <button class="btn btn-success ms-2">
-                        <i class="bi bi-send"></i>
-                    </button>
+                    <input type="text" class="form-control" placeholder="Type your message...">
+                    <button class="btn btn-success ms-2">Send</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/ChatPage.js"></script>
+    <script src="../components/Navbar.js"></script>
+    <script src="../components/Footer.js"></script>
+    <script src="../components/sendToken.js"></script>
 </body>
 </html>
