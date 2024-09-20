@@ -3,6 +3,7 @@ package rmit.hoversprite.Controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.mail.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +31,8 @@ import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Receptionist;
 import rmit.hoversprite.Model.User.Sprayer;
+import rmit.hoversprite.Proxies.ChatController;
+import rmit.hoversprite.Request.MessageBody;
 import rmit.hoversprite.Request.ReceptionistUpdateProfileRequest;
 import rmit.hoversprite.Request.SprayerUpdateProfileRequest;
 import rmit.hoversprite.Response.CheckTimeSlotService;
@@ -51,6 +54,9 @@ public class SprayerController {
 
     @Autowired
     SprayerHandleOrderMiddleware sprayerHandleOrderMiddleware;
+
+    @Autowired
+    ChatController chatController;
 
     @GetMapping("sprayer")
     public ResponseEntity<?> getSprayerResponseEntity() 
@@ -121,5 +127,10 @@ public class SprayerController {
         return ResponseEntity.ok(queueDTO);
     }
 
-    
+    @PostMapping("queue/sprayer/message")
+    public ResponseEntity<?> sprayerSendChat(@RequestBody MessageBody message)
+    {
+        chatController.sprayerSendChatMessage(message);
+        return ResponseEntity.ok(message);
+    }
 }
