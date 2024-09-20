@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.text.StyledEditorKit;
 
+import jakarta.mail.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,13 +45,9 @@ import rmit.hoversprite.Model.Order.Order;
 import rmit.hoversprite.Model.OrderQueue.OrderQueue;
 import rmit.hoversprite.Model.SprayerServices.SprayServices;
 import rmit.hoversprite.Model.User.Farmer;
+import rmit.hoversprite.Proxies.ChatController;
 import rmit.hoversprite.Proxies.OrderEmailProxy;
-import rmit.hoversprite.Request.FarmerAddFarmRequest;
-import rmit.hoversprite.Request.FarmerFeedbackRequest;
-import rmit.hoversprite.Request.FarmerOrderRequest;
-import rmit.hoversprite.Request.FarmerUpdateProfileRequest;
-import rmit.hoversprite.Request.FeedbackSprayerRequest;
-import rmit.hoversprite.Request.ReceptionistHandleOrderRequest;
+import rmit.hoversprite.Request.*;
 import rmit.hoversprite.Response.AuthenticationResponse;
 import rmit.hoversprite.Response.CheckTimeSlotService;
 import rmit.hoversprite.Services.FarmService;
@@ -85,6 +82,9 @@ public class FarmerController {
 
     @Autowired
     CheckTimeSlotService checkTimeSlotService;
+
+    @Autowired
+    ChatController chatController;
 
     @Autowired
     private Utils utilsClass;
@@ -211,5 +211,12 @@ public class FarmerController {
         // Get the spray service by service ID
         SprayServices services = sprayServices.getServiceByID(serviceID);
         return checkTimeSlotService.checkTimeSlot(date, services);
+    }
+
+    @PostMapping("queue/message")
+    public ResponseEntity<?> farmerChatSprayer(@RequestBody MessageBody message)
+    {
+        chatController.farmerSendChatMessage(message);
+        return ResponseEntity.ok(message);
     }
 }

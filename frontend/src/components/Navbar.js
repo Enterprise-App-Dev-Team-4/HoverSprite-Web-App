@@ -3,6 +3,7 @@ var user = null;
 var user_role = null;
 var stompClient = null;
 var noti = '';
+var message_content = '';
 
 function returnNavBar(data, role) {
     console.log('hello navbar');
@@ -252,6 +253,14 @@ function connectToWebSocket() {
             noti = message.body; 
             // Add the specific message to the notification dropdown
             addNotification(`User Message: ${message.body}`);
+        });
+
+        stompClient.subscribe(`/user/${user.email}/chat/messages`, function (message) {
+            console.log('Received specific user message: ' + message.body);
+            message_content = message.body;
+            console.log(message_content); 
+            // Add the specific message to the notification dropdown
+            
         });
     });
 }

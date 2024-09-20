@@ -3,8 +3,11 @@ const navBarURL = 'http://localhost:8080/userName';
 const SprayerURL = 'http://localhost:8080/sprayer';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const orderDetailAPI = 'http://localhost:8080/order';
+const farmerMsgAPI = 'http://localhost:8080/queue/message';
 
 let role = null;
+let sprayers = [];
+let farmer = '';
 let orderId = null;
 
 // Extract role and orderId on page load
@@ -39,6 +42,8 @@ function fetchOrderDetails(orderId) {
     sendRequestWithToken(url)
         .then(orderData => {
             console.log('Order Data:', orderData);
+            sprayers = orderData.sprayer;
+            farmer = orderData.farmerEmail;
             updateChatHeader(orderData.sprayer);  // Update the chat header with sprayer's first name
             clearChatContent();  // Clear any existing chat content
         })
@@ -80,12 +85,16 @@ function setupChatForm() {
         if (message) {
             // Display user message
             addMessageToChatBody(message, true);
+            if(role === 'farmer')
+            {
+                farmerSendMessage(message, sprayers, farmer);
+            }
             
             // Simulate receiving a response from the server
-            setTimeout(() => {
-                const serverMessage = `Server response to: ${message}`;
-                addMessageToChatBody(serverMessage, false);
-            }, 1000);  // Simulate a 1-second delay for server response
+            // setTimeout(() => {
+            //     const serverMessage = `Server response to: ${message}`;
+            //     addMessageToChatBody(serverMessage, false);
+            // }, 1000);  // Simulate a 1-second delay for server response
 
             messageInput.value = '';  // Clear the input
         }
@@ -154,4 +163,27 @@ function sendRequestWithToken(url) {
             'Content-Type': 'application/json',
         }
     }).then(response => response.json());
+}
+
+function farmerSendMessage(content, sprayers, farmerEmail) {
+    // The userMessage object contains the recipient and the message content
+    var sprayerEmail = [];
+    for(let i = 0; i < sprayers.length; i++)
+    {
+        sprayerEmail.push(sprayers[i].email);
+    }
+    
+    const userMessage = {
+        content: content,
+        sprayerEmail: sprayerEmail,
+        farmerEmail: farmerEmail
+    };
+
+    sendRequestWithToken(farmerMsgAPI, 'POST', userMessage)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error fetching order details:', error);
+            });
 }

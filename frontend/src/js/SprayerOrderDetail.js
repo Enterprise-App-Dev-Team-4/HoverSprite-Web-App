@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const chatBtn = document.getElementById('chatWithSprayer');
+    const orderId = window.location.pathname.split('/').pop();
+    chatBtn.addEventListener('click', () => {
+        window.location.href = `/farmer/chat?role=${encodeURIComponent(role)}&orderID=${orderId}`;
+    })
+})
+
 function fetchOrderDetails(orderId) {
     const url = `${orderDetailAPI}?orderId=${orderId}`; // Attach the orderId to the URL
     console.log(url);

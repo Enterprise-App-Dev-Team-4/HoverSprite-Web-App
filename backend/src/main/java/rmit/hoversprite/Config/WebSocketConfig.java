@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // Enable simple broker for public and specific user destinations
-        config.enableSimpleBroker("/all", "/specific", "/user");
+        config.enableSimpleBroker("/all", "/specific", "/chat", "/user");
         // Set application prefix for client-side destinations
         config.setApplicationDestinationPrefixes("/app");
         // Set user destination prefix for point-to-point communication
