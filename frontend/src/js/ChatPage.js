@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     loadNavBar(role);  // Load navigation bar based on role
     loadFooter();  // Load footer
     fetchOrderDetails(orderId);  // Fetch order details and update UI
+
+    setupChatForm();  // Set up the form for sending messages
 });
 
 // Function to extract user role from URL parameters
@@ -39,7 +41,6 @@ function fetchOrderDetails(orderId) {
             console.log('Order Data:', orderData);
             updateChatHeader(orderData.sprayer);  // Update the chat header with sprayer's first name
             clearChatContent();  // Clear any existing chat content
-            // updateChatMessages(orderData.chatMessages);  // Update chat content with messages (from server data)
         })
         .catch(error => {
             console.error('Error fetching order details:', error);
@@ -59,29 +60,53 @@ function updateChatHeader(sprayers) {
     }
 }
 
-
 // Clear existing chat content
 function clearChatContent() {
     const chatBody = document.querySelector('.chat-body');
     chatBody.innerHTML = '';  // Remove all previous chat messages
 }
 
-// Update chat messages dynamically
-function updateChatMessages(messages) {
-    const chatBody = document.querySelector('.chat-body');
-    messages.forEach(msg => {
-        const chatMessage = document.createElement('div');
-        chatMessage.classList.add('chat-message', msg.sentByUser ? 'sent' : 'received');
+// Function to handle form submission and send the message
+function setupChatForm() {
+    const chatForm = document.querySelector('.chat-footer');
+    const messageInput = chatForm.querySelector('input');
+    const sendButton = chatForm.querySelector('button');
 
-        const messageBubble = document.createElement('div');
-        messageBubble.classList.add('message');
-        messageBubble.textContent = msg.message;
+    // Add an event listener for the send button
+    sendButton.addEventListener('click', (e) => {
+        e.preventDefault();  // Prevent form submission
+        const message = messageInput.value.trim();
+        
+        if (message) {
+            // Display user message
+            addMessageToChatBody(message, true);
+            
+            // Simulate receiving a response from the server
+            setTimeout(() => {
+                const serverMessage = `Server response to: ${message}`;
+                addMessageToChatBody(serverMessage, false);
+            }, 1000);  // Simulate a 1-second delay for server response
 
-        chatMessage.appendChild(messageBubble);
-        chatBody.appendChild(chatMessage);
+            messageInput.value = '';  // Clear the input
+        }
     });
+}
 
-    // Scroll to the bottom of the chat after adding new messages
+// Function to add a message to the chat body
+function addMessageToChatBody(message, sentByUser) {
+    const chatBody = document.querySelector('.chat-body');
+    
+    const chatMessage = document.createElement('div');
+    chatMessage.classList.add('chat-message', sentByUser ? 'sent' : 'received');
+
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('message');
+    messageBubble.textContent = message;
+
+    chatMessage.appendChild(messageBubble);
+    chatBody.appendChild(chatMessage);
+
+    // Scroll to the bottom of the chat body to show the new message
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
