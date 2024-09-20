@@ -14,11 +14,10 @@ let orderId = null;
 document.addEventListener("DOMContentLoaded", function () {
     role = getUserRoleFromUrl();  // Get the user role from the URL
     orderId = getOrderIdFromUrl();  // Get the orderID from the URL (query string)
-
+    connectToWebSocket(addMessageToChatBody);
     loadNavBar(role);  // Load navigation bar based on role
     loadFooter();  // Load footer
     fetchOrderDetails(orderId);  // Fetch order details and update UI
-
     setupChatForm();  // Set up the form for sending messages
 });
 
@@ -90,9 +89,9 @@ function setupChatForm() {
                 farmerSendMessage(message, sprayers, farmer);
             }
             
-            // Simulate receiving a response from the server
+            //Simulate receiving a response from the server
             // setTimeout(() => {
-            //     const serverMessage = `Server response to: ${message}`;
+            //     const serverMessage = `Server response to: ${message_content}`;
             //     addMessageToChatBody(serverMessage, false);
             // }, 1000);  // Simulate a 1-second delay for server response
 

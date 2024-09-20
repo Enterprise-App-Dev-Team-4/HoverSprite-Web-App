@@ -233,7 +233,7 @@ function addNotification(messageContent) {
 }
 
 // Function to connect to WebSocket server and subscribe to topics
-function connectToWebSocket() {
+function connectToWebSocket(addMessageToChatBody) {
     var socket = new SockJS('http://localhost:8080/ws');
     stompClient = Stomp.over(socket);
 
@@ -260,7 +260,7 @@ function connectToWebSocket() {
             message_content = message.body;
             console.log(message_content); 
             // Add the specific message to the notification dropdown
-            
+            addMessageToChatBody(message_content, false);
         });
     });
 }
@@ -276,7 +276,7 @@ function activeClick() {
     console.log("Hello");
 
     // Connect to WebSocket on page load
-    connectToWebSocket();
+    
 
     const logoutLink = document.getElementById('logout-link');
     console.log('Logout link:', logoutLink); // Add this to check if logout-link is correctly selected
@@ -339,3 +339,4 @@ function activeClick() {
 
 returnNavBar();
 activeClick();
+connectToWebSocket();
