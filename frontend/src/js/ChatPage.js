@@ -4,6 +4,7 @@ const SprayerURL = 'http://localhost:8080/sprayer';
 const ReceptionistURL = 'http://localhost:8080/receptionist';
 const orderDetailAPI = 'http://localhost:8080/order';
 const farmerMsgAPI = 'http://localhost:8080/queue/message';
+const sprayerMsgAPI = 'http://localhost:8080/queue/sprayer/message';
 
 let role = null;
 let sprayers = [];
@@ -88,12 +89,13 @@ function setupChatForm() {
             {
                 farmerSendMessage(message, sprayers, farmer);
             }
+
+            if(role === 'sprayer')
+            {
+                sprayerSendMessage(message, sprayers, farmer);
+            }
             
-            //Simulate receiving a response from the server
-            // setTimeout(() => {
-            //     const serverMessage = `Server response to: ${message_content}`;
-            //     addMessageToChatBody(serverMessage, false);
-            // }, 1000);  // Simulate a 1-second delay for server response
+
 
             messageInput.value = '';  // Clear the input
         }
@@ -179,6 +181,29 @@ function farmerSendMessage(content, sprayers, farmerEmail) {
     };
 
     sendRequestWithToken(farmerMsgAPI, 'POST', userMessage)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error fetching order details:', error);
+            });
+}
+
+function sprayerSendMessage(content, sprayers, farmerEmail)
+{
+    var sprayerEmail = [];
+    for(let i = 0; i < sprayers.length; i++)
+    {
+        sprayerEmail.push(sprayers[i].email);
+    }
+    
+    const userMessage = {
+        content: content,
+        sprayerEmail: sprayerEmail,
+        farmerEmail: farmerEmail
+    };
+
+    sendRequestWithToken(sprayerMsgAPI, 'POST', userMessage)
             .then(data => {
                 console.log(data);
             })
